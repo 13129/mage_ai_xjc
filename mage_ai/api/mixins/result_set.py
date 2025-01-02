@@ -19,8 +19,8 @@ CONTEXT_DATA_KEY_USER_PERMISSIONS_GRANTED_KEY_ATTRIBUTE_OPERATIONS = '__attribut
 
 class ResultSetMixIn:
     @classmethod
-    def entity_name_uuid(self) -> EntityName:
-        model_name = self.model_name()
+    def entity_name_uuid(cls) -> EntityName:
+        model_name = cls.model_name()
         if model_name in EntityName._value2member_map_:
             return EntityName(model_name)
 

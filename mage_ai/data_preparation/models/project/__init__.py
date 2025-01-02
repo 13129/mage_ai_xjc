@@ -99,10 +99,6 @@ class Project:
         return self.repo_config.project_uuid
 
     @property
-    def openai_api_key(self) -> str:
-        return self.repo_config.openai_api_key
-
-    @property
     def features(self) -> Dict:
         if self._features:
             return self._features
@@ -150,9 +146,7 @@ class Project:
 
         return {}
 
-    @property
-    def emr_config(self) -> Dict:
-        return self.repo_config.emr_config or None
+
 
     @property
     def spark_config(self) -> Dict:

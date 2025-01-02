@@ -43,13 +43,6 @@ class CloudRunWorkspaceConfig(WorkspaceConfig):
 
 
 @dataclass
-class EcsWorkspaceConfig(WorkspaceConfig):
-    cluster_name: str = None
-    task_definition: str = None
-    container_name: str = None
-
-
-@dataclass
 class TerminationPolicy(BaseConfig):
     enable_auto_termination: bool = False
     max_idle_seconds: int = 0

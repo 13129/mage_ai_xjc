@@ -19,7 +19,6 @@ from mage_ai.settings.keys import (
     ACTIVE_DIRECTORY_CLIENT_SECRET,
     ACTIVE_DIRECTORY_DIRECTORY_ID,
     ACTIVE_DIRECTORY_ROLES_MAPPING,
-    AZURE_HOST,
     MICROSOFT_GRAPH_API_HOST,
 )
 
@@ -35,7 +34,6 @@ class ADProvider(SsoProvider, OauthProvider):
         self.client_id = get_settings_value(ACTIVE_DIRECTORY_CLIENT_ID)
         self.client_secret = get_settings_value(ACTIVE_DIRECTORY_CLIENT_SECRET)
         self.host = get_settings_value(
-            AZURE_HOST,
             default='https://login.microsoftonline.com',
         ).rstrip('/')
         self.graph_api_host = get_settings_value(
@@ -68,8 +66,8 @@ class ADProvider(SsoProvider, OauthProvider):
         """
         For active directory, the user can set up the Oauth provider in two different ways. They
         can either just set the ACTIVE_DIRECTORY_DIRECTORY_ID which will use the Mage application we
-        set up in Azure. They can additionally set the ACTIVE_DIRECTORY_CLIENT_ID and
-        ACTIVE_DIRECTORY_CLIENT_SECRET which will use their own Mage application in Azure.
+        set up in. They can additionally set the ACTIVE_DIRECTORY_CLIENT_ID and
+        ACTIVE_DIRECTORY_CLIENT_SECRET which will use their own Mage application in.
         """
         ad_directory_id = self.directory_id
         if self.client_id:

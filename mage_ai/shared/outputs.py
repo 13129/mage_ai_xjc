@@ -3,8 +3,8 @@ from typing import Any, Dict, Optional, Tuple
 
 import joblib
 
-from mage_ai.ai.utils.xgboost import load_model as load_model_xgboost
-from mage_ai.ai.utils.xgboost import save_model as save_model_xgboost
+# from mage_ai.ai.utils.xgboost import load_model as load_model_xgboost
+# from mage_ai.ai.utils.xgboost import save_model as save_model_xgboost
 
 # MATRIX_NPZ_FILE, MATRIX_SAMPLE_NPZ_FILE
 from mage_ai.data_preparation.models.variables.constants import (
@@ -37,13 +37,13 @@ def save_custom_object(
     elif VariableType.MODEL_XGBOOST == variable_type:
         is_object = True
 
-        save_model_xgboost(
-            data,
-            model_dir=variable_path,
-            model_filename=UBJSON_MODEL_FILENAME,
-            config_filename=CONFIG_JSON_FILE,
-            image_filename=MEDIA_IMAGE_VISUALIZATION_FILE,
-        )
+        # save_model_xgboost(
+        #     data,
+        #     model_dir=variable_path,
+        #     model_filename=UBJSON_MODEL_FILENAME,
+        #     config_filename=CONFIG_JSON_FILE,
+        #     image_filename=MEDIA_IMAGE_VISUALIZATION_FILE,
+        # )
     # elif VariableType.MATRIX_SPARSE == variable_type:
     #     save_npz(os.path.join(variable_path, MATRIX_NPZ_FILE), data)
     elif VariableType.CUSTOM_OBJECT == variable_type:
@@ -71,12 +71,13 @@ def load_custom_object(
         if VariableType.MODEL_SKLEARN == variable_type:
             return joblib.load(os.path.join(variable_path, JOBLIB_FILE))
         elif VariableType.MODEL_XGBOOST == variable_type:
-            return load_model_xgboost(
-                model_dir=variable_path,
-                model_filename=UBJSON_MODEL_FILENAME,
-                config_filename=CONFIG_JSON_FILE,
-                raise_exception=False,
-            )
+            ...
+            # return load_model_xgboost(
+            #     model_dir=variable_path,
+            #     model_filename=UBJSON_MODEL_FILENAME,
+            #     config_filename=CONFIG_JSON_FILE,
+            #     raise_exception=False,
+            # )
         # elif VariableType.MATRIX_SPARSE == variable_type:
         #     return load_npz(os.path.join(variable_path, MATRIX_NPZ_FILE))
         elif VariableType.CUSTOM_OBJECT == variable_type:

@@ -136,7 +136,6 @@ export interface IntegrationSourceStreamType {
 
 export enum IntegrationSourceEnum {
   AMPLITUDE = 'amplitude',
-  BIGQUERY = 'bigquery',
   CHARGEBEE = 'chargebee',
   GOOGLE_ADS = 'google_ads',
   GOOGLE_SEARCH_CONSOLE = 'google_search_console',
@@ -151,8 +150,6 @@ export enum IntegrationSourceEnum {
 }
 
 export enum IntegrationDestinationEnum {
-  AMAZON_S3 = 'amazon_s3',
-  BIGQUERY = 'bigquery',
   DELTA_LAKE_S3 = 'delta_lake_s3',
   GOOGLE_CLOUD_STORAGE = 'google_cloud_storage',
   KAFKA = 'kafka',
@@ -162,8 +159,6 @@ export enum IntegrationDestinationEnum {
 }
 
 export const DESTINATIONS_NO_UNIQUE_OR_KEY_SUPPORT: IntegrationDestinationEnum[] = [
-  IntegrationDestinationEnum.AMAZON_S3,
-  IntegrationDestinationEnum.GOOGLE_CLOUD_STORAGE,
   IntegrationDestinationEnum.KAFKA,
 ];
 

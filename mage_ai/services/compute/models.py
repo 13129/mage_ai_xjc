@@ -144,15 +144,8 @@ class ComputeService:
         self.with_clusters = with_clusters
 
     @classmethod
-    def build(self, project: Project, with_clusters: bool = False):
-        service_class = self
-
-        if project and project.spark_config:
-            if project.emr_config:
-                from mage_ai.services.compute.aws.models import AWSEMRComputeService
-
-                service_class = AWSEMRComputeService
-
+    def build(cls, project: Project, with_clusters: bool = False):
+        service_class = cls
         return service_class(project=project, with_clusters=with_clusters)
 
     def to_dict(self, **kwargs) -> Dict:

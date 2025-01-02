@@ -656,13 +656,9 @@ class Git:
                 for url in remote.urls:
                     if url.lower().startswith('https'):
                         provider = get_provider_from_remote_url(url)
-                        if provider == ProviderName.AZURE_DEVOPS:
-                            updated_url = url.replace('/_git', '')
-                            repository_names.append('/'.join(updated_url.split('/')[-2:]))
-                        else:
-                            repository_names.append(
+                        repository_names.append(
                                 '/'.join(url.split('/')[-2:]).replace('.git', '')
-                            )
+                        )
 
                         # Remove the token from the URL
                         # e.g. https://[user]:[token]@[netloc]

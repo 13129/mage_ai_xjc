@@ -153,18 +153,6 @@ def convert_python_type_to_trino_type(python_type, usr_data_types: Dict = None):
     return 'VARCHAR'
 
 
-def convert_python_type_to_clickhouse_type(python_type):
-    if python_type is int:
-        return 'Nullable(Int64)'
-    elif python_type is float:
-        return 'Nullable(Float64)'
-    elif python_type is bool:
-        return 'Nullable(Boolean)'
-    elif python_type is datetime:
-        return 'Nullable(Datetime64)'
-    return 'Nullable(String)'
-
-
 def is_port_in_use(port: int, host: str = 'localhost') -> bool:
     host = host or 'localhost'
     print(f'Checking port {port} on host {host}...')

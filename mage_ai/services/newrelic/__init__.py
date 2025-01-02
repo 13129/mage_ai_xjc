@@ -18,4 +18,4 @@ def initialize_new_relic():
             print("Unexpected error with new relic initialization. Disable "
                   f"new relic reporting. Message: {error}")
             enable_new_relic = False
-    return (enable_new_relic, application)
+    return enable_new_relic, application

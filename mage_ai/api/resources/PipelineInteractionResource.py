@@ -12,7 +12,7 @@ from mage_ai.shared.hash import extract, merge_dict
 class PipelineInteractionResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def get_model(self, pk, **kwargs):
+    async def get_model(cls, pk, **kwargs):
         uuid = urllib.parse.unquote(pk)
         user = kwargs.get('user')
         repo_path = get_repo_path(user=user, root_project=True)
@@ -23,8 +23,8 @@ class PipelineInteractionResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    async def member(self, pk, user, **kwargs):
-        model = await self.get_model(pk, user=user)
+    async def member(cls, pk, user, **kwargs):
+        model = await cls.get_model(pk, user=user)
 
         query = kwargs.get('query', {})
         filter_for_permissions = query.get('filter_for_permissions', [False])
@@ -34,7 +34,7 @@ class PipelineInteractionResource(GenericResource):
         if filter_for_permissions:
             await model.filter_for_permissions(user)
 
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     async def update(self, payload, **kwargs):
         payload_update = {}

@@ -52,9 +52,9 @@ def get_value_for_sync_config(env_var, value) -> bool:
 
 def build_sync_config(project_sync_config: Dict) -> Dict:
     """
-    Build the final sync_config from the saved project sync config and the environment variables.
-    The git setting values from the environment variables will take precedence unless the
-    GIT_OVERWRITE_WITH_PROJECT_SETTINGS environment variable is set to true.
+    从保存的项目同步配置和环境变量构建最终的sync_config。
+    来自环境变量的git设置值将优先考虑,除非
+    GIT_OVERWRITE_WITH_PROJECT_SETTINGS环境变量设置为true。
     """
 
     # Remove null or empty string values from the project_sync_config

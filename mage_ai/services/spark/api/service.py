@@ -23,12 +23,3 @@ class API:
                 application_id=application_id,
                 application_spark_ui_url=application_spark_ui_url,
             )
-        elif ComputeServiceUUID.AWS_EMR == compute_service:
-            from mage_ai.services.spark.api.aws_emr import AwsEmrAPI
-
-            return AwsEmrAPI(
-                all_applications=all_applications,
-                spark_session=spark_session,
-                application_id=application_id,
-                application_spark_ui_url=application_spark_ui_url,
-            )

@@ -63,23 +63,15 @@ class RepoConfig:
         self.cluster_type = None
 
         self.remote_variables_dir = None
-        self.ai_config = None
-        self.azure_container_instance_config = None
-        self.ecs_config = None
-        self.emr_config = None
         self.features = None
-        self.gcp_cloud_run_config = None
         self.k8s_executor_config = None
         self.spark_config = None
         self.notification_config = None
         self.queue_config = None
         self.help_improve_mage = None
-        self.openai_api_key = None
         self._pipelines = None
         self.retry_config = None
         self.ldap_config = None
-        self.s3_bucket = None
-        self.s3_path_prefix = None
         self.settings_backend = None
         self.logging_config = None
         self.variables_dir = None
@@ -107,10 +99,8 @@ class RepoConfig:
             # `get_variables_dir`.
             if config_dict and config_dict.get('variables_dir'):
                 self.variables_dir = config_dict.get('variables_dir')
-                if not self.variables_dir.startswith('s3'):
-                    self.variables_dir = os.path.abspath(
-                        os.path.join(self.repo_path, self.variables_dir)
-                    )
+                self.variables_dir = os.path.abspath(
+                        os.path.join(self.repo_path, self.variables_dir))
             else:
                 self.variables_dir = get_variables_dir(
                     repo_path=self.repo_path,
@@ -125,23 +115,13 @@ class RepoConfig:
             self.project_type = repo_config.get('project_type')
             self.cluster_type = repo_config.get('cluster_type')
             self.remote_variables_dir = repo_config.get('remote_variables_dir')
-
-            # Executor configs
-            self.ai_config = repo_config.get('ai_config', dict())
-            self.azure_container_instance_config = repo_config.get(
-                'azure_container_instance_config'
-            )
-            self.ecs_config = repo_config.get('ecs_config')
-            self.emr_config = repo_config.get('emr_config') or dict()
             self.features = repo_config.get('features', {})
-            self.gcp_cloud_run_config = repo_config.get('gcp_cloud_run_config')
             self.k8s_executor_config = repo_config.get('k8s_executor_config')
             self.spark_config = repo_config.get('spark_config')
             self.notification_config = repo_config.get('notification_config', dict())
             self.queue_config = repo_config.get('queue_config', dict())
             self.project_uuid = repo_config.get('project_uuid')
             self.help_improve_mage = repo_config.get('help_improve_mage')
-            self.openai_api_key = repo_config.get('openai_api_key')
             self.pipelines = repo_config.get('pipelines')
             self.retry_config = repo_config.get('retry_config')
             self.workspace_config_defaults = repo_config.get(
@@ -150,18 +130,7 @@ class RepoConfig:
             self.workspace_initial_metadata = repo_config.get(
                 'workspace_initial_metadata'
             )
-
             self.ldap_config = repo_config.get('ldap_config')
-
-            self.s3_bucket = None
-            self.s3_path_prefix = None
-            if (
-                self.remote_variables_dir is not None
-                and self.remote_variables_dir.startswith('s3://')
-            ):
-                path_parts = self.remote_variables_dir.replace('s3://', '').split('/')
-                self.s3_bucket = path_parts.pop(0)
-                self.s3_path_prefix = '/'.join(path_parts)
 
             self.settings_backend = repo_config.get('settings_backend', dict())
 
@@ -210,15 +179,9 @@ class RepoConfig:
 
     def to_dict(self, remote: bool = False) -> Dict:
         return dict(
-            ai_config=self.ai_config,
-            azure_container_instance_config=self.azure_container_instance_config,
-            ecs_config=self.ecs_config,
-            emr_config=self.emr_config,
             features=self.features,
-            gcp_cloud_run_config=self.gcp_cloud_run_config,
             help_improve_mage=self.help_improve_mage,
             notification_config=self.notification_config,
-            openai_api_key=self.openai_api_key,
             pipelines=self.pipelines.to_dict() if self.pipelines else self.pipelines,
             project_type=self.project_type,
             project_uuid=self.project_uuid,
@@ -258,7 +221,7 @@ def init_repo(
     root_project: bool = False,
 ) -> None:
     """
-    Initialize a repository under the current path.
+    初始化当前路径下的存储库。
     """
     if os.path.exists(repo_path):
         raise FileExistsError(f'Repository {repo_path} already exists')

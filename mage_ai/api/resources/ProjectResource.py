@@ -60,7 +60,6 @@ async def build_project(
     )
 
     model = merge_dict(project.repo_config.to_dict(), dict(
-        emr_config=project.emr_config,
         features=project.features,
         features_defined=project.features_defined,
         features_override=project.features_override,

@@ -7,7 +7,6 @@ import polars as pl
 import simplejson
 from sklearn.utils import estimator_html_repr
 
-from mage_ai.ai.utils.xgboost import render_tree_visualization
 from mage_ai.data.constants import InputDataType
 from mage_ai.data.models.constants import CHUNKS_DIRECTORY_NAME
 from mage_ai.data.tabular.models import BatchSettings
@@ -47,16 +46,16 @@ from mage_ai.shared.strings import is_json
 
 
 def format_output_data(
-    block,
-    data: Any,
-    variable_uuid: str,
-    block_uuid: Optional[str] = None,
-    csv_lines_only: Optional[bool] = False,
-    execution_partition: Optional[str] = None,
-    index: Optional[int] = None,
-    skip_dynamic_block: bool = False,
-    automatic_sampling: bool = False,
-    sample_count: Optional[int] = None,
+        block,
+        data: Any,
+        variable_uuid: str,
+        block_uuid: Optional[str] = None,
+        csv_lines_only: Optional[bool] = False,
+        execution_partition: Optional[str] = None,
+        index: Optional[int] = None,
+        skip_dynamic_block: bool = False,
+        automatic_sampling: bool = False,
+        sample_count: Optional[int] = None,
 ) -> Tuple[Dict, bool]:
     """
     Takes variable data and formats it to return to the frontend.
@@ -76,10 +75,10 @@ def format_output_data(
     is_dynamic = is_dynamic_block(block)
 
     if (
-        variable_type in [VariableType.DATAFRAME, VariableType.POLARS_DATAFRAME]
-        and is_basic_iterable
-        and isinstance(data, list)
-        and not is_dynamic
+            variable_type in [VariableType.DATAFRAME, VariableType.POLARS_DATAFRAME]
+            and is_basic_iterable
+            and isinstance(data, list)
+            and not is_dynamic
     ):
         formatted_outputs = []
         for output_idx, output in enumerate(data):
@@ -155,17 +154,17 @@ def format_output_data(
 
         return return_output, True
     elif (
-        VariableType.MODEL_SKLEARN == variable_type or VariableType.MODEL_XGBOOST == variable_type
+            VariableType.MODEL_SKLEARN == variable_type or VariableType.MODEL_XGBOOST == variable_type
     ):
 
         def __render(
-            model: Any,
-            partition=execution_partition,
-            pipeline=block.pipeline,
-            uuid=block.uuid,
-            variable_manager=variable_manager,
-            variable_type=variable_type,
-            variable_uuid=variable_uuid,
+                model: Any,
+                partition=execution_partition,
+                pipeline=block.pipeline,
+                uuid=block.uuid,
+                variable_manager=variable_manager,
+                variable_type=variable_type,
+                variable_uuid=variable_uuid,
         ) -> Dict[str, Optional[str]]:
             data_type = None
             text_data = None
@@ -181,7 +180,8 @@ def format_output_data(
                     partition=partition,
                     variable_type=variable_type,
                 ).variable_path
-                text_data, success = render_tree_visualization(image_dir)
+                success = None
+                # text_data, success = render_tree_visualization(image_dir)
 
                 if success:
                     data_type = DataType.IMAGE_PNG
@@ -442,17 +442,17 @@ df = get_variable('{block.pipeline.uuid}', '{block.uuid}', 'df')
 
 
 def get_outputs_for_display_dynamic_block(
-    block,
-    output_sets: List[Tuple],
-    child_data_sets: List[Tuple[Any, Any]],
-    block_uuid: Optional[str] = None,
-    csv_lines_only: bool = False,
-    dynamic_block_index: Optional[int] = None,
-    exclude_blank_variable_uuids: bool = False,
-    execution_partition: Optional[str] = None,
-    metadata: Optional[Dict] = None,
-    sample: bool = True,
-    sample_count: Optional[int] = None,
+        block,
+        output_sets: List[Tuple],
+        child_data_sets: List[Tuple[Any, Any]],
+        block_uuid: Optional[str] = None,
+        csv_lines_only: bool = False,
+        dynamic_block_index: Optional[int] = None,
+        exclude_blank_variable_uuids: bool = False,
+        execution_partition: Optional[str] = None,
+        metadata: Optional[Dict] = None,
+        sample: bool = True,
+        sample_count: Optional[int] = None,
 ) -> List[Dict[str, Any]]:
     data_products = []
     outputs = []
@@ -510,9 +510,9 @@ def get_outputs_for_display_dynamic_block(
 
             variable_type, basic_iterable = infer_variable_type(output)
             if (
-                variable_type in [VariableType.DATAFRAME, VariableType.POLARS_DATAFRAME]
-                and is_basic_iterable
-                and isinstance(output, list)
+                    variable_type in [VariableType.DATAFRAME, VariableType.POLARS_DATAFRAME]
+                    and is_basic_iterable
+                    and isinstance(output, list)
             ):
                 for output_idx, output_data in enumerate(output):
                     output_formatted, _ = format_output_data(
@@ -548,11 +548,11 @@ def get_outputs_for_display_dynamic_block(
                 outputs_below_limit = not sample or not sample_count
                 if is_data_product:
                     outputs_below_limit = outputs_below_limit or (
-                        sample_count is not None and len(data_products) < sample_count
+                            sample_count is not None and len(data_products) < sample_count
                     )
                 else:
                     outputs_below_limit = outputs_below_limit or (
-                        sample_count is not None and len(outputs) < sample_count
+                            sample_count is not None and len(outputs) < sample_count
                     )
 
                 if outputs_below_limit:
@@ -566,24 +566,24 @@ def get_outputs_for_display_dynamic_block(
 
 
 def handle_variables(
-    block,
-    items: List[Dict[str, Any]],
-    block_groups: Optional[
-        List[Dict[str, Union[List[str], Optional[List[Any]], Optional[str]]]]
-    ] = None,
-    block_uuid: Optional[str] = None,
-    csv_lines_only: bool = False,
-    exclude_blank_variable_uuids: bool = False,
-    execution_partition: Optional[str] = None,
-    include_print_outputs: bool = True,
-    input_data_types: Optional[List[InputDataType]] = None,
-    max_results: Optional[int] = None,
-    read_batch_settings: Optional[BatchSettings] = None,
-    read_chunks: Optional[List[ChunkKeyTypeUnion]] = None,
-    sample: bool = True,
-    sample_count: Optional[int] = None,
-    selected_variables: Optional[List[str]] = None,
-    variable_type: Optional[VariableType] = None,
+        block,
+        items: List[Dict[str, Any]],
+        block_groups: Optional[
+            List[Dict[str, Union[List[str], Optional[List[Any]], Optional[str]]]]
+        ] = None,
+        block_uuid: Optional[str] = None,
+        csv_lines_only: bool = False,
+        exclude_blank_variable_uuids: bool = False,
+        execution_partition: Optional[str] = None,
+        include_print_outputs: bool = True,
+        input_data_types: Optional[List[InputDataType]] = None,
+        max_results: Optional[int] = None,
+        read_batch_settings: Optional[BatchSettings] = None,
+        read_chunks: Optional[List[ChunkKeyTypeUnion]] = None,
+        sample: bool = True,
+        sample_count: Optional[int] = None,
+        selected_variables: Optional[List[str]] = None,
+        variable_type: Optional[VariableType] = None,
 ):
     data_products = []
     outputs = []
@@ -620,17 +620,17 @@ def handle_variables(
         for idx_inner, variable_uuid in enumerate(variable_uuids):
 
             def __callback(
-                data_from_yield,
-                b_uuid=b_uuid,
-                block=block,
-                csv_lines_only=csv_lines_only,
-                execution_partition=execution_partition,
-                idx=idx,
-                idx_inner=idx_inner,
-                input_data_types=input_data_types,
-                read_batch_settings=read_batch_settings,
-                read_chunks=read_chunks,
-                variable_uuid=variable_uuid,
+                    data_from_yield,
+                    b_uuid=b_uuid,
+                    block=block,
+                    csv_lines_only=csv_lines_only,
+                    execution_partition=execution_partition,
+                    idx=idx,
+                    idx_inner=idx_inner,
+                    input_data_types=input_data_types,
+                    read_batch_settings=read_batch_settings,
+                    read_chunks=read_chunks,
+                    variable_uuid=variable_uuid,
             ):
                 data, is_data_product = format_output_data(
                     block,
@@ -647,7 +647,7 @@ def handle_variables(
                     outputs.append(((idx, idx_inner), data, is_data_product))
 
             if (selected_variables and variable_uuid not in selected_variables) or (
-                exclude_blank_variable_uuids and variable_uuid.strip() == ''
+                    exclude_blank_variable_uuids and variable_uuid.strip() == ''
             ):
                 continue
 

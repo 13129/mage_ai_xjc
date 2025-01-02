@@ -21,10 +21,7 @@ from mage_ai.io.base import DataSource
 
 
 MAP_DATASOURCE_TO_HANDLER = {
-    DataSource.BIGQUERY: 'BigQuery',
     DataSource.POSTGRES: 'Postgres',
-    DataSource.REDSHIFT: 'Redshift',
-    DataSource.SNOWFLAKE: 'Snowflake',
 }
 
 
@@ -228,10 +225,9 @@ def __fetch_transformer_data_warehouse_template(data_source: DataSource):
     if data_source_handler is None:
         raise ValueError(f'No associated database/warehouse for data source \'{data_source}\'')
 
-    if data_source != DataSource.BIGQUERY:
-        additional_args = '\n        loader.commit() # Permanently apply database changes'
-    else:
-        additional_args = ''
+
+    additional_args = '\n        loader.commit() # Permanently apply database changes'
+
 
     return (
         template.render(

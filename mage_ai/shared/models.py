@@ -350,6 +350,10 @@ class DelegatorTarget:
 
 
 class Delegator:
+    """
+    delegate 委托
+    target 目标
+    """
     def __init__(self, target: Optional[Any] = None, *args, **kwargs):
         self.delegate = None
         self._target = target

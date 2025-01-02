@@ -10,7 +10,6 @@ from mage_ai.kernels.magic.kernels.manager import KernelManager
 from mage_ai.orchestration.db import safe_db_query
 from mage_ai.server.active_kernel import switch_active_kernel
 from mage_ai.server.kernels import DEFAULT_KERNEL_NAME, KernelName, kernel_managers
-from mage_ai.services.ssh.aws.emr.utils import tunnel
 from mage_ai.settings.server import KERNEL_MAGIC, MEMORY_MANAGER_V2
 
 
@@ -110,11 +109,7 @@ class KernelResource(GenericResource):
                     self.model.start()
 
         def _callback(*args, **kwargs):
-            tunnel(
-                kernel_name=self.model.kernel_name,
-                reconnect=True,
-                validate_conditions=True,
-            )
+            ...
 
         self.on_update_callback = _callback
 

@@ -3452,9 +3452,6 @@ class Block(
                 except Exception as err:
                     if is_debug():
                         raise err
-                    # TODO: we use to silently fail, but it looks bad when using BigQuery
-                    # print('\nFailed to analyze dataframe:')
-                    # print(traceback.format_exc())
             elif isinstance(data, pl.DataFrame):
                 self.variable_manager.add_variable(
                     self.pipeline_uuid,

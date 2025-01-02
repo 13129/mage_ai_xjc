@@ -19,9 +19,7 @@ from mage_ai.cluster_manager.constants import (
     CLOUD_SQL_CONNECTION_NAME,
     CONNECTION_URL_SECRETS_NAME,
     DB_SECRETS_NAME,
-    GCP_BACKEND_CONFIG_ANNOTATION,
     KUBE_NAMESPACE,
-    KUBE_SERVICE_GCP_BACKEND_CONFIG,
     KUBE_SERVICE_TYPE,
     NODE_PORT_SERVICE_TYPE,
     SERVICE_ACCOUNT_CREDENTIAL_FILE_PATH,
@@ -437,10 +435,6 @@ class WorkloadManager:
         service_name = f'{name}-service'
 
         annotations = {}
-        if os.getenv(KUBE_SERVICE_GCP_BACKEND_CONFIG):
-            annotations[GCP_BACKEND_CONFIG_ANNOTATION] = os.getenv(
-                KUBE_SERVICE_GCP_BACKEND_CONFIG
-            )
 
         service = {
             'apiVersion': 'v1',

@@ -16,15 +16,6 @@ from mage_ai.streaming.constants import SinkType
 from mage_ai.streaming.sinks.base import BaseSink
 
 IO_CLASS_MAP = {
-    SinkType.BIGQUERY: {
-        'class_name': 'BigQuery',
-    },
-    SinkType.CLICKHOUSE: {
-        'class_name': 'ClickHouse',
-    },
-    SinkType.DUCKDB: {
-        'class_name': 'DuckDB',
-    },
     SinkType.MYSQL: {
         'class_name': 'MySQL',
     },

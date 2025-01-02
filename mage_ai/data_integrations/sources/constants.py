@@ -2,7 +2,6 @@ from mage_ai.data_integrations.utils.settings import get_uuid
 from mage_ai.shared.hash import index_by
 
 SQL_SOURCES = [
-    dict(name='BigQuery'),
     dict(
         name='Microsoft SQL Server',
         uuid='mssql',
@@ -10,18 +9,12 @@ SQL_SOURCES = [
     dict(name='MySQL'),
     dict(name='OracleDB'),
     dict(name='PostgreSQL'),
-    dict(name='Redshift'),
-    dict(name='Snowflake'),
 ]
 
 SQL_SOURCES_MAPPING = index_by(get_uuid, SQL_SOURCES)
 
 SOURCES = sorted([
-    dict(name='Airtable'),
-    dict(name='Amazon S3'),
-    dict(name='Amplitude'),
     dict(name='Api'),
-    dict(name='Azure Blob Storage'),
     dict(name='Chargebee'),
     dict(name='Commercetools'),
     dict(name='Couchbase'),
@@ -32,11 +25,6 @@ SOURCES = sorted([
     dict(name='Freshdesk'),
     dict(name='Front'),
     dict(name='GitHub'),
-    dict(name='Google Ads'),
-    dict(name='Google Analytics'),
-    dict(name='Google Cloud Storage'),
-    dict(name='Google Search Console'),
-    dict(name='Google Sheets'),
     dict(name='HubSpot'),
     dict(name='Intercom'),
     dict(name='Knowi'),
@@ -53,6 +41,5 @@ SOURCES = sorted([
     dict(name='Sftp'),
     dict(name='Stripe'),
     dict(name='Tableau'),
-    dict(name='Twitter Ads'),
     dict(name='Zendesk'),
 ] + SQL_SOURCES, key=lambda x: x['name'])

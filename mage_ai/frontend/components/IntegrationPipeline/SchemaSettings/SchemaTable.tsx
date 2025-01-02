@@ -82,8 +82,6 @@ type SchemaTablePropsInternal = {
 } & SchemaTableProps;
 
 const PARTITION_KEY_DESTINATIONS = [
-  IntegrationDestinationEnum.BIGQUERY,
-  IntegrationDestinationEnum.DELTA_LAKE_S3,
 ];
 
 function SchemaTable({

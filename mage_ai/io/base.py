@@ -16,29 +16,14 @@ QUERY_ROW_LIMIT = 10_000_000
 
 
 class DataSource(StrEnum):
-    ALGOLIA = 'algolia'
     API = 'api'
-    BIGQUERY = 'bigquery'
-    CHROMA = 'chroma'
-    CLICKHOUSE = 'clickhouse'
-    DRUID = 'druid'
-    DUCKDB = 'duckdb'
     FILE = 'file'
-    GOOGLE_CLOUD_STORAGE = 'google_cloud_storage'
-    GOOGLE_SHEETS = 'google_sheets'
     KAFKA = 'kafka'
     MYSQL = 'mysql'
-    MSSQL = 'sqlserver'
-    OPENSEARCH = 'opensearch'
     PINOT = 'pinot'
     POSTGRES = 'postgres'
-    QDRANT = 'qdrant'
-    REDSHIFT = 'redshift'
-    S3 = 's3'
-    SNOWFLAKE = 'snowflake'
     SPARK = 'spark'
     TRINO = 'trino'
-    WEAVIATE = 'weaviate'
 
 
 class FileFormat(StrEnum):
@@ -88,7 +73,7 @@ class BaseIO(ABC):
         """
         Modifies SQL SELECT query to enforce a limit on the number of rows returned by the query.
         This method is currently supports PostgreSQL syntax, which means it can be used with
-        PostgreSQL, Amazon Redshift, Snowflake, and Google BigQuery.
+        PostgreSQL.
 
         Args:
             query (str): The SQL query to modify
@@ -135,7 +120,7 @@ LIMIT {limit}
 class BaseFile(BaseIO):
     """
     Data connector for file-like data sources (for example, loading from local
-    filesystem or external file storages such as AWS S3)
+    filesystem or external file storages such)
     """
 
     @abstractmethod

@@ -33,7 +33,6 @@ class StatisticsCalculator:
 
     def __init__(
         self,
-        # s3_client,
         # object_key_prefix,
         # feature_set_version,
         column_types,
@@ -152,9 +151,6 @@ class StatisticsCalculator:
             timeseries_metadata = self.__evaluate_timeseries(data)
             data.update(timeseries_metadata)
 
-            # object_key = s3_paths.path_statistics_overview(self.object_key_prefix)
-            # s3_data.upload_json_sorted(self.s3_client, object_key, data)
-
         increment(
             'statistics.calculate_statistics_overview.success',
             self.data_tags,
@@ -180,14 +176,6 @@ class StatisticsCalculator:
         df_top_value_counts = df_value_counts.copy()
         if df_top_value_counts.shape[0] > VALUE_COUNT_LIMIT:
             df_top_value_counts = df_top_value_counts.head(VALUE_COUNT_LIMIT)
-
-        # TODO: remove duplicate data for distinct values
-        # object_key_distinct_values = \
-        #     s3_paths.path_distinct_values_by_column(self.object_key_prefix, col)
-        # s3_data.upload_dataframe(
-        #     self.s3_client, df_top_value_counts, object_key_distinct_values, columns=[col])
-        # object_key_statistics = s3_paths.path_statistics_by_column(self.object_key_prefix, col)
-        # s3_data.upload_dataframe(self.s3_client, df_top_value_counts, object_key_statistics)
 
         # features = self.feature_set_version['features']
         # feature = find(lambda x: x['uuid'] == col, features)

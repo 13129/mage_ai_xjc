@@ -5,44 +5,43 @@ USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+COPY sources.list /etc/apt/sources.list
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update
+
+
 ## System Packages
 RUN \
-  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-  curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
   NODE_MAJOR=20 && \
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
-  apt-get update -y && \
-  ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
-  # Node
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update -y
+
+RUN  \
+  apt-get install -y --no-install-recommends \
   nodejs \
-  # NFS dependencies
   nfs-common \
-  # odbc dependencies
-  msodbcsql18 \
-  unixodbc-dev \
-  # postgres dependencies \
-  postgresql-client && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+  graphviz
 
-## Chart packages
-# Before fixing, ensure you have merged the chart packages installation step with another apt-get install step to adhere to best practices.
-# If keeping as a separate RUN statement, ensure you follow the same pattern regarding list cleanup and `-y` switch as done for system packages.
-RUN apt-get update -y && \
-  apt-get install -y --no-install-recommends graphviz && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+RUN  apt-get clean &&  rm -rf /var/lib/apt/lists/*
 
+RUN npm config set registry http://registry.npmmirror.com
 ## Node Packages
 RUN npm install --global yarn && yarn global add next
+
+# 设置 pip 使用阿里云的 HTTPS PyPI 镜像源
+RUN pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 
 ## Python Packages
 RUN \
   pip3 install --no-cache-dir sparkmagic && \
-  mkdir ~/.sparkmagic && \
-  curl https://raw.githubusercontent.com/jupyter-incubator/sparkmagic/master/sparkmagic/example_config.json > ~/.sparkmagic/config.json && \
-  sed -i 's/localhost:8998/host.docker.internal:9999/g' ~/.sparkmagic/config.json && \
+  mkdir /root/.sparkmagic
+
+COPY example_config.json /root/.sparkmagic/config.json
+  # curl https://raw.githubusercontent.com/jupyter-incubator/sparkmagic/master/sparkmagic/example_config.json > ~/.sparkmagic/config.json && \
+RUN \
+  sed -i 's/localhost:8998/host.docker.internal:9999/g' /root/.sparkmagic/config.json && \
   jupyter-kernelspec install --user "$(pip3 show sparkmagic | grep Location | cut -d' ' -f2)/sparkmagic/kernels/pysparkkernel"
 # Mage integrations and other related packages
 RUN \
@@ -51,7 +50,6 @@ RUN \
   pip3 install --no-cache-dir "git+https://github.com/mage-ai/singer-python.git#egg=singer-python" && \
   pip3 install --no-cache-dir "git+https://github.com/mage-ai/dbt-mysql.git#egg=dbt-mysql" && \
   pip3 install --no-cache-dir "git+https://github.com/mage-ai/sqlglot#egg=sqlglot" && \
-  # faster-fifo is not supported on Windows: https://github.com/alex-petrenko/faster-fifo/issues/17
   pip3 install --no-cache-dir faster-fifo && \
   pip3 install --no-cache-dir "git+https://github.com/mage-ai/dbt-synapse.git#egg=dbt-synapse"
 COPY mage_integrations /tmp/mage_integrations

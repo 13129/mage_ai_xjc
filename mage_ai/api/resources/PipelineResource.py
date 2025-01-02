@@ -7,7 +7,6 @@ from typing import Dict, List
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 
-from mage_ai.ai.constants import LLMUseCase
 from mage_ai.api.operations.constants import (
     DELETE,
     DETAIL,
@@ -17,7 +16,6 @@ from mage_ai.api.operations.constants import (
 )
 from mage_ai.api.resources.BaseResource import BaseResource
 from mage_ai.api.resources.BlockResource import BlockResource
-from mage_ai.api.resources.LlmResource import LlmResource
 from mage_ai.authentication.operation_history.utils import (
     load_pipelines_detail,
     record_create_pipeline,
@@ -101,7 +99,7 @@ def query_pipeline_schedules(
 class PipelineResource(BaseResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
+    async def collection(cls, query, meta, user, **kwargs):
         context_data = kwargs.get('context_data')
         limit = (meta or {}).get(META_KEY_LIMIT, None)
         if limit is not None:
@@ -393,7 +391,7 @@ class PipelineResource(BaseResource):
         final_end_idx = results_size - 1 if has_next else results_size
 
         arr = results[0:final_end_idx]
-        result_set = self.build_result_set(
+        result_set = cls.build_result_set(
             arr,
             user,
             **kwargs,
@@ -441,70 +439,70 @@ class PipelineResource(BaseResource):
                 execution_framework=payload.get('execution_framework'),
             )
 
-            if llm_payload:
-                llm_use_case = llm_payload.get('use_case')
-
-                if LLMUseCase.GENERATE_PIPELINE_WITH_DESCRIPTION == llm_use_case:
-                    llm_resource = await LlmResource.create(llm_payload, user, **kwargs)
-                    llm_response = llm_resource.model.get('response')
-
-                    blocks_mapping = {}
-
-                    for block_number, block_payload_orig in llm_response.items():
-                        block_payload = block_payload_orig.copy()
-
-                        configuration = block_payload.get('configuration')
-                        if configuration:
-                            for k, v in configuration.items():
-                                configuration[k] = v.value if isinstance(v, Enum) else v
-
-                            block_payload['configuration'] = configuration
-
-                        block_uuid = f'{pipeline.uuid}_block_{block_number}'
-                        block_resource = await BlockResource.create(
-                            merge_dict(
-                                dict(
-                                    name=block_uuid,
-                                    type=block_payload.get('block_type'),
-                                ),
-                                ignore_keys(
-                                    block_payload,
-                                    [
-                                        'block_type',
-                                        'upstream_blocks',
-                                    ],
-                                ),
-                            ),
-                            user,
-                            **merge_dict(
-                                kwargs,
-                                dict(
-                                    parent_model=pipeline,
-                                ),
-                            ),
-                        )
-
-                        upstream_block_uuids = block_payload.get('upstream_blocks')
-
-                        pipeline.add_block(
-                            block_resource.model,
-                            None,
-                            priority=len(upstream_block_uuids) if upstream_block_uuids else 0,
-                            widget=False,
-                        )
-
-                        blocks_mapping[block_number] = dict(
-                            block=block_resource.model,
-                            upstream_block_uuids=upstream_block_uuids,
-                        )
-
-                    for _block_number, config in blocks_mapping.items():
-                        upstream_block_uuids = config['upstream_block_uuids']
-
-                        if upstream_block_uuids and len(upstream_block_uuids) >= 1:
-                            block = config['block']
-                            arr = [f'{pipeline.uuid}_block_{bn}' for bn in upstream_block_uuids]
-                            block.update(dict(upstream_blocks=arr))
+            # if llm_payload:
+            #     llm_use_case = llm_payload.get('use_case')
+            #
+            #     if LLMUseCase.GENERATE_PIPELINE_WITH_DESCRIPTION == llm_use_case:
+            #         llm_resource = await LlmResource.create(llm_payload, user, **kwargs)
+            #         llm_response = llm_resource.model.get('response')
+            #
+            #         blocks_mapping = {}
+            #
+            #         for block_number, block_payload_orig in llm_response.items():
+            #             block_payload = block_payload_orig.copy()
+            #
+            #             configuration = block_payload.get('configuration')
+            #             if configuration:
+            #                 for k, v in configuration.items():
+            #                     configuration[k] = v.value if isinstance(v, Enum) else v
+            #
+            #                 block_payload['configuration'] = configuration
+            #
+            #             block_uuid = f'{pipeline.uuid}_block_{block_number}'
+            #             block_resource = await BlockResource.create(
+            #                 merge_dict(
+            #                     dict(
+            #                         name=block_uuid,
+            #                         type=block_payload.get('block_type'),
+            #                     ),
+            #                     ignore_keys(
+            #                         block_payload,
+            #                         [
+            #                             'block_type',
+            #                             'upstream_blocks',
+            #                         ],
+            #                     ),
+            #                 ),
+            #                 user,
+            #                 **merge_dict(
+            #                     kwargs,
+            #                     dict(
+            #                         parent_model=pipeline,
+            #                     ),
+            #                 ),
+            #             )
+            #
+            #             upstream_block_uuids = block_payload.get('upstream_blocks')
+            #
+            #             pipeline.add_block(
+            #                 block_resource.model,
+            #                 None,
+            #                 priority=len(upstream_block_uuids) if upstream_block_uuids else 0,
+            #                 widget=False,
+            #             )
+            #
+            #             blocks_mapping[block_number] = dict(
+            #                 block=block_resource.model,
+            #                 upstream_block_uuids=upstream_block_uuids,
+            #             )
+            #
+            #         for _block_number, config in blocks_mapping.items():
+            #             upstream_block_uuids = config['upstream_block_uuids']
+            #
+            #             if upstream_block_uuids and len(upstream_block_uuids) >= 1:
+            #                 block = config['block']
+            #                 arr = [f'{pipeline.uuid}_block_{bn}' for bn in upstream_block_uuids]
+            #                 block.update(dict(upstream_blocks=arr))
 
         if pipeline:
             await UsageStatisticLogger(
@@ -582,8 +580,7 @@ class PipelineResource(BaseResource):
         if api_operation_action != DELETE:
             kernel_name = PIPELINE_TO_KERNEL_NAME[pipeline.type]
             switch_active_kernel(
-                kernel_name,
-                emr_config=pipeline.executor_config if kernel_name == KernelName.PYSPARK else None,
+                kernel_name
             )
 
         if api_operation_action == DETAIL:
@@ -671,70 +668,70 @@ class PipelineResource(BaseResource):
         if update_content:
             update_content = update_content[0]
 
-        llm_payload = payload.get('llm')
-        if llm_payload:
-            llm_use_case = llm_payload.get('use_case')
-            llm_request = llm_payload.get('request')
-
-            if 'pipeline_uuid' not in llm_payload:
-                llm_payload['pipeline_uuid'] = self.model.uuid
-
-            llm_resource = await LlmResource.create(llm_payload, self.current_user, **kwargs)
-            llm_response = llm_resource.model.get('response')
-
-            pipeline_doc = None
-            block_docs = []
-            blocks = self.model.blocks_by_uuid.values()
-
-            async def _add_markdown_block(block_doc: str, block_uuid: str, priority: int):
-                return await BlockResource.create(
-                    dict(
-                        content=block_doc.strip() if block_doc else block_doc,
-                        language=BlockLanguage.MARKDOWN,
-                        name=f'Documentation for {block_uuid}',
-                        priority=priority,
-                        type=BlockType.MARKDOWN,
-                    ),
-                    self.current_user,
-                    **merge_dict(
-                        kwargs,
-                        dict(
-                            parent_model=self.model,
-                        ),
-                    ),
-                )
-
-            if LLMUseCase.GENERATE_DOC_FOR_BLOCK == llm_use_case:
-                block_doc = llm_response.get('block_doc')
-                if block_doc:
-                    block_uuid = llm_request.get('block_uuid')
-                    priority = find_index(lambda x: x.uuid == block_uuid, blocks)
-                    await _add_markdown_block(block_doc, block_uuid, priority)
-            elif LLMUseCase.GENERATE_DOC_FOR_PIPELINE == llm_use_case:
-                block_docs = llm_response.get('block_docs', [])
-                pipeline_doc = llm_response.get('pipeline_doc')
-
-                if pipeline_doc:
-                    lines = []
-                    if payload.get('description'):
-                        lines.append(payload.get('description'))
-                    lines.append(pipeline_doc)
-                    payload['description'] = '\n'.join(lines).strip()
-
-            if block_docs and len(block_docs) >= 1:
-                blocks_with_docs = list(zip(block_docs, blocks))
-                blocks_with_docs.reverse()
-                blocks_with_docs_length = len(blocks_with_docs)
-
-                for idx, tup in enumerate(blocks_with_docs):
-                    priority = blocks_with_docs_length - (idx + 1)
-                    block_doc, block = tup
-
-                    if block_doc:
-                        await _add_markdown_block(block_doc, block.uuid, priority)
-
-            if pipeline_doc:
-                await _add_markdown_block(pipeline_doc, self.model.uuid, 0)
+        # llm_payload = payload.get('llm')
+        # if llm_payload:
+        #     llm_use_case = llm_payload.get('use_case')
+        #     llm_request = llm_payload.get('request')
+        #
+        #     if 'pipeline_uuid' not in llm_payload:
+        #         llm_payload['pipeline_uuid'] = self.model.uuid
+        #
+        #     llm_resource = await LlmResource.create(llm_payload, self.current_user, **kwargs)
+        #     llm_response = llm_resource.model.get('response')
+        #
+        #     pipeline_doc = None
+        #     block_docs = []
+        #     blocks = self.model.blocks_by_uuid.values()
+        #
+        #     async def _add_markdown_block(block_doc: str, block_uuid: str, priority: int):
+        #         return await BlockResource.create(
+        #             dict(
+        #                 content=block_doc.strip() if block_doc else block_doc,
+        #                 language=BlockLanguage.MARKDOWN,
+        #                 name=f'Documentation for {block_uuid}',
+        #                 priority=priority,
+        #                 type=BlockType.MARKDOWN,
+        #             ),
+        #             self.current_user,
+        #             **merge_dict(
+        #                 kwargs,
+        #                 dict(
+        #                     parent_model=self.model,
+        #                 ),
+        #             ),
+        #         )
+        #
+        #     if LLMUseCase.GENERATE_DOC_FOR_BLOCK == llm_use_case:
+        #         block_doc = llm_response.get('block_doc')
+        #         if block_doc:
+        #             block_uuid = llm_request.get('block_uuid')
+        #             priority = find_index(lambda x: x.uuid == block_uuid, blocks)
+        #             await _add_markdown_block(block_doc, block_uuid, priority)
+        #     elif LLMUseCase.GENERATE_DOC_FOR_PIPELINE == llm_use_case:
+        #         block_docs = llm_response.get('block_docs', [])
+        #         pipeline_doc = llm_response.get('pipeline_doc')
+        #
+        #         if pipeline_doc:
+        #             lines = []
+        #             if payload.get('description'):
+        #                 lines.append(payload.get('description'))
+        #             lines.append(pipeline_doc)
+        #             payload['description'] = '\n'.join(lines).strip()
+        #
+        #     if block_docs and len(block_docs) >= 1:
+        #         blocks_with_docs = list(zip(block_docs, blocks))
+        #         blocks_with_docs.reverse()
+        #         blocks_with_docs_length = len(blocks_with_docs)
+        #
+        #         for idx, tup in enumerate(blocks_with_docs):
+        #             priority = blocks_with_docs_length - (idx + 1)
+        #             block_doc, block = tup
+        #
+        #             if block_doc:
+        #                 await _add_markdown_block(block_doc, block.uuid, priority)
+        #
+        #     if pipeline_doc:
+        #         await _add_markdown_block(pipeline_doc, self.model.uuid, 0)
 
         pipeline_type = self.model.type
         await self.model.update(

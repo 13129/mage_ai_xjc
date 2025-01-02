@@ -3,7 +3,6 @@ from dataclasses import fields
 from mage_ai.api.presenters.BasePresenter import BasePresenter
 from mage_ai.cluster_manager.config import (
     CloudRunWorkspaceConfig,
-    EcsWorkspaceConfig,
     KubernetesWorkspaceConfig,
 )
 from mage_ai.shared.hash import merge_dict
@@ -22,7 +21,6 @@ class WorkspacePresenter(BasePresenter):
                 'url',
                 *[f.name for f in fields(KubernetesWorkspaceConfig)],
                 *[f.name for f in fields(CloudRunWorkspaceConfig)],
-                *[f.name for f in fields(EcsWorkspaceConfig)],
             ]
         )
     )

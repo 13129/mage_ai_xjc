@@ -8,17 +8,9 @@ from mage_ai.shared.enum import StrEnum
 
 
 class IOConfigKeys(StrEnum):
-    AWS = 'AWS'
-    BIGQUERY = 'BigQuery'
-    CLICKHOUSE = 'ClickHouse'
-    DRUID = 'Druid'
-    DUCKDB = 'DuckDB'
     FILE = 'File'
     PINOT = 'Pinot'
     POSTGRES = 'PostgreSQL'
-    REDSHIFT = 'Redshift'
-    S3 = 'S3'
-    SNOWFLAKE = 'Snowflake'
 
 
 class IOConfig:

@@ -123,7 +123,7 @@ DISABLE_AUTO_BROWSER_OPEN = get_bool_value(os.getenv('DISABLE_AUTO_BROWSER_OPEN'
 DISABLE_AUTORELOAD = get_bool_value(os.getenv('DISABLE_AUTORELOAD', 'False'))
 HIDE_API_TRIGGER_TOKEN = get_bool_value(os.getenv('HIDE_API_TRIGGER_TOKEN', 'False'))
 
-# The hostname in Kubernetes or AWS ECS
+# The hostname in Kubernetes
 HOSTNAME = os.getenv('HOSTNAME')
 INITIAL_METADATA = os.getenv('INITIAL_METADATA')
 LOGS_DIR_PATH = os.getenv('LOGS_DIR_PATH')
@@ -281,8 +281,6 @@ MAGE_SETTINGS_ENVIRONMENT_VARIABLES = [
     'OKTA_DOMAIN_URL',
     'OKTA_CLIENT_ID',
     'OKTA_CLIENT_SECRET',
-    'GOOGLE_CLIENT_ID',
-    'GOOGLE_CLIENT_SECRET',
     'OIDC_CLIENT_ID',
     'OIDC_CLIENT_SECRET',
     'OIDC_DISCOVERY_URL',

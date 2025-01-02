@@ -1,3 +1,3 @@
 export enum CloudProviderSparkClusterEnum {
-  EMR = 'emr',
-};
+    EMR = 'emr',
+  };

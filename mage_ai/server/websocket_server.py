@@ -465,10 +465,7 @@ class WebSocketServer(tornado.websocket.WebSocketHandler):
 
                 execution_uuid = None
                 # Need to cache everything here
-                if (
-                    block.should_track_spark()
-                    and ComputeServiceUUID.AWS_EMR == block.compute_service_uuid
-                ):
+                if block.should_track_spark():
                     execution_uuid = str(uuid.uuid4()).split('-')[0]
                     block.clear_spark_jobs_cache()
                     block.cache_spark_application()

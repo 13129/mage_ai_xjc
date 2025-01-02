@@ -2010,9 +2010,7 @@ function CodeBlock(
     [blockUUID, dataProviderConfig, savePipelineContent],
   );
 
-  const requiresDatabaseName =
-    DataSourceTypeEnum.BIGQUERY === dataProviderConfig[CONFIG_KEY_DATA_PROVIDER] ||
-    DataSourceTypeEnum.SNOWFLAKE === dataProviderConfig[CONFIG_KEY_DATA_PROVIDER];
+  const requiresDatabaseName=[];
 
   const blocksLength = useMemo(() => blocks?.length || 0, [blocks]);
 
@@ -3074,7 +3072,6 @@ df = get_variable('${pipelineUUID}', '${blockUUID}', 'output_0')`;
                             <Spacing mr={1} />
 
                             {![
-                              DataProviderEnum.CLICKHOUSE,
                               DataProviderEnum.MYSQL,
                               // @ts-ignore
                             ].includes(dataProviderConfig[CONFIG_KEY_DATA_PROVIDER]) && (

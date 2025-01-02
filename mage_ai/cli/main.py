@@ -16,7 +16,7 @@ from mage_ai.shared.constants import ENV_VAR_INSTANCE_TYPE, InstanceType
 
 class OrderCommands(TyperGroup):
     def list_commands(self, ctx: Context):
-        """Return list of commands in the order they appear."""
+        """按命令出现的顺序返回命令列表."""
         return list(self.commands)
 
 
@@ -30,69 +30,69 @@ app = typer.Typer(
 INIT_PROJECT_PATH_DEFAULT = typer.Argument(..., help='path of the Mage project to be created.')
 INIT_PROJECT_TYPE_DEFAULT = typer.Option(
     ProjectType.STANDALONE.value,
-    help='type of project to create, options are main, sub, or standalone',
+    help='要创建的项目类型，选项有主、子或独立',
 )
 INIT_CLUSTER_TYPE_DEFAULT = typer.Option(
     None,
-    help='type of instance to create for workspace management',
+    help='要为工作空间管理创建的实例类型',
 )
 INIT_PROJECT_UUID_DEFAULT = typer.Option(
     None,
-    help='project uuid for the new project',
+    help='新项目的项目uid',
 )
 
 START_PROJECT_PATH_DEFAULT = typer.Argument(
-    os.getcwd(), help='path of the Mage project to be loaded.'
+    os.getcwd(), help='要加载的Mage项目的路径.'
 )
-START_HOST_DEFAULT = typer.Option('localhost', help='specify the host.')
-START_PORT_DEFAULT = typer.Option('6789', help='specify the port.')
+START_HOST_DEFAULT = typer.Option('localhost', help='指定主机.')
+START_PORT_DEFAULT = typer.Option('6789', help='指定端口.')
 START_MANAGE_INSTANCE_DEFAULT = typer.Option('0', help='')
 START_DBT_DOCS_INSTANCE_DEFAULT = typer.Option('0', help='')
 START_INSTANCE_TYPE_DEFAULT = typer.Option(
-    InstanceType.SERVER_AND_SCHEDULER.value, help='specify the instance type.'
+    InstanceType.SERVER_AND_SCHEDULER.value, help='指定实例类型.'
 )
 START_PROJECT_TYPE_DEFAULT = typer.Option(
     ProjectType.STANDALONE.value,
-    help='create project of this type if does not exist, options are main, sub, or standalone',
+    help='创建此类型的项目（如果不存在），选项为主项目、子项目或独立项目',
 )
 START_CLUSTER_TYPE_DEFAULT = typer.Option(
     None,
-    help='type of instance to create for workspace management',
+    help='要为工作空间管理创建的实例类型',
 )
 START_PROJECT_UUID_DEFAULT = typer.Option(
     None,
-    help='set project uuid for the repo that is being started',
+    help='为正在启动的存储库设置 Project UUID',
 )
 
 RUN_PROJECT_PATH_DEFAULT = typer.Argument(
-    ..., help='path of the Mage project that contains the pipeline.'
+    ..., help='包含 pipeline 的 Mage 工程的 path.'
 )
-RUN_PIPELINE_UUID_DEFAULT = typer.Argument(..., help='uuid of the pipeline to be run.')
-RUN_TEST_DEFAULT = typer.Option(False, help='specify if tests should be run.')
-RUN_BLOCK_UUID_DEFAULT = typer.Option(None, help='uuid of the block to be run.')
+RUN_PIPELINE_UUID_DEFAULT = typer.Argument(..., help='待运行的 Pipeline 的 uuid.')
+RUN_TEST_DEFAULT = typer.Option(False, help='指定是否应运行测试.')
+RUN_BLOCK_UUID_DEFAULT = typer.Option(None, help='待运行区块的 uuid.')
 RUN_EXECUTION_PARTITION_DEFAULT = typer.Option(None, help='')
 RUN_EXECUTOR_TYPE_DEFAULT = typer.Option(None, help='')
 RUN_CALLBACK_URL_DEFAULT = typer.Option(None, help='')
 RUN_BLOCK_RUN_ID_DEFAULT = typer.Option(None, help='')
 RUN_PIPELINE_RUN_ID_DEFAULT = typer.Option(None, help='')
 RUN_RUNTIME_VARS_DEFAULT = typer.Option(
-    None, help='specify runtime variables. These will overwrite the pipeline global variables.'
+    None, help='指定运行时变量。这些将覆盖管道全局变量.'
 )
-RUN_SKIP_SENSORS_DEFAULT = typer.Option(False, help='specify if the sensors should be skipped.')
+RUN_SKIP_SENSORS_DEFAULT = typer.Option(False, help='指定是否应跳过传感器.')
 RUN_TEMPLATE_RUNTIME_CONFIGURATION_DEFAULT = typer.Option(
-    None, help='runtime configuration of data integration block runs.'
+    None, help='数据集成块运行的运行时配置.'
 )
 CLEAN_LOGS_PROJECT_PATH_DEFAULT = typer.Argument(
-    ..., help='path of the Mage project to clean old logs.'
+    ..., help='path 来清理旧日志。'
 )
-CLEAN_LOGS_PIPELINE_UUID_DEFAULT = typer.Option(None, help='uuid of the pipeline to clean.')
+CLEAN_LOGS_PIPELINE_UUID_DEFAULT = typer.Option(None, help='要清理的管道的 uuid.')
 CLEAN_VARIABLES_PROJECT_PATH_DEFAULT = typer.Argument(
-    ..., help='path of the Mage project to clean variables.'
+    ..., help='清理变量的 Mage 工程的路径.'
 )
-CLEAN_VARIABLES_PIPELINE_UUID_DEFAULT = typer.Option(None, help='uuid of the pipeline to clean.')
+CLEAN_VARIABLES_PIPELINE_UUID_DEFAULT = typer.Option(None, help='要清理的管道的 uuid.')
 
 CREATE_SPARK_CLUSTER_PROJECT_PATH_DEFAULT = typer.Argument(
-    ..., help='path of the Mage project that contains the EMR config.'
+    ..., help='包含 EMR 配置的 Mage 工程的路径.'
 )
 
 
@@ -104,7 +104,7 @@ def init(
     project_uuid: str = INIT_PROJECT_UUID_DEFAULT,
 ):
     """
-    Initialize Mage project.
+    初始化 Mage 工程。
     """
     from mage_ai.data_preparation.repo_manager import init_repo
 
@@ -115,7 +115,7 @@ def init(
         cluster_type=cluster_type,
         project_uuid=project_uuid,
     )
-    print(f'Initialized Mage project at {repo_path}')
+    print(f'初始化 Mage 工程 {repo_path}')
 
 
 @app.command()
@@ -301,19 +301,6 @@ def clean_old_logs(
     LoggerManagerFactory.get_logger_manager(
         pipeline_uuid=pipeline_uuid,
     ).delete_old_logs()
-
-
-@app.command()
-def create_spark_cluster(
-    project_path: str = CREATE_SPARK_CLUSTER_PROJECT_PATH_DEFAULT,
-):
-    """
-    Create EMR cluster for Mage project.
-    """
-    from mage_ai.services.aws.emr.launcher import create_cluster
-
-    project_path = os.path.abspath(project_path)
-    create_cluster(project_path)
 
 
 if __name__ == '__main__':

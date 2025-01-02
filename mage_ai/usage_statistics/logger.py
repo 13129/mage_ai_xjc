@@ -215,13 +215,6 @@ class UsageStatisticLogger():
         for k, v in (self.project.features or {}).items():
             features[k] = 1 if v else 0
 
-        if self.project.repo_config.openai_api_key and \
-                len(self.project.repo_config.openai_api_key) >= 1:
-
-            features['openai'] = 1
-        else:
-            features['openai'] = 0
-
         return await self.__send_message(
             dict(
                 object=EventObjectType.PROJECT,

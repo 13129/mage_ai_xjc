@@ -1,6 +1,5 @@
 import argparse
 import asyncio
-import json
 import os
 import shutil
 import stat
@@ -14,7 +13,6 @@ import pytz
 import tornado.ioloop
 import tornado.web
 from sqlalchemy import or_
-from tornado import autoreload
 from tornado.ioloop import PeriodicCallback
 from tornado.log import enable_pretty_logging
 from tornado.options import options
@@ -86,17 +84,13 @@ from mage_ai.server.terminal_server import (
 from mage_ai.server.websocket_server import WebSocketServer
 from mage_ai.services.redis.redis import init_redis_client
 from mage_ai.services.spark.models.applications import Application
-from mage_ai.services.ssh.aws.emr.utils import file_path as file_path_aws_emr
 from mage_ai.settings import (
     AUTHENTICATION_MODE,
     DEFAULT_OWNER_EMAIL,
     DEFAULT_OWNER_PASSWORD,
     DEFAULT_OWNER_USERNAME,
     DISABLE_AUTO_BROWSER_OPEN,
-    DISABLE_AUTORELOAD,
-    ENABLE_PROMETHEUS,
     OAUTH2_APPLICATION_CLIENT_ID,
-    OTEL_EXPORTER_OTLP_ENDPOINT,
     REDIS_URL,
     REQUESTS_BASE_PATH,
     REQUIRE_USER_AUTHENTICATION,
@@ -110,16 +104,14 @@ from mage_ai.settings import (
 )
 from mage_ai.settings.keys import LDAP_ADMIN_USERNAME
 from mage_ai.settings.repo import (
-    DEFAULT_MAGE_DATA_DIR,
     MAGE_CLUSTER_TYPE_ENV_VAR,
     MAGE_PROJECT_TYPE_ENV_VAR,
     get_metadata_path,
-    get_repo_name,
     get_variables_dir,
     set_repo_path,
 )
 from mage_ai.shared.constants import ENV_VAR_INSTANCE_TYPE, InstanceType
-from mage_ai.shared.environments import is_debug, is_dev
+from mage_ai.shared.environments import is_debug
 from mage_ai.shared.io import chmod
 from mage_ai.shared.logger import LoggingLevel, set_logging_format
 from mage_ai.shared.singletons.memory import get_memory_manager_controller
@@ -208,11 +200,6 @@ def replace_base_path(base_path: str) -> str:
     src = os.path.join(os.path.dirname(__file__), BASE_PATH_TEMPLATE_EXPORTS_FOLDER)
 
     directory = get_variables_dir()
-    # get_variables_dir can return an s3 path. In that case, use the DEFAULT_MAGE_DATA_DIR
-    # directory.
-    if directory.startswith('s3'):
-        directory = os.path.join(os.path.expanduser(DEFAULT_MAGE_DATA_DIR), get_repo_name())
-        os.makedirs(directory, exist_ok=True)
     dst = os.path.join(directory, BASE_PATH_EXPORTS_FOLDER)
     if os.path.exists(dst):
         shutil.rmtree(dst)
@@ -397,64 +384,6 @@ def make_app(
     else:
         routes = routes_full
 
-    if ENABLE_PROMETHEUS or OTEL_EXPORTER_OTLP_ENDPOINT:
-        from opentelemetry.instrumentation.tornado import TornadoInstrumentor
-
-        TornadoInstrumentor().instrument()
-        logger.info('OpenTelemetry instrumentation enabled.')
-
-    if OTEL_EXPORTER_OTLP_ENDPOINT:
-        logger.info(f'OTEL_EXPORTER_OTLP_ENDPOINT: {OTEL_EXPORTER_OTLP_ENDPOINT}')
-
-        from opentelemetry import trace
-        from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
-            OTLPSpanExporter,
-        )
-        from opentelemetry.sdk.resources import Resource
-        from opentelemetry.sdk.trace import TracerProvider
-        from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-        service_name = 'mage-ai-server'
-        resource = Resource(
-            attributes={
-                'service.name': service_name,
-            }
-        )
-
-        # Set up a TracerProvider and attach an OTLP exporter to it
-        trace.set_tracer_provider(TracerProvider(resource=resource))
-        tracer_provider = trace.get_tracer_provider()
-
-        # Configure OTLP exporter
-        otlp_exporter = OTLPSpanExporter(
-            # Endpoint of your OpenTelemetry Collector
-            endpoint=OTEL_EXPORTER_OTLP_ENDPOINT,
-            # Use insecure channel if your collector does not support TLS
-            insecure=True,
-        )
-
-        # Attach the OTLP exporter to the TracerProvider
-        span_processor = BatchSpanProcessor(otlp_exporter)
-        tracer_provider.add_span_processor(span_processor)
-
-    if ENABLE_PROMETHEUS:
-        from opentelemetry import metrics
-        from opentelemetry.exporter.prometheus import PrometheusMetricReader
-        from opentelemetry.instrumentation.tornado import TornadoInstrumentor
-        from opentelemetry.sdk.metrics import MeterProvider
-        from opentelemetry.sdk.resources import SERVICE_NAME, Resource
-
-        TornadoInstrumentor().instrument()
-        # Service name is required for most backends
-        resource = Resource(attributes={SERVICE_NAME: 'mage'})
-
-        # Initialize PrometheusMetricReader which pulls metrics from the SDK
-        # on-demand to respond to scrape requests
-        reader = PrometheusMetricReader()
-        provider = MeterProvider(resource=resource, metric_readers=[reader])
-        metrics.set_meter_provider(provider)
-        routes += [(r'/metrics', PrometheusMetricsHandler)]
-
     if update_routes:
         updated_routes = []
         for route in routes:
@@ -462,22 +391,8 @@ def make_app(
     else:
         updated_routes = routes
 
-    file_path = file_path_aws_emr()
-    if not os.path.exists(file_path):
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, 'w') as f:
-            f.write(json.dumps({}))
-
-    if is_dev() and not DISABLE_AUTORELOAD:
-        should_autoreload = True
-        autoreload.add_reload_hook(scheduler_manager.stop_scheduler)
-        autoreload.watch(file_path)
-    else:
-        should_autoreload = False
-
     return tornado.web.Application(
         updated_routes,
-        autoreload=should_autoreload,
         template_path=template_dir,
     )
 
@@ -697,18 +612,6 @@ async def main(
                     print(f'[ERROR] FileCache.initialize_cache_with_settings: {err}.')
                     if is_debug():
                         raise err
-
-        try:
-            from mage_ai.services.ssh.aws.emr.models import create_tunnel
-
-            tunnel = create_tunnel(
-                clean_up_on_failure=True,
-                project=project_model,
-            )
-            if tunnel:
-                print(f'SSH tunnel active: {tunnel.is_active()}')
-        except Exception as err:
-            print(f'[WARNING] SSH tunnel failed to create and connect: {err}')
 
     if ProjectType.MAIN == project_type:
         # Check scheduler status periodically

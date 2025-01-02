@@ -22,16 +22,4 @@ def get_template_vars_no_db(include_python_libraries: Dict = None) -> Dict[str, 
     if include_python_libraries:
         kwargs.update(include_python_libraries)
 
-    try:
-        from mage_ai.services.aws.secrets_manager.secrets_manager import get_secret
-        kwargs['aws_secret_var'] = get_secret
-    except Exception:
-        pass
-
-    try:
-        from mage_ai.services.azure.key_vault.key_vault import get_secret
-        kwargs['azure_secret_var'] = get_secret
-    except Exception:
-        pass
-
     return kwargs

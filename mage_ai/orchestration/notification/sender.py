@@ -7,13 +7,8 @@ from mage_ai.orchestration.notification.config import (
     MessageTemplate,
     NotificationConfig,
 )
-from mage_ai.services.discord.discord import send_discord_message
 from mage_ai.services.email.email import send_email
-from mage_ai.services.google_chat.google_chat import send_google_chat_message
 from mage_ai.services.opsgenie.opsgenie import send_opsgenie_alert
-from mage_ai.services.slack.slack import send_slack_message
-from mage_ai.services.teams.teams import send_teams_message
-from mage_ai.services.telegram.telegram import send_telegram_message
 from mage_ai.settings import DEFAULT_LOCALHOST_URL, MAGE_PUBLIC_HOST
 
 DEFAULT_MESSAGES = dict(
@@ -61,36 +56,6 @@ class NotificationSender:
         """
         if summary is None:
             return
-        if self.config.slack_config is not None and self.config.slack_config.is_valid:
-            try:
-                send_slack_message(self.config.slack_config, details or summary, title)
-            except Exception:
-                traceback.print_exc()
-
-        if self.config.teams_config is not None and self.config.teams_config.is_valid:
-            try:
-                send_teams_message(self.config.teams_config, summary)
-            except Exception:
-                traceback.print_exc()
-
-        if self.config.discord_config is not None and self.config.discord_config.is_valid:
-            try:
-                send_discord_message(self.config.discord_config, summary, title)
-            except Exception:
-                traceback.print_exc()
-
-        if self.config.telegram_config is not None and self.config.telegram_config.is_valid:
-            try:
-                send_telegram_message(self.config.telegram_config, summary, title)
-            except Exception:
-                traceback.print_exc()
-
-        if self.config.google_chat_config is not None and self.config.google_chat_config.is_valid:
-            try:
-                send_google_chat_message(self.config.google_chat_config, summary)
-            except Exception:
-                traceback.print_exc()
-
         if self.config.email_config is not None and title is not None:
             try:
                 send_email(

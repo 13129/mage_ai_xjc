@@ -278,16 +278,6 @@ class KafkaSource(BaseSource):
     def __deserialize_message(self, message):
         if self.config.serde_config is None:
             return self.__deserialize_json(message)
-        if (
-            self.config.serde_config.serialization_method
-            == SerializationMethod.PROTOBUF
-            and self.schema_class is not None
-        ):
-            from google.protobuf.json_format import MessageToDict
-
-            obj = self.schema_class()
-            obj.ParseFromString(message)
-            return MessageToDict(obj)
         elif self.config.serde_config.serialization_method == SerializationMethod.AVRO:
             return self.avro_serde.value.deserialize(message)
         elif (

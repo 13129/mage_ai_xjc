@@ -55,8 +55,6 @@ class ExecutorFactory:
             b. If the pipeline type is STREAMING, use StreamingPipelineExecutor.
             c. Otherwise, use default PipelineExecutor.
 
-        TODO: Add pipeline executor for GCP_CLOUD_RUN executor_type
-
         Args:
             pipeline (Pipeline): The pipeline to be executed.
             execution_partition (Union[str, None], optional): The execution partition of the
@@ -65,19 +63,8 @@ class ExecutorFactory:
                 specified. Use this executor_type directly.        """
 
         executor_type = self.get_pipeline_executor_type(pipeline, executor_type=executor_type)
-        if executor_type == ExecutorType.PYSPARK:
-            from mage_ai.data_preparation.executors.pyspark_pipeline_executor import (
-                PySparkPipelineExecutor,
-            )
 
-            # Run pipeline on EMR cluster
-            return PySparkPipelineExecutor(pipeline)
-        elif executor_type == ExecutorType.ECS:
-            from mage_ai.data_preparation.executors.ecs_pipeline_executor import (
-                EcsPipelineExecutor,
-            )
-            return EcsPipelineExecutor(pipeline, execution_partition=execution_partition)
-        elif executor_type == ExecutorType.K8S:
+        if executor_type == ExecutorType.K8S:
             from mage_ai.data_preparation.executors.k8s_pipeline_executor import (
                 K8sPipelineExecutor,
             )
@@ -137,26 +124,7 @@ class ExecutorFactory:
                         # Use default executor type
                         executor_type = self.get_default_executor_type()
 
-        if executor_type == ExecutorType.PYSPARK:
-            from mage_ai.data_preparation.executors.pyspark_block_executor import (
-                PySparkBlockExecutor,
-            )
-            return PySparkBlockExecutor(**executor_kwargs)
-        elif executor_type == ExecutorType.AZURE_CONTAINER_INSTANCE:
-            from mage_ai.data_preparation.executors.azure_container_instance_executor import (
-                AzureContainerInstanceExecutor,
-            )
-            return AzureContainerInstanceExecutor(**executor_kwargs)
-        elif executor_type == ExecutorType.ECS:
-            from mage_ai.data_preparation.executors.ecs_block_executor import (
-                EcsBlockExecutor,
-            )
-            return EcsBlockExecutor(**executor_kwargs)
-        elif executor_type == ExecutorType.GCP_CLOUD_RUN:
-            from mage_ai.data_preparation.executors.gcp_cloud_run_block_executor import (
-                GcpCloudRunBlockExecutor,
-            )
-            return GcpCloudRunBlockExecutor(**executor_kwargs)
+
         elif executor_type == ExecutorType.K8S:
             from mage_ai.data_preparation.executors.k8s_block_executor import (
                 K8sBlockExecutor,

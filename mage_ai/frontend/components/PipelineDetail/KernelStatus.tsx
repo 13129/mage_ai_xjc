@@ -130,7 +130,7 @@ function KernelStatus({
     alive,
     usage,
   } = kernel || {};
-  const [selectedSparkClusterType, setSelectedSparkClusterType] =
+  const [selectedSparkClusterType] = 
     useState(CloudProviderSparkClusterEnum.EMR);
   const [showSelectCluster, setShowSelectCluster] = useState(false);
   const [showSelectKernel, setShowSelectKernel] = useState(false);

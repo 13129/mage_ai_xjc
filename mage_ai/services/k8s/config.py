@@ -23,7 +23,6 @@ from mage_ai.shared.hash import get_safe_value
 # import traceback
 
 DEFAULT_SERVICE_ACCOUNT_NAME = 'default'
-ECS_CONTAINER_METADATA_URI_VAR = 'ECS_CONTAINER_METADATA_URI_V4'
 
 
 @dataclass

@@ -98,17 +98,7 @@ function ConnectionSettings({
     })),
     [objectAttributesSparkConfig],
   );
-  const emrJarFiles: JarFileType[] = useMemo(() => (objectAttributesEMRConfig?.spark_jars || [])
-    .map(val => ({
-      config: JarFileConfigEnum.EMR,
-      value: val,
-    })),
-    [objectAttributesEMRConfig],
-  );
-  const allJarFiles: JarFileType[] = useMemo(() => sparkJarFiles.concat(emrJarFiles), [
-    emrJarFiles,
-    sparkJarFiles,
-  ]);
+  let allJarFiles;
   const hasJarFiles = useMemo(() => allJarFiles?.length >= 1, [allJarFiles]);
   const jarFileExists = useMemo(() => (allJarFiles || [])
     .some(jarFile => jarFile.value === newJarFile), 
@@ -178,22 +168,12 @@ function ConnectionSettings({
               pauseEvent(e);
 
               if (!jarFileExists) {
-                if (selectedComputeService === ComputeServiceUUIDEnum.AWS_EMR) {
-                  const updatedJarFiles = emrJarFiles
-                    .map(({ value }) => value)
-                    .concat(newJarFile);
-                  setObjectAttributesEMRConfig({
-                    spark_jars: updatedJarFiles,
-                  });
-                } else {
                   const updatedJarFiles = sparkJarFiles
                     .map(({ value }) => value)
                     .concat(newJarFile);
                   setObjectAttributesSparkConfig({
                     spark_jars: updatedJarFiles,
                   });
-                }
-
                 setIsAddingNewJarFile(false);
                 setNewJarFile(null);
               }
@@ -222,17 +202,7 @@ function ConnectionSettings({
         </>
       )}
     </FlexContainer>
-  ), [
-    isAddingNewJarFile,
-    hasJarFiles,
-    jarFileExists,
-    newJarFile,
-    emrJarFiles,
-    selectedComputeService,
-    setObjectAttributesEMRConfig,
-    sparkJarFiles,
-    setObjectAttributesSparkConfig,
-  ]);
+  ), [isAddingNewJarFile, hasJarFiles, jarFileExists, newJarFile, sparkJarFiles, setObjectAttributesSparkConfig]);
 
   const jarFilesMemo = useMemo(() => allJarFiles?.map(({ config, value }: JarFileType, idx: number) => (
     <div key={value}>
@@ -246,17 +216,11 @@ function ConnectionSettings({
             noBorder
             noPadding
             onClick={() => {
-              if (config === JarFileConfigEnum.EMR) {
-                const jarFiles = emrJarFiles.map(({ value }) => value);
-                setObjectAttributesEMRConfig({
-                  spark_jars: removeAtIndex(jarFiles, idx - sparkJarFiles.length),
-                });
-              } else {
+
                 const jarFiles = sparkJarFiles.map(({ value }) => value);
                 setObjectAttributesSparkConfig({
                   spark_jars: removeAtIndex(jarFiles, idx),
                 });
-              }
             }}
           >
             <Trash default size={ICON_SIZE} />
@@ -285,13 +249,7 @@ function ConnectionSettings({
         </FlexContainer>
       </Spacing>
     </div>
-  )), [
-    allJarFiles,
-    emrJarFiles,
-    setObjectAttributesEMRConfig,
-    setObjectAttributesSparkConfig,
-    sparkJarFiles,
-  ]);
+  )), [allJarFiles, setObjectAttributesSparkConfig, sparkJarFiles]);
 
   const awsEMRSetupMemo = useMemo(() => {
     const remoteVariablesDirKey = 'remote_variables_dir';

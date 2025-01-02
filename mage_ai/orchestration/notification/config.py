@@ -1,13 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from mage_ai.services.discord.config import DiscordConfig
 from mage_ai.services.email.config import EmailConfig
-from mage_ai.services.google_chat.config import GoogleChatConfig
 from mage_ai.services.opsgenie.config import OpsgenieConfig
-from mage_ai.services.slack.config import SlackConfig
-from mage_ai.services.teams.config import TeamsConfig
-from mage_ai.services.telegram.config import TelegramConfig
 from mage_ai.shared.config import BaseConfig
 from mage_ai.shared.enum import StrEnum
 
@@ -42,10 +37,5 @@ class MessageTemplates(BaseConfig):
 class NotificationConfig(BaseConfig):
     alert_on: List[AlertOn] = field(default_factory=lambda: DEFAULT_ALERT_ON)
     email_config: EmailConfig = None
-    google_chat_config: GoogleChatConfig = None
     opsgenie_config: OpsgenieConfig = None
-    slack_config: SlackConfig = None
-    teams_config: TeamsConfig = None
-    discord_config: DiscordConfig = None
-    telegram_config: TelegramConfig = None
     message_templates: MessageTemplates = None

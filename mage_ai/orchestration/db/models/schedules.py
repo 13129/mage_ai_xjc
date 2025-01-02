@@ -1806,9 +1806,9 @@ class BlockRun(BlockRunProjectPlatformMixin, BaseModel):
 
 class EventMatcher(BaseModel):
     class EventType(StrEnum):
-        AWS_EVENT = 'aws_event'
+        ...
 
-    event_type = Column(Enum(EventType), default=EventType.AWS_EVENT)
+    event_type = Column(Enum(EventType), default='')
     name = Column(String(255))
     pattern = Column(JSON)
 
@@ -1875,13 +1875,6 @@ class EventMatcher(BaseModel):
             if ids is not None:
                 ps = [pipeline_schedules_by_id[i] for i in [int(i) for i in ids]]
                 event_matcher.update(pipeline_schedules=ps)
-
-            if event_matcher.event_type == EventMatcher.EventType.AWS_EVENT:
-                from mage_ai.services.aws.events.events import update_event_rule_targets
-
-                # For AWS event, update related AWS infra (add trigger to lambda function)
-                update_event_rule_targets(event_matcher.name)
-
         return [t[0] for t in event_matchers_and_pipeline_schedule_ids]
 
     def active_pipeline_schedules(self) -> List[PipelineSchedule]:

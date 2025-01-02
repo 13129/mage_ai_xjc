@@ -256,9 +256,6 @@ class Pipeline:
     @property
     def remote_variables_dir(self):
         remote_variables_dir = self.repo_config.remote_variables_dir
-        if remote_variables_dir == 's3://bucket/path_prefix':
-            # Filter out default value
-            return None
         return remote_variables_dir
 
     @property

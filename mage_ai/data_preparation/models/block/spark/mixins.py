@@ -64,7 +64,6 @@ class SparkBlock:
 
     def is_using_spark(self) -> bool:
         return self.compute_service_uuid in [
-            ComputeServiceUUID.AWS_EMR,
             ComputeServiceUUID.STANDALONE_CLUSTER,
         ]
 
@@ -111,10 +110,6 @@ class SparkBlock:
             execution_timestamp_start: float = self.execution_timestamp_start,
             execution_uuid_start=self.execution_uuid_start,
         ) -> bool:
-            if ComputeServiceUUID.AWS_EMR == compute_service_uuid:
-                key = self.execution_uuid_start or self.execution_timestamp_start
-                return job.name == f'{block_uuid}:{key}'
-
             if not job.submission_time:
                 return False
 

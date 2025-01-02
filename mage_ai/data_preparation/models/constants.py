@@ -86,9 +86,6 @@ class CallbackStatus(StrEnum):
 
 
 class ExecutorType(StrEnum):
-    AZURE_CONTAINER_INSTANCE = 'azure_container_instance'
-    ECS = 'ecs'
-    GCP_CLOUD_RUN = 'gcp_cloud_run'
     K8S = 'k8s'
     LOCAL_PYTHON = 'local_python'
     # Force using local python when default executor is set

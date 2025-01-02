@@ -251,9 +251,7 @@ class DBTBlock(Block):
                             ) as dbt_adapter:
                                 credentials = dbt_adapter.credentials
                                 # some databases use other default schema names
-                                # e.g. duckdb uses main schema as default
                                 schema = getattr(credentials, 'schema', None)
-
                             Sources(project_path).reset_pipeline(
                                 project_name=Path(project_path).stem,
                                 pipeline_uuid=pipeline_uuid,

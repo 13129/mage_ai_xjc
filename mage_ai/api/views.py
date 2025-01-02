@@ -112,23 +112,23 @@ def __determine_action(
     pk: Union[None, int, str] = None,
 ) -> Tuple[str, str]:
     if 'DELETE' == request.method:
-        return (DELETE, __parse_request_body(request))
+        return DELETE, __parse_request_body(request)
 
     if 'GET' == request.method:
         if pk and child and child_pk:
-            return (DETAIL, request.query_arguments)
+            return DETAIL, request.query_arguments
         elif pk and child and not child_pk:
-            return (LIST, request.query_arguments)
+            return LIST, request.query_arguments
         elif pk and not child:
-            return (DETAIL, request.query_arguments)
+            return DETAIL, request.query_arguments
         elif not pk:
-            return (LIST, request.query_arguments)
+            return LIST, request.query_arguments
 
     if 'POST' == request.method:
-        return (CREATE, __parse_request_body(request))
+        return CREATE, __parse_request_body(request)
 
     if 'PUT' == request.method:
-        return (UPDATE, __parse_request_body(request))
+        return UPDATE, __parse_request_body(request)
 
 
 def __meta(request) -> Dict:

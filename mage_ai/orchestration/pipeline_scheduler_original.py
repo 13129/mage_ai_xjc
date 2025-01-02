@@ -1425,7 +1425,6 @@ def cancel_block_runs_and_jobs(
                 )
         if pipeline_run.executor_type == ExecutorType.K8S:
             """
-            TODO: Support running and cancelling pipeline runs in ECS and GCP_CLOUD_RUN executors
             """
             ExecutorFactory.get_pipeline_executor(
                 pipeline,

@@ -45,14 +45,6 @@ class Application(BaseSparkModel):
     @classmethod
     def load(self, **kwargs):
         payload = kwargs.copy() if kwargs else {}
-
-        if ComputeServiceUUID.AWS_EMR == get_compute_service(ignore_active_kernel=True):
-            if payload.get('id'):
-                parts = urllib.parse.unquote(payload.get('id')).split('/')
-                if len(parts) >= 2:
-                    payload['id'] = parts[0]
-                    payload['attempts_count'] = parts[1]
-
         return super().load(**payload)
 
     @classmethod
@@ -97,15 +89,6 @@ class Application(BaseSparkModel):
         return data
 
     def calculated_id(self) -> str:
-        if ComputeServiceUUID.AWS_EMR == get_compute_service(ignore_active_kernel=True):
-            count = 1
-            if self.attempts:
-                count = len(self.attempts)
-            elif self.attempts_count is not None:
-                count = self.attempts_count
-
-            return f'{self.id}/{count}'
-
         return self.id
 
     def to_dict(self, **kwargs) -> Dict:

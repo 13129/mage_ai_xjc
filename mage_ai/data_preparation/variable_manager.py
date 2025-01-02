@@ -22,7 +22,6 @@ from mage_ai.io.base import ExportWritePolicy
 from mage_ai.settings.platform import project_platform_activated
 from mage_ai.settings.repo import get_repo_path, get_variables_dir
 from mage_ai.settings.server import MEMORY_MANAGER_V2
-from mage_ai.shared.constants import GCS_PREFIX, S3_PREFIX
 from mage_ai.shared.dates import str_to_timedelta
 from mage_ai.shared.environments import is_debug
 from mage_ai.shared.strings import to_ordinal_integers
@@ -51,12 +50,7 @@ class VariableManager:
             repo_path=repo_path,
             variables_dir=variables_dir,
         )
-        if variables_dir is not None and variables_dir.startswith(S3_PREFIX):
-            return S3VariableManager(**manager_args)
-        elif variables_dir is not None and variables_dir.startswith(GCS_PREFIX):
-            return GCSVariableManager(**manager_args)
-        else:
-            return VariableManager(**manager_args)
+        return VariableManager(**manager_args)
 
     def add_variable(
         self,
@@ -478,22 +472,6 @@ class VariableManager:
             if not self.storage.path_exists(path):
                 self.storage.makedirs(path, exist_ok=True)
         return path
-
-
-class S3VariableManager(VariableManager):
-    def __init__(self, repo_path=None, variables_dir=None):
-        super().__init__(repo_path=repo_path, variables_dir=variables_dir)
-        from mage_ai.data_preparation.storage.s3_storage import S3Storage
-
-        self.storage = S3Storage(dirpath=variables_dir)
-
-
-class GCSVariableManager(VariableManager):
-    def __init__(self, repo_path=None, variables_dir=None):
-        super().__init__(repo_path=repo_path, variables_dir=variables_dir)
-        from mage_ai.data_preparation.storage.gcs_storage import GCSStorage
-
-        self.storage = GCSStorage(dirpath=variables_dir)
 
 
 def clean_variables(pipeline_uuid: str = None):
