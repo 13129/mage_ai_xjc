@@ -6,7 +6,7 @@ logger = Logger().new_server_logger(__name__)
 
 
 def get_messages(callback=None):
-    now = datetime.utcnow()
+    now = datetime.now()
 
     while True:
         try:

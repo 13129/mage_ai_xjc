@@ -108,7 +108,7 @@ class MongoDBIncremental(TestCase):
         return {
             'simple_coll_1': {49, 50, 51, 0},
             'simple_coll_2': {99, 100, 101, 0},
-            **{"simple_coll_{}".format(k): {49, 50, 51, 0} for k in self.key_names() if k not in ("simple_coll_int_field")},
+            **{"simple_coll_{}".format(k): {49, 50, 51, 0} for k in self.key_names() if k not in "simple_coll_int_field"},
             'simple_coll_int_field': {49, 50, 51, 52}
         }
 
@@ -293,26 +293,26 @@ class MongoDBIncremental(TestCase):
             client["simple_db"]["simple_coll_2"].find_one_and_update({"_id": update_doc_coll_2["_id"]}, {"$set": {"date_field": datetime(2020, 1, 1, 19, 29, 14, 578000)}})
 
             for key_name in self.key_names():
-                if (key_name == 'int_field'):
+                if key_name == 'int_field':
                     # get the first document in the collection to update
                     doc_to_update = client["simple_db"]["simple_coll_{}".format(key_name)].find_one(sort=[("{}".format(key_name), -1)])
                     value = doc_to_update["{}".format(key_name)]
                     int_based_coll = client["simple_db"]["simple_coll_{}".format(key_name)].find_one()
                     client["simple_db"]["simple_coll_{}".format(key_name)].find_one_and_update({"_id": int_based_coll["_id"]}, {"$set": {"{}".format(key_name): value+3}})
-                elif (key_name == 'double_field'):
+                elif key_name == 'double_field':
                     doc_to_update = client["simple_db"]["simple_coll_{}".format(key_name)].find_one(sort=[("{}".format(key_name), -1)])
                     value = doc_to_update["{}".format(key_name)]
                     double_based_coll = client["simple_db"]["simple_coll_{}".format(key_name)].find_one()
                     client["simple_db"]["simple_coll_{}".format(key_name)].find_one_and_update({"_id": double_based_coll["_id"]}, {"$set": {"{}".format(key_name): value+3}})
-                elif (key_name == '64_bit_int_field'):
+                elif key_name == '64_bit_int_field':
                     doc_to_update = client["simple_db"]["simple_coll_{}".format(key_name)].find_one(sort=[("{}".format(key_name), -1)])
                     value = doc_to_update["{}".format(key_name)]
                     bit64_int_based_coll = client["simple_db"]["simple_coll_{}".format(key_name)].find_one()
                     client["simple_db"]["simple_coll_{}".format(key_name)].find_one_and_update({"_id": bit64_int_based_coll["_id"]}, {"$set": {"{}".format(key_name): value+3}})
-                elif (key_name == 'date_field'):
+                elif key_name == 'date_field':
                     date_based_coll = client["simple_db"]["simple_coll_{}".format(key_name)].find_one()
                     client["simple_db"]["simple_coll_{}".format(key_name)].find_one_and_update({"_id": date_based_coll["_id"]}, {"$set": {"{}".format(key_name): datetime(2021, 1, 1, 15, 30, 14, 222000)}})
-                elif (key_name == 'timestamp_field'):
+                elif key_name == 'timestamp_field':
                     timestamp_based_coll = client["simple_db"]["simple_coll_{}".format(key_name)].find_one()
                     client["simple_db"]["simple_coll_{}".format(key_name)].find_one_and_update({"_id": timestamp_based_coll["_id"]}, {"$set": {"{}".format(key_name): bson.timestamp.Timestamp(1565897157+99, 1)}})
 

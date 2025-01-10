@@ -67,8 +67,8 @@ def generate_docs_boolean_id():
 
 def generate_docs_date_id():
     docs = []
-    d1 = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-    d2 = datetime.datetime.utcnow()
+    d1 = datetime.datetime.now() - datetime.timedelta(days=1)
+    d2 = datetime.datetime.now()
     docs.append({"_id": d1, "string_field": random_string_generator()})
     docs.append({"_id": d2, "string_field": random_string_generator()})
     return docs
@@ -169,7 +169,7 @@ class MongoDbPrimaryKeyIdVariation(unittest.TestCase):
             'coll_with_64_bit_int_id': [9223372036854775800, 9223372036854775799],
             'coll_with_int_id': [0, 1, 2, 3, 4],
             'coll_with_32_bit_int_id': [2147483640, 2147483620],
-            'coll_with_date_id': [datetime.datetime.utcnow() - datetime.timedelta(days=1), datetime.datetime.utcnow()],
+            'coll_with_date_id': [datetime.datetime.now() - datetime.timedelta(days=1), datetime.datetime.now()],
             'coll_with_double_id': [decimal.Decimal('546.43'), decimal.Decimal('555.56')]
             }
 
@@ -181,7 +181,7 @@ class MongoDbPrimaryKeyIdVariation(unittest.TestCase):
             'coll_with_64_bit_int_id': int,
             'coll_with_int_id': int,
             'coll_with_32_bit_int_id': int,
-            'coll_with_date_id': [datetime.datetime.utcnow() - datetime.timedelta(days=1), datetime.datetime.utcnow()],
+            'coll_with_date_id': [datetime.datetime.now() - datetime.timedelta(days=1), datetime.datetime.now()],
             'coll_with_double_id': decimal.Decimal
             }
 
@@ -205,9 +205,9 @@ class MongoDbPrimaryKeyIdVariation(unittest.TestCase):
                 }
 
     def test_run(self):
-        '''
+        """
         Running the test with all the available replication methods
-        '''
+        """
 
         for replication in replication_method:
             if replication != 'INCREMENTAL':

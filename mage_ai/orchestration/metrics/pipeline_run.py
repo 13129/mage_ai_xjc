@@ -2,7 +2,7 @@ import json
 import re
 from copy import deepcopy
 from typing import Dict, List, Tuple
-
+from mage_ai.utils.logger import Logger
 from mage_ai.data_preparation.models.constants import PipelineType
 from mage_ai.orchestration.db.models.schedules import BlockRun, PipelineRun
 from mage_ai.shared.hash import merge_dict
@@ -220,7 +220,6 @@ def __calculate_metrics(pipeline_run: PipelineRun, pipeline) -> Dict:
 
     pipeline_metrics_by_stream = {}
     pipeline_logs_by_stream = {}
-    print("测试111111",pipeline_run.logs[1]['content'].split('\n'))
     pipeline_logs = pipeline_run.logs[1]['content'].split('\n')
     for pipeline_log in pipeline_logs:
         tags = parse_line(pipeline_log)

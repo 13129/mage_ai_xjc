@@ -191,7 +191,7 @@ def build_time_series_buckets(
 
     max_value_datetime_ts = max_value_datetime.timestamp()
 
-    now = datetime.utcnow()
+    now = datetime.now()
     interval_seconds = (
         now + TIME_INTERVAL_TO_TIME_DELTA[time_interval]
     ).timestamp() - now.timestamp()

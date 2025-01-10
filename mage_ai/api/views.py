@@ -29,7 +29,7 @@ async def execute_operation(
         resource=resource,
         user_id=user_id,
     )
-    start_time = datetime.utcnow()
+    start_time = datetime.now()
 
     meta = __meta(request)
     http_error_codes = (meta or {}).get('_http_error_codes', False)
@@ -69,7 +69,7 @@ async def execute_operation(
         )
         raise err
 
-    end_time = datetime.utcnow()
+    end_time = datetime.now()
 
     error_response = response.get('error', None)
     if error_response:
@@ -244,7 +244,7 @@ def __log_error(
 
     error(
         '[{}] [ERROR] {} /{} [user: {}]: {}'.format(
-            datetime.utcnow(),
+            datetime.now(),
             request.method,
             endpoint,
             user_id,

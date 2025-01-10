@@ -68,7 +68,7 @@ class MemoryManager:
                             /[process_uuid].log
         """
         if not self._log_path:
-            now = datetime.utcnow()
+            now = datetime.now()
 
             datetime_partitions = []
             for partition_name in SYSTEM_LOGS_PARTITIONS:

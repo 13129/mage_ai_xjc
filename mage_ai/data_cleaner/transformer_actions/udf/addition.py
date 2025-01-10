@@ -25,7 +25,9 @@ class Addition(BaseUDF):
             )
         return df_result
 
-    def __add_value(self, original_column, value, column_type=None, options={}):
+    def __add_value(self, original_column, value, column_type=None, options=None):
+        if options is None:
+            options = {}
         if column_type == ColumnType.DATETIME:
             time_unit = options.get('time_unit', 'd')
             return (

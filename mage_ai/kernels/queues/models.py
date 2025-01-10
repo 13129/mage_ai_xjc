@@ -12,4 +12,4 @@ class Message(BaseDataClass):
     timestamp: Optional[int] = None
 
     def __post_init__(self):
-        self.timestamp = int(datetime.utcnow().timestamp() * 1000)
+        self.timestamp = int(datetime.now().timestamp() * 1000)

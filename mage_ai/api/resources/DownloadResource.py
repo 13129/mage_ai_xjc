@@ -45,7 +45,7 @@ class DownloadResource(GenericResource):
         return [zip_name, file_list]
 
     def generate_download_token(file_name, file_list, ignore_folder_structure):
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now()
         payload = {
             'file_name': file_name,
             'file_list': file_list,

@@ -21,7 +21,7 @@ def clean_column_name(col, lower_case: bool = True, handle_leading_underscore: b
         # Oracle does not allow column names to start with an underscore,
         # so we need to wrap it with quotes.
         col_new = f'"{col_new}"'
-    if col_new.upper() in (SQL_RESERVED_WORDS):
+    if col_new.upper() in SQL_RESERVED_WORDS:
         if handle_leading_underscore:
             col_new = f'"_{col_new}"'
         else:

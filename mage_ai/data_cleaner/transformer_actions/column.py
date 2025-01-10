@@ -203,7 +203,7 @@ def reformat(df, action, **kwargs):
             try:
                 df.loc[:, column] = clean_col.astype(float)
             except ValueError:
-                logger.warn(
+                logger.warning(
                     f'Currency conversion applied on non-numerical column \'{column}\''
                     ': no action taken'
                 )

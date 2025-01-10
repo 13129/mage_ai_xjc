@@ -170,7 +170,7 @@ class GlobalDataProduct:
             d = relativedelta(**delta)
 
             if in_seconds:
-                now = datetime.utcnow().replace(tzinfo=timezone.utc)
+                now = datetime.now().replace(tzinfo=timezone.utc)
 
                 return ((now + d) - now).total_seconds()
             else:
@@ -203,7 +203,7 @@ class GlobalDataProduct:
             value = outdated_starting_at.get(key, None)
             if value is not None:
                 value2 = extract_value_from_datetime(
-                    now or datetime.utcnow().replace(tzinfo=timezone.utc),
+                    now or datetime.now().replace(tzinfo=timezone.utc),
                 )
                 values[key] = dict(
                     current=value2,
@@ -235,7 +235,7 @@ class GlobalDataProduct:
         if not pipeline_run:
             return [True, True]
 
-        now = datetime.utcnow().replace(tzinfo=timezone.utc)
+        now = datetime.now().replace(tzinfo=timezone.utc)
 
         execution_date = self.next_run_at(pipeline_run)
         if not execution_date:

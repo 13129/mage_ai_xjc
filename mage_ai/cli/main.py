@@ -104,7 +104,7 @@ def init(
     project_uuid: str = INIT_PROJECT_UUID_DEFAULT,
 ):
     """
-    初始化 Mage 工程。
+    初始化 Mage 项目。
     """
     from mage_ai.data_preparation.repo_manager import init_repo
 
@@ -115,7 +115,7 @@ def init(
         cluster_type=cluster_type,
         project_uuid=project_uuid,
     )
-    print(f'初始化 Mage 工程 {repo_path}')
+    print(f'初始化 Mage 项目路径{repo_path}')
 
 
 @app.command()
@@ -131,11 +131,11 @@ def start(
     project_uuid: str = START_PROJECT_UUID_DEFAULT,
 ):
     """
-    Start Mage server and UI.
+    启动Mage服务器和UI.
     """
     from mage_ai.settings.repo import set_repo_path
 
-    # Set repo_path before intializing the DB so that we can get correct db_connection_url
+    # 在初始化DB之前设置repo_path，这样我们就可以得到正确的db_connection_url
     project_path = os.path.abspath(project_path)
     set_repo_path(project_path)
 
@@ -173,7 +173,7 @@ def run(
     template_runtime_configuration: Union[str, None] = RUN_TEMPLATE_RUNTIME_CONFIGURATION_DEFAULT,
 ):
     """
-    Run pipeline.
+    运行管道.
     """
     from mage_ai.settings.repo import set_repo_path
 

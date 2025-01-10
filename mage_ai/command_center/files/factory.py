@@ -60,21 +60,21 @@ class FileFactory(BaseFactory):
                 files.append(scored)
 
         if self.search:
-            now = datetime.utcnow().timestamp()
+            now = datetime.now().timestamp()
             cache = FileCache.initialize_cache_with_settings()
             lines = await cache.load() or []
             print(
-                f"[FileFactory] Load files: {len(lines)} - {datetime.utcnow().timestamp() - now}"
+                f"[FileFactory] Load files: {len(lines)} - {datetime.now().timestamp() - now}"
             )
 
-            now = datetime.utcnow().timestamp()
+            now = datetime.now().timestamp()
             await asyncio.gather(*[build_and_score(item_dict) for item_dict in lines])
             print(
                 f"[FileFactory] Search {self.search}: "
-                f"{len(files)} - {datetime.utcnow().timestamp() - now}",
+                f"{len(files)} - {datetime.now().timestamp() - now}",
             )
 
-            now = datetime.utcnow().timestamp()
+            now = datetime.now().timestamp()
             files = await self.rank_items(files)
             files = [
                 merge_dict(
@@ -83,6 +83,6 @@ class FileFactory(BaseFactory):
                 )
                 for item_dict in files
             ]
-            print(f"[FileFactory] Rank items: {datetime.utcnow().timestamp() - now}")
+            print(f"[FileFactory] Rank items: {datetime.now().timestamp() - now}")
 
         return files[:10] + items

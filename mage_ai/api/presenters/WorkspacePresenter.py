@@ -10,19 +10,8 @@ from mage_ai.shared.hash import merge_dict
 
 class WorkspacePresenter(BasePresenter):
     default_attributes = list(
-        set(
-            [
-                'access',
-                'cluster_type',
-                'instance',
-                'name',
-                'repo_path',
-                'success',
-                'url',
-                *[f.name for f in fields(KubernetesWorkspaceConfig)],
-                *[f.name for f in fields(CloudRunWorkspaceConfig)],
-            ]
-        )
+        {'access', 'cluster_type', 'instance', 'name', 'repo_path', 'success', 'url',
+         *[f.name for f in fields(KubernetesWorkspaceConfig)], *[f.name for f in fields(CloudRunWorkspaceConfig)]}
     )
 
     async def present(self, **kwargs):

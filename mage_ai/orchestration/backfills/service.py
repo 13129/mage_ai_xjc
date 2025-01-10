@@ -28,7 +28,7 @@ def start_backfill(backfill: Backfill) -> List[PipelineRun]:
             name=f'Backfill {backfill.name}',
             pipeline_uuid=backfill.pipeline_uuid,
             schedule_interval=ScheduleInterval.ONCE,
-            start_time=datetime.utcnow(),
+            start_time=datetime.now(),
             variables=backfill_variables,
             settings=backfill.settings,
         )

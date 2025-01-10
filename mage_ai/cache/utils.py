@@ -117,7 +117,7 @@ def build_pipeline_dict(
     return dict(
         added_at=added_at,
         pipeline=pipeline_output_dict,
-        updated_at=datetime.utcnow().timestamp(),
+        updated_at=datetime.now().timestamp(),
     )
 
 

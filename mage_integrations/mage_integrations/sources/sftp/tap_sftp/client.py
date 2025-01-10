@@ -22,7 +22,7 @@ def handle_backoff(details):
     )
 
 
-class SFTPConnection():
+class SFTPConnection:
     def __init__(self,
                  host,
                  username,
@@ -48,7 +48,7 @@ class SFTPConnection():
     # minute for SSH connection to succeed. 2^6 + 2^5 + ...
     @backoff.on_exception(
         backoff.expo,
-        (EOFError),
+        EOFError,
         max_tries=6,
         on_backoff=handle_backoff,
         jitter=None,
@@ -136,7 +136,7 @@ class SFTPConnection():
                     LOGGER.warning("Cannot read m_time for file %s, \
                                     defaulting to current epoch time",
                                    os.path.join(prefix, file_attr.filename))
-                    last_modified = datetime.utcnow().timestamp()
+                    last_modified = datetime.now().timestamp()
 
                 # NB: SFTP specifies path characters to be '/'
                 #     https://tools.ietf.org/html/draft-ietf-secsh-filexfer-13#section-6

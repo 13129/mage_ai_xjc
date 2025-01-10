@@ -1,8 +1,9 @@
 import importlib
+from typing import List, Dict
 
 
-class BaseUDF():
-    def __init__(self, df, arguments=[], code=None, options={}, kwargs={}):
+class BaseUDF:
+    def __init__(self, df, arguments:List=None, code=None, options:Dict=None, kwargs:Dict=None):
         self.df = df
         self.arguments = arguments
         self.code = code

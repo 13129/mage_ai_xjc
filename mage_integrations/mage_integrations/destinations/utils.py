@@ -33,7 +33,7 @@ def flatten_record(d, parent_key='', sep='__'):
 
 
 def update_record_with_internal_columns(record):
-    curr_time = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
+    curr_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
     record[INTERNAL_COLUMN_CREATED_AT] = curr_time
     record[INTERNAL_COLUMN_UPDATED_AT] = curr_time
     return record

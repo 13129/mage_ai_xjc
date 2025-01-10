@@ -1555,7 +1555,7 @@ class Block(
                     )
 
                     logger_manager = LoggerManagerFactory.get_logger_manager(
-                        block_uuid=datetime.utcnow().strftime(format='%Y%m%dT%H%M%S'),
+                        block_uuid=datetime.now().strftime(format='%Y%m%dT%H%M%S'),
                         partition=LOG_PARTITION_EDIT_PIPELINE,
                         pipeline_uuid=self.pipeline_uuid,
                         subpartition=clean_name(self.uuid),
@@ -1961,7 +1961,7 @@ class Block(
             stdout = sys.stdout
 
         with redirect_stdout(stdout) as out, redirect_stderr(stdout) as err:
-            yield (out, err)
+            yield out, err
 
     def _execute_block(
         self,

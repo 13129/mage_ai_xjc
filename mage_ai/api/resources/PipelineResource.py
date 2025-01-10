@@ -167,7 +167,7 @@ class PipelineResource(BaseResource):
         history_by_pipeline_uuid = {}
         if from_history_days is not None and is_number(from_history_days):
             timestamp_start = (
-                datetime.utcnow()
+                datetime.now()
                 - timedelta(
                     hours=24 * int(from_history_days),
                 )

@@ -80,7 +80,7 @@ class ExecutorFactory:
 
     @classmethod
     def get_block_executor(
-        self,
+        cls,
         pipeline: Pipeline,
         block_uuid: str,
         block_run_id: int = None,
@@ -122,7 +122,7 @@ class ExecutorFactory:
                     executor_type = block.get_executor_type()
                     if executor_type == ExecutorType.LOCAL_PYTHON or not executor_type:
                         # Use default executor type
-                        executor_type = self.get_default_executor_type()
+                        executor_type = cls.get_default_executor_type()
 
 
         if executor_type == ExecutorType.K8S:

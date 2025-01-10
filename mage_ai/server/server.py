@@ -651,7 +651,7 @@ async def main(
     # Used for the magic kernel
     tornado.ioloop.IOLoop.current().start()
 
-
+# 程序入口点
 def start_server(
     host: str = None,
     port: str = None,
@@ -674,6 +674,7 @@ def start_server(
         project = os.path.join(os.getcwd(), 'default_repo')
 
     if not os.path.exists(project):
+        # 初始化项目
         init_repo(
             project,
             project_type=project_type,
@@ -683,8 +684,9 @@ def start_server(
     set_repo_path(project)
     init_project_uuid(overwrite_uuid=project_uuid, root_project=True)
 
+    # 异步执行统计数据日志记录
     asyncio.run(UsageStatisticLogger().project_impression())
-
+    # 设置日志样式及等级
     set_logging_format(
         logging_format=SERVER_LOGGING_FORMAT,
         level=SERVER_VERBOSITY,
@@ -695,6 +697,8 @@ def start_server(
     enable_pretty_logging()
 
     if dbt_docs:
+        # todo 改为单独控制
+        # 运行dbt文档服务器
         run_docs_server()
     else:
         set_db_schema()

@@ -264,7 +264,7 @@ class VariableManager:
         if retention_ds is None:
             return
 
-        min_partition = (datetime.utcnow() - retention_ds).strftime(format='%Y%m%dT%H%M%S')
+        min_partition = (datetime.now() - retention_ds).strftime(format='%Y%m%dT%H%M%S')
 
         print(f'Clean variables before partition {min_partition}')
         if pipeline_uuid is None:

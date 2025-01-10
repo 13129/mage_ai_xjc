@@ -143,7 +143,7 @@ def update_source_state_from_destination_state(
 
 
 def parse_args(required_config_keys):
-    '''Parse standard command-line args.
+    """Parse standard command-line args.
 
     Parses the command-line arguments mentioned in the SPEC and the
     BEST_PRACTICES documents:
@@ -157,7 +157,7 @@ def parse_args(required_config_keys):
     Returns the parsed args object from argparse. For each argument that
     point to JSON files (config, state, properties), we will automatically
     load and parse the JSON file.
-    '''
+    """
     parser = argparse.ArgumentParser()
 
     # This can be included in the settings file or in the config_json

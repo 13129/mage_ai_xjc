@@ -9,7 +9,7 @@ from mage_ai.shared.environments import is_debug
 class CodeExecutionResource(GenericResource):
     @classmethod
     async def create(cls, payload, user, **kwargs) -> GenericResource:
-        now = datetime.utcnow().timestamp()
+        now = datetime.now().timestamp()
         if is_debug():
             print('[CodeExecutionResource.create]', now)
 

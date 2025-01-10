@@ -169,4 +169,4 @@ def get_path_parts(file_path: str) -> Tuple[str, str, str]:
         except ValueError:
             pass
 
-    return (root_project_full_path, path, str(file_path_base))
+    return root_project_full_path, path, str(file_path_base)

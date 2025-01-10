@@ -11,7 +11,9 @@ options = {
 initialize(**options)
 
 
-def create_event(title, text, tags={}):
+def create_event(title, text, tags=None):
+    if tags is None:
+        tags = {}
     return api.Event.create(
         title=title,
         text=text,
@@ -19,19 +21,23 @@ def create_event(title, text, tags={}):
     )
 
 
-def gauge(metric, value, host='mage', tags={}):
+def gauge(metric, value, host='mage', tags=None):
+    if tags is None:
+        tags = {}
     return api.Metric.send(
         host=host,
         metric=metric,
         points=[
-            (datetime.utcnow().timestamp(), value),
+            (datetime.now().timestamp(), value),
         ],
         tags=tags,
         type='gauge',
     )
 
 
-def increment(metric, tags={}, value=1):
+def increment(metric, tags=None, value=1):
+    if tags is None:
+        tags = {}
     return create_metrics([
         (metric, value, tags),
     ])
@@ -52,36 +58,42 @@ def create_metrics(metrics, host='mage', metric_type='count'):
     return api.Metric.send(metrics=arr)
 
 
-def create_metric(metric, value, host='mage', tags={}):
+def create_metric(metric, value, host='mage', tags=None):
+    if tags is None:
+        tags = {}
     return api.Metric.send(
         host=host,
         metric=metric,
         points=[
-            (datetime.utcnow().timestamp(), value),
+            (datetime.now().timestamp(), value),
         ],
         tags=tags,
         type='count',
     )
 
 
-def histogram(metric, value, host='mage', tags={}):
+def histogram(metric, value, host='mage', tags=None):
+    if tags is None:
+        tags = {}
     return api.Metric.send(
         host=host,
         metric=metric,
         points=[
-            (datetime.utcnow().timestamp(), value),
+            (datetime.now().timestamp(), value),
         ],
         tags=tags,
         type='histogram',
     )
 
 
-def timing(metric, value, host='mage', tags={}):
+def timing(metric, value, host='mage', tags=None):
+    if tags is None:
+        tags = {}
     return api.Metric.send(
         host=host,
         metric=metric,
         points=[
-            (datetime.utcnow().timestamp(), value),
+            (datetime.now().timestamp(), value),
         ],
         tags=tags,
         type='timer',
@@ -92,7 +104,9 @@ class timed_decorator(object):
     """
     @timed_decorator('metric.metric', tags={ 'key': 'value' })
     """
-    def __init__(self, metric, tags={}):
+    def __init__(self, metric, tags=None):
+        if tags is None:
+            tags = {}
         self.metric = metric
         self.tags = tags
 
@@ -108,7 +122,9 @@ class timer(object):
     with timer('metric.metric', tags={ 'key': 'value' }):
         function()
     """
-    def __init__(self, metric, tags={}):
+    def __init__(self, metric, tags=None):
+        if tags is None:
+            tags = {}
         self.metric = metric
         self.start = None
         self.tags = tags

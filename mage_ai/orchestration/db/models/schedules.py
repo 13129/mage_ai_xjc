@@ -299,7 +299,7 @@ class PipelineSchedule(PipelineScheduleProjectPlatformMixin, BaseModel):
         return query.all()
 
     @classmethod
-    def create(self, **kwargs) -> 'PipelineSchedule':
+    def create(cls, **kwargs) -> 'PipelineSchedule':
         if 'token' not in kwargs:
             kwargs['token'] = uuid.uuid4().hex
         model = super().create(**kwargs)
@@ -1339,7 +1339,7 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
 
     @classmethod
     def create(
-        self,
+        cls,
         create_block_runs: bool = True,
         prevent_duplicates: bool = False,
         **kwargs,
@@ -1706,8 +1706,8 @@ class BlockRun(BlockRunProjectPlatformMixin, BaseModel):
 
     @classmethod
     @safe_db_query
-    def get(self, pipeline_run_id: int = None, block_uuid: str = None) -> 'BlockRun':
-        block_runs = self.query.filter(
+    def get(cls, pipeline_run_id: int = None, block_uuid: str = None) -> 'BlockRun':
+        block_runs = cls.query.filter(
             BlockRun.pipeline_run_id == pipeline_run_id,
             BlockRun.block_uuid == block_uuid,
         ).all()

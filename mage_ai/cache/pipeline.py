@@ -124,7 +124,7 @@ class PipelineCache(BaseCache):
 
     def add_model(self, model, repo_path: str = None) -> None:
         self.update_model(
-            model, added_at=datetime.utcnow().timestamp(), repo_path=repo_path
+            model, added_at=datetime.now().timestamp(), repo_path=repo_path
         )
 
     def move_model(self, new_model, old_model, repo_path: str = None) -> None:

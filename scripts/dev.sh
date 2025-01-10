@@ -133,7 +133,7 @@ case $key in
     shift # past value
     ;;
     --debug)
-    DEBUG=1
+    DEBUG=0
     shift # past argument
     shift # past value
     ;;

@@ -42,14 +42,18 @@ class Model:
         if not os.path.isdir(self.dir):
             os.mkdir(self.dir)
 
-    def read_json_file(self, file_name, default_value={}):
+    def read_json_file(self, file_name, default_value=None):
+        if default_value is None:
+            default_value = {}
         file_path = os.path.join(self.dir, file_name)
         if not os.path.exists(file_path):
             return default_value
         with open(file_path) as file:
             return json.load(file)
 
-    def write_json_file(self, file_name, obj={}, subdir=None):
+    def write_json_file(self, file_name, obj=None, subdir=None):
+        if obj is None:
+            obj = {}
         if subdir is None:
             dir_path = self.dir
         else:

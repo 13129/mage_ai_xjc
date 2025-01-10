@@ -12,24 +12,24 @@ from mage_ai.version_control.models import Project
 
 class VersionControlProjectResource(VersionControlErrors, AsyncBaseResource):
     @classmethod
-    async def collection(self, query: Dict, _meta: Dict, user: User, **kwargs):
-        return self.build_result_set(
+    async def collection(cls, query: Dict, _meta: Dict, user: User, **kwargs):
+        return cls.build_result_set(
             Project.load_all(),
             user,
             **kwargs,
         )
 
     @classmethod
-    async def create(self, payload: Dict, user: User, **kwargs):
+    async def create(cls, payload: Dict, user: User, **kwargs):
         model = Project.create(payload['uuid'])
 
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res
 
     @classmethod
-    def get_model(self, pk, **kwargs):
+    def get_model(cls, pk, **kwargs):
         model = Project.load(uuid=urllib.parse.unquote(pk))
 
         if not model.exists():
@@ -38,8 +38,8 @@ class VersionControlProjectResource(VersionControlErrors, AsyncBaseResource):
         return model
 
     @classmethod
-    async def member(self, pk: str, user: User, **kwargs):
-        model = self.get_model(pk)
+    async def member(cls, pk: str, user: User, **kwargs):
+        model = cls.get_model(pk)
 
         sync_resource = SyncResource.member(None, user, repo_path=model.repo_path)
         result = SyncResource.presenter_class()(
@@ -51,7 +51,7 @@ class VersionControlProjectResource(VersionControlErrors, AsyncBaseResource):
             result = await result
         model.sync_config = result
 
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res
@@ -63,7 +63,7 @@ class VersionControlProjectResource(VersionControlErrors, AsyncBaseResource):
             self.model.configure(name=payload.get('name'))
 
         if payload.get('sync_config'):
-            SyncResource.create(
+            await SyncResource.create(
                 payload.get('sync_config'),
                 self.current_user,
                 repo_name=self.model.repo_path,

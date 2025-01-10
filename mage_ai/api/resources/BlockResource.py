@@ -38,7 +38,7 @@ from mage_ai.usage_statistics.logger import UsageStatisticLogger
 class BlockResource(GenericResource):
     @classmethod
     @safe_db_query
-    def collection(self, query_arg, meta, user, **kwargs):
+    def collection(cls, query_arg, meta, user, **kwargs):
         parent_model = kwargs.get('parent_model')
 
         block_uuids = query_arg.get('block_uuid[]', [])
@@ -60,15 +60,15 @@ class BlockResource(GenericResource):
                 block_uuids,
             )
 
-        return self.build_result_set(
+        return cls.build_result_set(
             block_dicts_by_uuid.values(),
             user,
             **kwargs,
         )
 
     @classmethod
-    async def process_collection(self, query_arg, meta, user, **kwargs):
-        total_results = self.collection(query_arg, meta, user, **kwargs)
+    async def process_collection(cls, query_arg, meta, user, **kwargs):
+        total_results = cls.collection(query_arg, meta, user, **kwargs)
         total_count = len(total_results)
 
         limit = int((meta or {}).get(META_KEY_LIMIT, 0))
@@ -87,7 +87,7 @@ class BlockResource(GenericResource):
             final_end_idx = results_size - 1 if has_next else results_size
             final_results = results[0:final_end_idx]
 
-        result_set = self.build_result_set(
+        result_set = cls.build_result_set(
             final_results,
             user,
             **kwargs,
@@ -100,7 +100,7 @@ class BlockResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    async def create(self, payload, user, **kwargs):
+    async def create(cls, payload, user, **kwargs):
         pipeline = kwargs.get('parent_model')
         block = None
 
@@ -250,11 +250,11 @@ class BlockResource(GenericResource):
                 replicated_block=replicated_block,
             )
 
-        return self(block, user, **kwargs)
+        return cls(block, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         error = ApiError.RESOURCE_INVALID.copy()
 
         query = kwargs.get('query', {})
@@ -272,7 +272,7 @@ class BlockResource(GenericResource):
             pk = urllib.parse.unquote(pk)
             block = pipeline.get_block(pk, block_type=block_type, extension_uuid=extension_uuid)
             if block:
-                return self(block, user, **kwargs)
+                return cls(block, user, **kwargs)
             else:
                 if extension_uuid:
                     message = f'Block {pk} does not exist in pipeline {pipeline.uuid} ' \
@@ -293,7 +293,7 @@ class BlockResource(GenericResource):
                 block = None
 
             if block:
-                return self(block, user, **kwargs)
+                return cls(block, user, **kwargs)
             else:
                 error.update(ApiError.RESOURCE_NOT_FOUND)
                 raise ApiError(error)
@@ -339,7 +339,7 @@ class BlockResource(GenericResource):
             error.update(ApiError.RESOURCE_NOT_FOUND)
             raise ApiError(error)
 
-        return self(block, user, **kwargs)
+        return cls(block, user, **kwargs)
 
     @safe_db_query
     async def delete(self, **kwargs):

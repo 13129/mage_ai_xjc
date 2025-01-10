@@ -90,7 +90,7 @@ class Kernel:
         message_request_uuid: Optional[str] = None,
         timestamp: Optional[float] = None,
     ) -> ProcessBase:
-        now = datetime.utcnow().timestamp()
+        now = datetime.now().timestamp()
 
         if is_debug():
             print('[Manager.start_processes]', now - (timestamp or 0))

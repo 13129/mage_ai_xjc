@@ -33,33 +33,33 @@ class BaseParser:
         self.policy = policy
 
     @classmethod
-    def query_parser(self, query_parameter: str) -> Dict:
-        if not self.query_parsers.get(self.__name__):
-            self.query_parsers[self.__name__] = {}
-        return self.query_parsers[self.__name__].get(query_parameter)
+    def query_parser(cls, query_parameter: str) -> Dict:
+        if not cls.query_parsers.get(cls.__name__):
+            cls.query_parsers[cls.__name__] = {}
+        return cls.query_parsers[cls.__name__].get(query_parameter)
 
     @classmethod
-    def read_parser(self, resource_attribute: str) -> Dict:
-        if not self.read_parsers.get(self.__name__):
-            self.read_parsers[self.__name__] = {}
-        return self.read_parsers[self.__name__].get(resource_attribute)
+    def read_parser(cls, resource_attribute: str) -> Dict:
+        if not cls.read_parsers.get(cls.__name__):
+            cls.read_parsers[cls.__name__] = {}
+        return cls.read_parsers[cls.__name__].get(resource_attribute)
 
     @classmethod
-    def write_parser(self, resource_attribute: str) -> Dict:
-        if not self.write_parsers.get(self.__name__):
-            self.write_parsers[self.__name__] = {}
-        return self.write_parsers[self.__name__].get(resource_attribute)
+    def write_parser(cls, resource_attribute: str) -> Dict:
+        if not cls.write_parsers.get(cls.__name__):
+            cls.write_parsers[cls.__name__] = {}
+        return cls.write_parsers[cls.__name__].get(resource_attribute)
 
     @classmethod
     def parse_query(
-        self,
+        cls,
         parser: Callable[['BaseParser', Any, Union[ApiError], Dict], Any],
         on_action: Union[List[OperationType], OperationType] = None,
         on_authorize_status: Union[List[AuthorizeStatusType], AuthorizeStatusType] = None,
         scopes: List[OauthScopeType] = None,
     ) -> None:
-        if not self.query_parsers.get(self.__name__):
-            self.query_parsers[self.__name__] = {}
+        if not cls.query_parsers.get(cls.__name__):
+            cls.query_parsers[cls.__name__] = {}
 
         actions = on_action or [OperationType.ALL.value]
         if not isinstance(actions, list):
@@ -70,26 +70,26 @@ class BaseParser:
             authorize_statuses = [authorize_statuses]
 
         for scope in (scopes or [OauthScopeType.ALL]):
-            if not self.query_parsers[self.__name__].get(scope):
-                self.query_parsers[self.__name__][scope] = {}
+            if not cls.query_parsers[cls.__name__].get(scope):
+                cls.query_parsers[cls.__name__][scope] = {}
 
             for action in actions:
-                if not self.query_parsers[self.__name__][scope].get(action):
-                    self.query_parsers[self.__name__][scope][action] = {}
+                if not cls.query_parsers[cls.__name__][scope].get(action):
+                    cls.query_parsers[cls.__name__][scope][action] = {}
 
                 for authorize_status in authorize_statuses:
-                    self.query_parsers[self.__name__][scope][action][authorize_status] = parser
+                    cls.query_parsers[cls.__name__][scope][action][authorize_status] = parser
 
     @classmethod
     def parse_read(
-        self,
+        cls,
         parser: Callable[['BaseParser', Any, Union[ApiError, Dict]], Any],
         on_action: Union[List[OperationType], OperationType] = None,
         on_authorize_status: Union[List[AuthorizeStatusType], AuthorizeStatusType] = None,
         scopes: List[OauthScopeType] = None,
     ) -> None:
-        if not self.read_parsers.get(self.__name__):
-            self.read_parsers[self.__name__] = {}
+        if not cls.read_parsers.get(cls.__name__):
+            cls.read_parsers[cls.__name__] = {}
 
         actions = on_action or [OperationType.ALL.value]
         if not isinstance(actions, list):
@@ -100,26 +100,26 @@ class BaseParser:
             authorize_statuses = [authorize_statuses]
 
         for scope in (scopes or [OauthScopeType.ALL]):
-            if not self.read_parsers[self.__name__].get(scope):
-                self.read_parsers[self.__name__][scope] = {}
+            if not cls.read_parsers[cls.__name__].get(scope):
+                cls.read_parsers[cls.__name__][scope] = {}
 
             for action in actions:
-                if not self.read_parsers[self.__name__][scope].get(action):
-                    self.read_parsers[self.__name__][scope][action] = {}
+                if not cls.read_parsers[cls.__name__][scope].get(action):
+                    cls.read_parsers[cls.__name__][scope][action] = {}
 
                 for authorize_status in authorize_statuses:
-                    self.read_parsers[self.__name__][scope][action][authorize_status] = parser
+                    cls.read_parsers[cls.__name__][scope][action][authorize_status] = parser
 
     @classmethod
     def parse_write(
-        self,
+        cls,
         parser: Callable[['BaseParser', Any, Union[ApiError, Dict]], Any],
         on_action: Union[List[OperationType], OperationType] = None,
         on_authorize_status: Union[List[AuthorizeStatusType], AuthorizeStatusType] = None,
         scopes: List[OauthScopeType] = None,
     ) -> None:
-        if not self.write_parsers.get(self.__name__):
-            self.write_parsers[self.__name__] = {}
+        if not cls.write_parsers.get(cls.__name__):
+            cls.write_parsers[cls.__name__] = {}
 
         actions = on_action or [OperationType.ALL.value]
         if not isinstance(actions, list):
@@ -130,15 +130,15 @@ class BaseParser:
             authorize_statuses = [authorize_statuses]
 
         for scope in (scopes or [OauthScopeType.ALL]):
-            if not self.write_parsers[self.__name__].get(scope):
-                self.write_parsers[self.__name__][scope] = {}
+            if not cls.write_parsers[cls.__name__].get(scope):
+                cls.write_parsers[cls.__name__][scope] = {}
 
             for action in actions:
-                if not self.write_parsers[self.__name__][scope].get(action):
-                    self.write_parsers[self.__name__][scope][action] = {}
+                if not cls.write_parsers[cls.__name__][scope].get(action):
+                    cls.write_parsers[cls.__name__][scope][action] = {}
 
                 for authorize_status in authorize_statuses:
-                    self.write_parsers[self.__name__][scope][action][authorize_status] = parser
+                    cls.write_parsers[cls.__name__][scope][action][authorize_status] = parser
 
     async def parse_query_and_authorize(
         self,

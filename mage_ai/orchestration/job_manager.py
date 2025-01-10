@@ -88,14 +88,14 @@ class JobManager:
         return f'{job_type}_{uid}'
 
 
-job_manager = None
+# job_manager = None
 
 
 def get_job_manager() -> JobManager:
-    global job_manager
-    if job_manager is None:
-        job_manager = JobManager()
-    return job_manager
+    # global job_manager
+    # if job_manager is None:
+    #     job_manager = JobManager()
+    return JobManager()
 
 
 if __name__ == '__main__':

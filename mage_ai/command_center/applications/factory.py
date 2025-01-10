@@ -91,6 +91,6 @@ class ApplicationFactory(BaseFactory):
     def score_item(self, item_dict: Dict, score: int = None) -> int:
         timestamp = ((item_dict.get('metadata') or {}).get('page') or {}).get('timestamp')
         if timestamp:
-            now = datetime.utcnow().timestamp()
+            now = datetime.now().timestamp()
             return score + (DEFAULT_RATIO * (now / timestamp))
         return score

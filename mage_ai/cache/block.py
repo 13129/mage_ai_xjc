@@ -22,7 +22,7 @@ class BlockCache(BaseCache):
 
     @classmethod
     async def initialize_cache(
-        self,
+        cls,
         caches: List[BaseCache] = None,
         file_path: str = None,
         replace: bool = False,
@@ -30,7 +30,7 @@ class BlockCache(BaseCache):
         root_project: bool = True,
     ) -> 'BlockCache':
         repo_path = repo_path or get_repo_path(root_project=root_project)
-        cache = self(repo_path=repo_path)
+        cache = cls(repo_path=repo_path)
         if replace or not cache.exists():
             await cache.initialize_cache_for_all_pipelines(caches=caches, file_path=file_path)
 
@@ -110,7 +110,7 @@ class BlockCache(BaseCache):
         return pipeline_count_mapping
 
     def add_pipeline(self, block, pipeline, repo_path: str) -> None:
-        self.update_pipeline(block, pipeline, repo_path, added_at=datetime.utcnow().timestamp())
+        self.update_pipeline(block, pipeline, repo_path, added_at=datetime.now().timestamp())
 
     def move_pipelines(self, new_block, old_block, repo_path: str) -> None:
         new_key = self.build_key(new_block, repo_path=repo_path)

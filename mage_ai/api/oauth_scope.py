@@ -1,7 +1,7 @@
 from mage_ai.shared.enum import StrEnum
 
 
-class OauthScope():
+class OauthScope:
     SCOPE_DELIMITER = ','
 
     CLIENT_ALL = 'all'

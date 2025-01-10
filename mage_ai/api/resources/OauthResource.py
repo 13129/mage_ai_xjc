@@ -130,7 +130,7 @@ class OauthResource(GenericResource):
         else:
             expire_timedelta = get_default_expire_time(provider)
         if access_token:
-            access_token.expires = datetime.utcnow() + expire_timedelta
+            access_token.expires = datetime.now() + expire_timedelta
             access_token.save()
         else:
             access_token = generate_access_token(

@@ -69,89 +69,89 @@ class BasePolicy(UserPermissionMixIn, ResultSetMixIn):
         return Entity.PROJECT, get_project_uuid()
 
     @classmethod
-    def action_rule(self, action):
+    def action_rule(cls, action):
         if REQUIRE_USER_PERMISSIONS:
-            return self.action_rule_with_permissions(action)
+            return cls.action_rule_with_permissions(action)
 
-        if not self.action_rules.get(self.__name__):
-            self.action_rules[self.__name__] = {}
-        return self.action_rules[self.__name__].get(action)
-
-    @classmethod
-    def override_permission_action_rule(self, action):
-        if not self.override_permission_action_rules.get(self.__name__):
-            self.override_permission_action_rules[self.__name__] = {}
-        return self.override_permission_action_rules[self.__name__].get(action)
+        if not cls.action_rules.get(cls.__name__):
+            cls.action_rules[cls.__name__] = {}
+        return cls.action_rules[cls.__name__].get(action)
 
     @classmethod
-    def query_rule(self, query):
+    def override_permission_action_rule(cls, action):
+        if not cls.override_permission_action_rules.get(cls.__name__):
+            cls.override_permission_action_rules[cls.__name__] = {}
+        return cls.override_permission_action_rules[cls.__name__].get(action)
+
+    @classmethod
+    def query_rule(cls, query):
         if REQUIRE_USER_PERMISSIONS:
-            return self.attribute_rule_with_permissions(AttributeOperationType.QUERY, query)
+            return cls.attribute_rule_with_permissions(AttributeOperationType.QUERY, query)
 
-        if not self.query_rules.get(self.__name__):
-            self.query_rules[self.__name__] = {}
-        return self.query_rules[self.__name__].get(query)
-
-    @classmethod
-    def override_permission_query_rule(self, query):
-        if not self.override_permission_query_rules.get(self.__name__):
-            self.override_permission_query_rules[self.__name__] = {}
-        return self.override_permission_query_rules[self.__name__].get(query)
+        if not cls.query_rules.get(cls.__name__):
+            cls.query_rules[cls.__name__] = {}
+        return cls.query_rules[cls.__name__].get(query)
 
     @classmethod
-    def read_rule(self, read):
+    def override_permission_query_rule(cls, query):
+        if not cls.override_permission_query_rules.get(cls.__name__):
+            cls.override_permission_query_rules[cls.__name__] = {}
+        return cls.override_permission_query_rules[cls.__name__].get(query)
+
+    @classmethod
+    def read_rule(cls, read):
         if REQUIRE_USER_PERMISSIONS:
-            return self.attribute_rule_with_permissions(AttributeOperationType.READ, read)
+            return cls.attribute_rule_with_permissions(AttributeOperationType.READ, read)
 
-        if not self.read_rules.get(self.__name__):
-            self.read_rules[self.__name__] = {}
-        return self.read_rules[self.__name__].get(read)
-
-    @classmethod
-    def override_permission_read_rule(self, read):
-        if not self.override_permission_read_rules.get(self.__name__):
-            self.override_permission_read_rules[self.__name__] = {}
-        return self.override_permission_read_rules[self.__name__].get(read)
+        if not cls.read_rules.get(cls.__name__):
+            cls.read_rules[cls.__name__] = {}
+        return cls.read_rules[cls.__name__].get(read)
 
     @classmethod
-    def write_rule(self, write):
+    def override_permission_read_rule(cls, read):
+        if not cls.override_permission_read_rules.get(cls.__name__):
+            cls.override_permission_read_rules[cls.__name__] = {}
+        return cls.override_permission_read_rules[cls.__name__].get(read)
+
+    @classmethod
+    def write_rule(cls, write):
         if REQUIRE_USER_PERMISSIONS:
-            return self.attribute_rule_with_permissions(AttributeOperationType.WRITE, write)
+            return cls.attribute_rule_with_permissions(AttributeOperationType.WRITE, write)
 
-        if not self.write_rules.get(self.__name__):
-            self.write_rules[self.__name__] = {}
-        return self.write_rules[self.__name__].get(write)
-
-    @classmethod
-    def override_permission_write_rule(self, write):
-        if not self.override_permission_write_rules.get(self.__name__):
-            self.override_permission_write_rules[self.__name__] = {}
-        return self.override_permission_write_rules[self.__name__].get(write)
+        if not cls.write_rules.get(cls.__name__):
+            cls.write_rules[cls.__name__] = {}
+        return cls.write_rules[cls.__name__].get(write)
 
     @classmethod
-    def allow_actions(self, array, **kwargs):
-        if not self.action_rules.get(self.__name__):
-            self.action_rules[self.__name__] = {}
-        if not self.override_permission_action_rules.get(self.__name__):
-            self.override_permission_action_rules[self.__name__] = {}
+    def override_permission_write_rule(cls, write):
+        if not cls.override_permission_write_rules.get(cls.__name__):
+            cls.override_permission_write_rules[cls.__name__] = {}
+        return cls.override_permission_write_rules[cls.__name__].get(write)
+
+    @classmethod
+    def allow_actions(cls, array, **kwargs):
+        if not cls.action_rules.get(cls.__name__):
+            cls.action_rules[cls.__name__] = {}
+        if not cls.override_permission_action_rules.get(cls.__name__):
+            cls.override_permission_action_rules[cls.__name__] = {}
 
         array_use = array or [OperationType.ALL]
         for key in array_use:
-            if not self.action_rules[self.__name__].get(key):
-                self.action_rules[self.__name__][key] = {}
+            if not cls.action_rules[cls.__name__].get(key):
+                cls.action_rules[cls.__name__][key] = {}
             for scope in kwargs.get('scopes', []):
-                if scope not in self.action_rules[self.__name__][key]:
-                    self.action_rules[self.__name__][key][scope] = []
-                self.action_rules[self.__name__][key][scope].append(
+                if scope not in cls.action_rules[cls.__name__][key]:
+                    cls.action_rules[cls.__name__][key][scope] = []
+                cls.action_rules[cls.__name__][key][scope].append(
                     extract(kwargs, ['condition']),
                 )
 
-            if not self.override_permission_action_rules[self.__name__].get(key):
-                self.override_permission_action_rules[self.__name__][key] = {}
+            if not cls.override_permission_action_rules[cls.__name__].get(key):
+                cls.override_permission_action_rules[cls.__name__][key] = {}
             for scope in kwargs.get('scopes', []):
-                if scope not in self.override_permission_action_rules[self.__name__][key]:
-                    self.override_permission_action_rules[self.__name__][key][scope] = []
-                self.override_permission_action_rules[self.__name__][key][scope].append(extract(
+                if scope not in cls.override_permission_action_rules[cls.__name__][key]:
+                    cls.override_permission_action_rules[cls.__name__][key][scope] = []
+                cls.override_permission_action_rules[cls.__name__][key][scope].append(extract(
                     kwargs,
                     [
                         'override_permission_condition',
@@ -159,130 +159,130 @@ class BasePolicy(UserPermissionMixIn, ResultSetMixIn):
                 ))
 
     @classmethod
-    def allow_query(self, array: List = None, **kwargs):
-        if not self.query_rules.get(self.__name__):
-            self.query_rules[self.__name__] = {}
-        if not self.override_permission_query_rules.get(self.__name__):
-            self.override_permission_query_rules[self.__name__] = {}
+    def allow_query(cls, array: List = None, **kwargs):
+        if not cls.query_rules.get(cls.__name__):
+            cls.query_rules[cls.__name__] = {}
+        if not cls.override_permission_query_rules.get(cls.__name__):
+            cls.override_permission_query_rules[cls.__name__] = {}
 
         array_use = array or [AttributeType.ALL]
         for key in array_use:
-            if not self.query_rules[self.__name__].get(key):
-                self.query_rules[self.__name__][key] = {}
-            if not self.override_permission_query_rules[self.__name__].get(key):
-                self.override_permission_query_rules[self.__name__][key] = {}
+            if not cls.query_rules[cls.__name__].get(key):
+                cls.query_rules[cls.__name__][key] = {}
+            if not cls.override_permission_query_rules[cls.__name__].get(key):
+                cls.override_permission_query_rules[cls.__name__][key] = {}
 
             actions = kwargs.get('on_action', [OperationType.ALL])
             actions = actions if isinstance(actions, list) else [actions]
 
             for scope in kwargs.get('scopes', []):
-                if not self.query_rules[self.__name__][key].get(scope):
-                    self.query_rules[self.__name__][key][scope] = {}
+                if not cls.query_rules[cls.__name__][key].get(scope):
+                    cls.query_rules[cls.__name__][key][scope] = {}
                 for action in actions:
-                    if action not in self.query_rules[self.__name__][key][scope]:
-                        self.query_rules[self.__name__][key][scope][action] = []
-                    self.query_rules[self.__name__][key][scope][action].append(extract(
+                    if action not in cls.query_rules[cls.__name__][key][scope]:
+                        cls.query_rules[cls.__name__][key][scope][action] = []
+                    cls.query_rules[cls.__name__][key][scope][action].append(extract(
                         kwargs,
                         [
                             'condition',
                         ],
                     ))
 
-                if not self.override_permission_query_rules[self.__name__][key].get(scope):
-                    self.override_permission_query_rules[self.__name__][key][scope] = {}
+                if not cls.override_permission_query_rules[cls.__name__][key].get(scope):
+                    cls.override_permission_query_rules[cls.__name__][key][scope] = {}
                 for action in actions:
                     if action not in \
-                            self.override_permission_query_rules[self.__name__][key][scope]:
+                            cls.override_permission_query_rules[cls.__name__][key][scope]:
 
-                        self.override_permission_query_rules[self.__name__][key][scope][action] = []
-                    self.override_permission_query_rules[self.__name__][key][scope][action].append(
+                        cls.override_permission_query_rules[cls.__name__][key][scope][action] = []
+                    cls.override_permission_query_rules[cls.__name__][key][scope][action].append(
                         extract(kwargs, ['override_permission_condition']),
                     )
 
     @classmethod
-    def allow_read(self, array, **kwargs):
-        if not self.read_rules.get(self.__name__):
-            self.read_rules[self.__name__] = {}
-        if not self.override_permission_read_rules.get(self.__name__):
-            self.override_permission_read_rules[self.__name__] = {}
+    def allow_read(cls, array, **kwargs):
+        if not cls.read_rules.get(cls.__name__):
+            cls.read_rules[cls.__name__] = {}
+        if not cls.override_permission_read_rules.get(cls.__name__):
+            cls.override_permission_read_rules[cls.__name__] = {}
 
         for key in array:
-            if not self.read_rules[self.__name__].get(key):
-                self.read_rules[self.__name__][key] = {}
-            if not self.override_permission_read_rules[self.__name__].get(key):
-                self.override_permission_read_rules[self.__name__][key] = {}
+            if not cls.read_rules[cls.__name__].get(key):
+                cls.read_rules[cls.__name__][key] = {}
+            if not cls.override_permission_read_rules[cls.__name__].get(key):
+                cls.override_permission_read_rules[cls.__name__][key] = {}
 
             actions = kwargs.get('on_action', [OperationType.ALL])
             actions = actions if isinstance(actions, list) else [actions]
 
             for scope in kwargs.get('scopes', []):
-                if not self.read_rules[self.__name__][key].get(scope):
-                    self.read_rules[self.__name__][key][scope] = {}
+                if not cls.read_rules[cls.__name__][key].get(scope):
+                    cls.read_rules[cls.__name__][key][scope] = {}
                 for action in actions:
-                    if action not in self.read_rules[self.__name__][key][scope]:
-                        self.read_rules[self.__name__][key][scope][action] = []
-                    self.read_rules[self.__name__][key][scope][action].append(
+                    if action not in cls.read_rules[cls.__name__][key][scope]:
+                        cls.read_rules[cls.__name__][key][scope][action] = []
+                    cls.read_rules[cls.__name__][key][scope][action].append(
                         extract(kwargs, ['condition']),
                     )
 
-                if not self.override_permission_read_rules[self.__name__][key].get(scope):
-                    self.override_permission_read_rules[self.__name__][key][scope] = {}
+                if not cls.override_permission_read_rules[cls.__name__][key].get(scope):
+                    cls.override_permission_read_rules[cls.__name__][key][scope] = {}
                 for action in actions:
-                    if action not in self.override_permission_read_rules[self.__name__][key][scope]:
-                        self.override_permission_read_rules[self.__name__][key][scope][action] = []
-                    self.override_permission_read_rules[self.__name__][key][scope][action].append(
+                    if action not in cls.override_permission_read_rules[cls.__name__][key][scope]:
+                        cls.override_permission_read_rules[cls.__name__][key][scope][action] = []
+                    cls.override_permission_read_rules[cls.__name__][key][scope][action].append(
                         extract(kwargs, ['override_permission_condition']),
                     )
 
     @classmethod
-    def allow_write(self, array, **kwargs):
-        if not self.write_rules.get(self.__name__):
-            self.write_rules[self.__name__] = {}
-        if not self.override_permission_write_rules.get(self.__name__):
-            self.override_permission_write_rules[self.__name__] = {}
+    def allow_write(cls, array, **kwargs):
+        if not cls.write_rules.get(cls.__name__):
+            cls.write_rules[cls.__name__] = {}
+        if not cls.override_permission_write_rules.get(cls.__name__):
+            cls.override_permission_write_rules[cls.__name__] = {}
 
         for key in array:
-            if not self.write_rules[self.__name__].get(key):
-                self.write_rules[self.__name__][key] = {}
-            if not self.override_permission_write_rules[self.__name__].get(key):
-                self.override_permission_write_rules[self.__name__][key] = {}
+            if not cls.write_rules[cls.__name__].get(key):
+                cls.write_rules[cls.__name__][key] = {}
+            if not cls.override_permission_write_rules[cls.__name__].get(key):
+                cls.override_permission_write_rules[cls.__name__][key] = {}
 
             actions = kwargs.get('on_action', [OperationType.ALL])
             actions = actions if isinstance(actions, list) else [actions]
 
             for scope in kwargs.get('scopes', []):
-                if not self.write_rules[self.__name__][key].get(scope):
-                    self.write_rules[self.__name__][key][scope] = {}
+                if not cls.write_rules[cls.__name__][key].get(scope):
+                    cls.write_rules[cls.__name__][key][scope] = {}
                 for action in actions:
-                    if action not in self.write_rules[self.__name__][key][scope]:
-                        self.write_rules[self.__name__][key][scope][action] = []
-                    self.write_rules[self.__name__][key][scope][action].append(
+                    if action not in cls.write_rules[cls.__name__][key][scope]:
+                        cls.write_rules[cls.__name__][key][scope][action] = []
+                    cls.write_rules[cls.__name__][key][scope][action].append(
                         extract(kwargs, ['condition']),
                     )
 
-                if not self.override_permission_write_rules[self.__name__][key].get(scope):
-                    self.override_permission_write_rules[self.__name__][key][scope] = {}
+                if not cls.override_permission_write_rules[cls.__name__][key].get(scope):
+                    cls.override_permission_write_rules[cls.__name__][key][scope] = {}
                 for action in actions:
                     if action not in \
-                            self.override_permission_write_rules[self.__name__][key][scope]:
+                            cls.override_permission_write_rules[cls.__name__][key][scope]:
 
-                        self.override_permission_write_rules[self.__name__][key][scope][action] = []
-                    self.override_permission_write_rules[self.__name__][key][scope][action].append(
+                        cls.override_permission_write_rules[cls.__name__][key][scope][action] = []
+                    cls.override_permission_write_rules[cls.__name__][key][scope][action].append(
                         extract(kwargs, ['override_permission_condition']),
                     )
 
     @classmethod
-    def resource_name(self):
-        return inflection.pluralize(self.resource_name_singular())
+    def resource_name(cls):
+        return inflection.pluralize(cls.resource_name_singular())
 
     @classmethod
-    def model_name(self) -> str:
-        return self.__name__.replace('Policy', '')
+    def model_name(cls) -> str:
+        return cls.__name__.replace('Policy', '')
 
     @classmethod
-    def resource_name_singular(self):
+    def resource_name_singular(cls):
         return inflection.underscore(
-            self.__name__.replace(
+            cls.__name__.replace(
                 'Policy', '')).lower()
 
     def is_owner(self) -> bool:
