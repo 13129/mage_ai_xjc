@@ -7,7 +7,7 @@ import pytz
 import singer
 
 
-class BasePaystackStream():
+class BasePaystackStream:
     # GLOBAL PROPERTIES
     TABLE = None
     KEY_PROPERTIES = []

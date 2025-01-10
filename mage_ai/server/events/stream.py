@@ -44,7 +44,7 @@ class EventStreamHandler(BaseHandler):
                 event_stream = EventStream.load(
                     event_uuid=uuid4().hex,
                     result=result,
-                    timestamp=int(datetime.utcnow().timestamp() * 1000),
+                    timestamp=int(datetime.now().timestamp() * 1000),
                     type=EventStreamType.EXECUTION,
                     uuid=self.uuid,
                 )

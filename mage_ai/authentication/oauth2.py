@@ -33,7 +33,7 @@ def generate_access_token(
             token_count = Oauth2AccessToken.query.filter(Oauth2AccessToken.token == token).count()
 
     attributes_data = dict(
-        expires=datetime.utcnow() + timedelta(seconds=duration),
+        expires=datetime.now() + timedelta(seconds=duration),
         token=token,
         user_id=user.id if user else None,
     )

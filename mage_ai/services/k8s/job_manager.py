@@ -16,7 +16,7 @@ from mage_ai.services.k8s.constants import (
 from mage_ai.shared.hash import merge_dict
 
 
-class JobManager():
+class JobManager:
     def __init__(
         self,
         job_name: str = 'mage-job',

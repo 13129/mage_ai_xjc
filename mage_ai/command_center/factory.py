@@ -184,7 +184,7 @@ class BaseFactory:
                 return None
 
         condition = item_dict.get('condition')
-        if (not condition or condition(dict(project=self.project, user=self.user))):
+        if not condition or condition(dict(project=self.project, user=self.user)):
             return merge_dict(item_dict, dict(score=self.score_item(item_dict, score=score)))
 
         return None

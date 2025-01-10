@@ -145,7 +145,7 @@ class SessionResource(BaseResource):
 
     @safe_db_query
     def update(self, payload, **kwargs):
-        self.model.expires = datetime.utcnow()
+        self.model.expires = datetime.now()
         self.model.save()
 
     @safe_db_query

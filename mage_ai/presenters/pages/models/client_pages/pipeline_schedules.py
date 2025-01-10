@@ -29,14 +29,14 @@ class CreatePage(BasePage):
     operation = OperationType.CREATE
 
     @classmethod
-    async def components(self, **kwargs) -> List[PageComponent]:
+    async def components(cls, **kwargs) -> List[PageComponent]:
         return [
             CreateWithInteractionsComponent,
             EditComponent,
         ]
 
     @classmethod
-    async def disabled(self, current_user: User = None, **kwargs) -> bool:
+    async def disabled(cls, current_user: User = None, **kwargs) -> bool:
         pipelines = kwargs.get('pipelines') or []
         for pipeline in [p for p in pipelines if p]:
             pipeline_schedule = PipelineScheduleResource.model_class(pipeline_uuid=pipeline.uuid)

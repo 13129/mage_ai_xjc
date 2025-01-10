@@ -177,7 +177,7 @@ def trigger_and_check_status(
             logging_tags=logging_tags,
         )
 
-    poll_start = datetime.utcnow().replace(tzinfo=timezone.utc)
+    poll_start = datetime.now().replace(tzinfo=timezone.utc)
     while True:
         pipeline_runs = global_data_product.pipeline_runs()
 
@@ -200,7 +200,7 @@ def trigger_and_check_status(
                 break
 
         # Check if polling has timed out
-        now = datetime.utcnow().replace(tzinfo=timezone.utc)
+        now = datetime.now().replace(tzinfo=timezone.utc)
         if (
             poll_timeout is not None and
             now > poll_start + timedelta(seconds=poll_timeout)
@@ -223,7 +223,7 @@ def trigger_and_check_status(
 
             if pipeline_run_created and pipeline_run_created.id == pipeline_run.id:
                 diff = (
-                    datetime.utcnow().replace(tzinfo=timezone.utc).timestamp() -
+                    datetime.now().replace(tzinfo=timezone.utc).timestamp() -
                     pipeline_run_created.created_at.timestamp()
                 )
                 __log(

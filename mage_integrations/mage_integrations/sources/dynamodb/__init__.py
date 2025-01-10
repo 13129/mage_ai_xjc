@@ -56,9 +56,9 @@ class DynamoDb(Source):
         ) for stream_id in table_list]
 
     def discover_stream(self, client, table_name):
-        '''
+        """
         Read a single table in DynamoDB.
-        '''
+        """
         try:
             table_info = client.describe_table(TableName=table_name).get(TABLE, {})
         except ClientError:
@@ -109,9 +109,9 @@ class DynamoDb(Source):
         return catalog_entry
 
     def discover(self, streams: List[str] = None) -> Catalog:
-        '''
+        """
         Read streams in DynamoDB.
-        '''
+        """
         client = self.build_client()
         outputs = []
         if streams:
@@ -123,9 +123,9 @@ class DynamoDb(Source):
         return Catalog(outputs)
 
     def build_client(self):
-        '''
+        """
         Build DynamoDB client.
-        '''
+        """
         config = Config(
            retries={
               'max_attempts': 10,
@@ -172,9 +172,9 @@ class DynamoDb(Source):
         client.describe_endpoints()
 
     def scan_table(self, table_name, last_evaluated_key):
-        '''
+        """
         Scan records in one table.
-        '''
+        """
         scan_params = {
             'TableName': table_name,
             'Limit': 100

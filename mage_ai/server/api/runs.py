@@ -68,10 +68,10 @@ class ApiRunHandler(BaseHandler):
         try:
             if record:
                 pipeline_run = PipelineRun.create(
-                    completed_at=datetime.utcnow(),
+                    completed_at=datetime.now(),
                     create_block_runs=False,
-                    execution_date=datetime.utcnow(),
-                    started_at=datetime.utcnow(),
+                    execution_date=datetime.now(),
+                    started_at=datetime.now(),
                     pipeline_schedule_id=pipeline_schedule.id,
                     pipeline_uuid=pipeline.uuid,
                     status=PipelineRun.PipelineRunStatus.COMPLETED,
@@ -82,7 +82,7 @@ class ApiRunHandler(BaseHandler):
                     block_uuid=block.uuid,
                     metrics=variables,
                     status=BlockRun.BlockRunStatus.RUNNING,
-                    started_at=datetime.utcnow(),
+                    started_at=datetime.now(),
                 )
 
             parts = []
@@ -91,7 +91,7 @@ class ApiRunHandler(BaseHandler):
             else:
                 parts.extend([
                     str(pipeline_schedule.id),
-                    datetime.utcnow().strftime('%Y%m%dT%H%M%S'),
+                    datetime.now().strftime('%Y%m%dT%H%M%S'),
                 ])
 
             execution_partition = os.path.join(
@@ -129,7 +129,7 @@ class ApiRunHandler(BaseHandler):
 
             if record:
                 block_run.update(
-                    completed_at=datetime.utcnow(),
+                    completed_at=datetime.now(),
                     status=BlockRun.BlockRunStatus.COMPLETED,
                 )
         except Exception as err:

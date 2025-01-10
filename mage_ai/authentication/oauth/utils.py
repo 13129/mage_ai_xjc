@@ -30,7 +30,7 @@ def access_tokens_for_client(
         access_tokens_query = Oauth2AccessToken.query
         access_tokens_query.cache = True
         access_tokens_query = access_tokens_query.filter(
-            Oauth2AccessToken.expires > datetime.utcnow(),
+            Oauth2AccessToken.expires > datetime.now(),
             Oauth2AccessToken.oauth2_application_id == oauth_client.id,
         )
         if user:

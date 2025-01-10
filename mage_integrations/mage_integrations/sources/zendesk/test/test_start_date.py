@@ -118,7 +118,7 @@ class ZendeskStartDate(ZendeskTest):
                     # Verify replication key is greater or equal to start_date for sync 1
                     for replication_date in replication_dates_1:
                         if stream == "tickets":
-                            replication_date = datetime.utcfromtimestamp(replication_date).strftime('%Y-%m-%dT%H:%M:%SZ')
+                            replication_date = datetime.fromtimestamp(replication_date).strftime('%Y-%m-%dT%H:%M:%SZ')
 
                         self.assertGreaterEqual(
                             self.parse_date(replication_date), self.parse_date(
@@ -131,7 +131,7 @@ class ZendeskStartDate(ZendeskTest):
                     # Verify replication key is greater or equal to start_date for sync 2
                     for replication_date in replication_dates_2:
                         if stream == "tickets":
-                            replication_date = datetime.utcfromtimestamp(replication_date).strftime('%Y-%m-%dT%H:%M:%SZ')
+                            replication_date = datetime.fromtimestamp(replication_date).strftime('%Y-%m-%dT%H:%M:%SZ')
 
                         self.assertGreaterEqual(
                             self.parse_date(replication_date), self.parse_date(

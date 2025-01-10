@@ -13,27 +13,27 @@ class BlockFactory(BaseFactory):
         items = []
 
         if self.search:
-            now = datetime.utcnow().timestamp()
+            now = datetime.now().timestamp()
             cache = await BlockCache.initialize_cache()
             mapping = cache.get(cache.cache_key)
-            print(f'[BlockFactory] Load: {len(mapping)} - {datetime.utcnow().timestamp() - now}')
+            print(f'[BlockFactory] Load: {len(mapping)} - {datetime.now().timestamp() - now}')
 
             data_array = mapping.items()
-            now = datetime.utcnow().timestamp()
+            now = datetime.now().timestamp()
             await asyncio.gather(
                 *[build_and_score(self, data, items) for data in data_array]
             )
             print(
                 f'[BlockFactory] Search {self.search}: '
-                f'{len(items)} - {datetime.utcnow().timestamp() - now}',
+                f'{len(items)} - {datetime.now().timestamp() - now}',
             )
 
-            now = datetime.utcnow().timestamp()
+            now = datetime.now().timestamp()
             items = await self.rank_items(items)
             items = [merge_dict(
                 item_dict,
                 add_application_actions(item_dict),
             ) for item_dict in items]
-            print(f'[BlockFactory] Rank items: {datetime.utcnow().timestamp() - now}')
+            print(f'[BlockFactory] Rank items: {datetime.now().timestamp() - now}')
 
         return items

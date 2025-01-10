@@ -135,9 +135,8 @@ class LoggerManager:
         log_retention_period = self.logging_config.retention_period
         if not log_retention_period:
             return
-        min_partition = (datetime.utcnow() -
-                         str_to_timedelta(log_retention_period)).strftime(
-                            format='%Y%m%dT%H%M%S')
+        min_partition = (datetime.now() -
+                         str_to_timedelta(log_retention_period)).strftime('%Y%m%dT%H%M%S')
 
         if self.pipeline_uuid is None:
             from mage_ai.data_preparation.models.pipeline import Pipeline

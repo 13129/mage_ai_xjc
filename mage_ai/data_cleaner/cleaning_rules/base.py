@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 from mage_ai.data_cleaner.column_types.constants import NUMBER_TYPES
 
 STATUS_NOT_APPLIED = 'not_applied'
@@ -7,7 +9,9 @@ STATUS_COMPLETED = 'completed'
 class BaseRule:
     default_config = dict()
 
-    def __init__(self, df, column_types, statistics, custom_config={}):
+    def __init__(self, df, column_types, statistics, custom_config=None):
+        if custom_config is None:
+            custom_config = {}
         self.df = df
         self.df_columns = df.columns.tolist()
         self.column_types = column_types
@@ -42,12 +46,12 @@ class BaseRule:
         title,
         message,
         action_type,
-        action_arguments=[],
+        action_arguments:List=None,
         action_code='',
-        action_options={},
-        action_variables={},
+        action_options:Dict=None,
+        action_variables:Dict=None,
         axis='column',
-        outputs=[],
+        outputs:List=None,
     ):
         return dict(
             title=title,

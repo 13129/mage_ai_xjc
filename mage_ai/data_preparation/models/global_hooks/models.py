@@ -530,7 +530,7 @@ class Hook(BaseDataClass):
         if not self.metadata:
             self.metadata = HookMetadata.load()
 
-        now = datetime.utcnow().isoformat(' ', 'seconds')
+        now = datetime.now().isoformat(' ', 'seconds')
         self.metadata.snapshot_hash = self.__generate_snapshot_hash(prefix=now)
         self.metadata.snapshotted_at = now
 
@@ -787,7 +787,7 @@ class GlobalHooks(BaseDataClass):
         snapshot: bool = False,
         update: bool = False,
     ) -> Hook:
-        now = datetime.utcnow().isoformat(' ', 'seconds')
+        now = datetime.now().isoformat(' ', 'seconds')
 
         if not update and self.get_hook(
             operation_type=hook.operation_type,

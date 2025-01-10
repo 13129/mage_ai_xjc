@@ -181,7 +181,7 @@ def new_list(self, api_key=None, stripe_version=None, stripe_account=None, **par
 ListObject.list = new_list
 
 
-class Context():
+class Context:
     config = {}
     state = {}
     catalog = {}
@@ -471,8 +471,8 @@ def reduce_foreign_keys(rec, stream_name):
                       max_tries=7,
                       factor=2)
 def new_request(self, method, url, params=None, headers=None):
-    '''The new request function to overwrite the request()
-    function of the APIRequestor class of SDK.'''
+    """The new request function to overwrite the request()
+    function of the APIRequestor class of SDK."""
     rbody, rcode, rheaders, my_api_key = self.request_raw(
         method.lower(), url, params, headers, is_streaming=False
     )
@@ -530,11 +530,11 @@ def get_bookmark_for_stream(stream_name, replication_key):
 
 
 def evaluate_start_time_based_on_lookback(bookmark, lookback_window):
-    '''
+    """
     For historical syncs take the start date as the starting point in a sync,
     even if it is more recent than {today - lookback_window}. For incremental syncs,
     the tap should start syncing from {previous state - lookback_window}
-    '''
+    """
     start_date = int(utils.strptime_to_utc(Context.config["start_date"]).timestamp())
     if bookmark:
         lookback_evaluated_time = bookmark - lookback_window

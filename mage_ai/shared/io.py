@@ -98,10 +98,10 @@ async def read_last_line_async(file_path: str) -> str:
     async with aiofiles.open(file_path, mode='rb') as f:
         # catch OSError in case of a one line file
         try:
-            f.seek(-2, os.SEEK_END)
+            await f.seek(-2, os.SEEK_END)
             while f.read(1) != b'\n':
-                f.seek(-2, os.SEEK_CUR)
+                await f.seek(-2, os.SEEK_CUR)
         except OSError:
-            f.seek(0)
+            await f.seek(0)
 
         return f.readline().decode()

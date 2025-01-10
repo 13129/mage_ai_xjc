@@ -117,7 +117,7 @@ class DBTBlock(Block):
                 self.pipeline.blocks_by_uuid, variables=self.pipeline.variables)
 
     @classmethod
-    def _variables_json(self, variables: Dict[str, Any]) -> str:
+    def _variables_json(cls, variables: Dict[str, Any]) -> str:
         """
         Serializes dict into json
 
@@ -272,7 +272,7 @@ class DBTBlock(Block):
         self,
         **kwargs
     ) -> Generator[None, None, None]:
-        yield (None, None)
+        yield None, None
 
     def set_default_configurations(self):
         pass

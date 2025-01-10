@@ -10,7 +10,7 @@ from mage_ai.shared.hash import merge_dict
 from mage_ai.shared.parsers import encode_complex
 
 
-class DictLogger():
+class DictLogger:
     def __init__(self, logger: logging.Logger, logging_tags: Dict = None):
         self.logger = logger
         if logging_tags is None:
@@ -52,7 +52,7 @@ class DictLogger():
         log_level=None,
         **kwargs,
     ):
-        now = datetime.utcnow()
+        now = datetime.now()
         data = dict(
             level=logging.getLevelName(log_level) if log_level else method_name.upper(),
             message=message,

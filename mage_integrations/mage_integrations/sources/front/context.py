@@ -21,7 +21,7 @@ class Context(object):
         self.client = Client(config)
         self._catalog = None
         self.selected_stream_ids = None
-        self.now = datetime.utcnow()
+        self.now = datetime.now()
 
     @property
     def catalog(self):

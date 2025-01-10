@@ -652,7 +652,7 @@ def handle_variables(
                 continue
 
             if block_outputs and idx_inner < len(block_outputs):
-                yield (block_outputs[idx_inner], sample, sample_count, __callback)
+                yield block_outputs[idx_inner], sample, sample_count, __callback
             else:
                 variable_object = block.get_variable_object(
                     block_uuid=b_uuid,
@@ -672,7 +672,7 @@ def handle_variables(
                     )
                     variable_type_mapping[variable_object.variable_type].append(variable_uuid)
 
-                yield (variable_object, sample, sample_count, __callback)
+                yield variable_object, sample, sample_count, __callback
 
     arr = outputs + data_products
     arr_sorted = sorted(arr, key=lambda x: x[0])

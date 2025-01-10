@@ -385,7 +385,7 @@ class TestConnectionErrorBackoff(unittest.TestCase):
 
 
 # Mock args
-class Args():
+class Args:
     def __init__(self, config):
         self.config = config
         self.discover = False

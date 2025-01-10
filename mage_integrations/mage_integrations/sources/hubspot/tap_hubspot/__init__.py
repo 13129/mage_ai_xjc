@@ -282,7 +282,7 @@ def acquire_access_token_from_refresh_token():
     CONFIG['access_token'] = auth['access_token']
     CONFIG['refresh_token'] = auth['refresh_token']
     CONFIG['token_expires'] = (
-        datetime.datetime.utcnow() +
+        datetime.datetime.now() +
         datetime.timedelta(seconds=auth['expires_in'] - 600))
     LOGGER.info("Token refreshed. Expires at %s", CONFIG['token_expires'])
 
@@ -324,7 +324,7 @@ def get_params_and_headers(params):
     params = params or {}
     hapikey = CONFIG['hapikey']
     if hapikey is None:
-        if 'access_token' not in CONFIG and (CONFIG['token_expires'] is None or CONFIG['token_expires'] < datetime.datetime.utcnow()):
+        if 'access_token' not in CONFIG and (CONFIG['token_expires'] is None or CONFIG['token_expires'] < datetime.datetime.now()):
             acquire_access_token_from_refresh_token()
         headers = {'Authorization': 'Bearer {}'.format(CONFIG['access_token'])}
     else:
@@ -805,7 +805,7 @@ def sync_deals(STATE, ctx, logger=LOGGER):
     for key in mdata.keys():
         if 'associations' in key:
             assoc_mdata = mdata.get(key)
-            if (assoc_mdata.get('selected') and assoc_mdata.get('selected') is True):
+            if assoc_mdata.get('selected') and assoc_mdata.get('selected') is True:
                 params['includeAssociations'] = True
 
     v3_fields = None
@@ -925,7 +925,7 @@ def sync_entity_chunked(STATE, catalog, entity_name, key_properties, path, logge
     start = get_start(STATE, entity_name, bookmark_key)
     logger.info(f'sync_{entity_name} from {start}')
 
-    now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
+    now = datetime.datetime.now().replace(tzinfo=pytz.UTC)
     now_ts = int(now.timestamp() * 1000)
 
     start_ts = int(utils.strptime_with_tz(start).timestamp() * 1000)

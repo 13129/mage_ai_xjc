@@ -47,7 +47,7 @@ def send_status_update(
                             ),
                         ],
                         priority=0,
-                        timestamp=int(datetime.datetime.utcnow().timestamp() * 1000),
+                        timestamp=int(datetime.datetime.now().timestamp() * 1000),
                         type=DataType.GROUP,
                         variable_uuid=uuid,
                     ),

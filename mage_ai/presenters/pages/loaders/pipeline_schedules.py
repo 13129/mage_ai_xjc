@@ -7,7 +7,7 @@ from mage_ai.presenters.pages.loaders.base import BaseLoader
 class Loader(BaseLoader):
     @classmethod
     async def load(
-        self,
+        cls,
         ids: List[Union[int, str]],
         query: Dict = None,
         **kwargs,

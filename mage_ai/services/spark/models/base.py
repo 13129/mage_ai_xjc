@@ -10,7 +10,7 @@ from mage_ai.shared.models import BaseDataClass
 @dataclass
 class BaseSparkModel(BaseDataClass):
     @classmethod
-    def cache_dir_path(self) -> str:
+    def cache_dir_path(cls) -> str:
         repo_config = get_repo_config(repo_path=get_repo_path())
 
         return os.path.join(

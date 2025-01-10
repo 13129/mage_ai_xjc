@@ -143,7 +143,7 @@ class ZendeskBookMark(ZendeskTest):
                         replication_key_value = record.get(replication_key)
                         # For `ticket` stream it stores bookmarks as int timestamp. So, converting it to the string.
                         if stream == "tickets":
-                            replication_key_value = datetime.utcfromtimestamp(replication_key_value).strftime('%Y-%m-%dT%H:%M:%SZ')
+                            replication_key_value = datetime.fromtimestamp(replication_key_value).strftime('%Y-%m-%dT%H:%M:%SZ')
 
                         self.assertLessEqual(
                             replication_key_value, first_bookmark_value_utc,
@@ -155,7 +155,7 @@ class ZendeskBookMark(ZendeskTest):
                         replication_key_value = record.get(replication_key)
 
                         if stream == "tickets":
-                            replication_key_value = datetime.utcfromtimestamp(replication_key_value).strftime('%Y-%m-%dT%H:%M:%SZ')
+                            replication_key_value = datetime.fromtimestamp(replication_key_value).strftime('%Y-%m-%dT%H:%M:%SZ')
 
                         self.assertGreaterEqual(replication_key_value, simulated_bookmark_value,
                                                 msg="Second sync records do not repect the previous bookmark.")

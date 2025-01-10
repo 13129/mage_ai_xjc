@@ -216,7 +216,7 @@ def uuid_for_output_variables(
         __uuid='uuid_for_output_variables',
     )
 
-    return (block_uuid, changed)
+    return block_uuid, changed
 
 
 def transform_dataframe_for_display(

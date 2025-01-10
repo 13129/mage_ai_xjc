@@ -2,13 +2,7 @@ import os
 from typing import Dict, List
 
 MIN_SECRET_LENGTH = 8
-WHITELISTED_ENV_VARS = set([
-    'MAGE_DATA_DIR',
-    'MAGE_REPO_PATH',
-    'HOME',
-    'PWD',
-    'PYTHONPATH',
-])
+WHITELISTED_ENV_VARS = {'MAGE_DATA_DIR', 'MAGE_REPO_PATH', 'HOME', 'PWD', 'PYTHONPATH'}
 
 
 def filter_out_env_var_values(value: str) -> str:

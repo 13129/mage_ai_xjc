@@ -17,7 +17,7 @@ class OauthAccessTokenResource(DatabaseResource):
             show_all = show_all[0]
 
         if not show_all:
-            results = results.filter(Oauth2AccessToken.expires > datetime.utcnow())
+            results = results.filter(Oauth2AccessToken.expires > datetime.now())
 
         results = results.order_by(Oauth2AccessToken.expires.desc())
 

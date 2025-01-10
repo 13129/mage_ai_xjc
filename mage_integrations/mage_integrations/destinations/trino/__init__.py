@@ -6,7 +6,7 @@ import copy
 
 
 class Trino(Destination):
-    def __new__(self, argument_parser, **kwargs):
+    def __new__(cls, argument_parser, **kwargs):
         argument_parser_copy = copy.deepcopy(argument_parser)
         config = Destination(
             argument_parser=argument_parser_copy,

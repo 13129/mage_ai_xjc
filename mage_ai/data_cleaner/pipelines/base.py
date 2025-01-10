@@ -37,12 +37,18 @@ DEFAULT_RULES = [
 
 
 class BasePipeline:
-    def __init__(self, actions=[], rules=DEFAULT_RULES, verbose=False):
+    def __init__(self, actions=None, rules=None, verbose=False):
+        if rules is None:
+            rules = DEFAULT_RULES
+        if actions is None:
+            actions = []
         self.actions = actions
         self.rules = rules
         self.verbose = verbose
 
-    def create_actions(self, df, column_types, statistics, rule_configs={}):
+    def create_actions(self, df, column_types, statistics, rule_configs=None):
+        if rule_configs is None:
+            rule_configs = {}
         if not statistics or len(statistics) == 0:
             calculator = StatisticsCalculator(column_types, self.verbose)
             statistics = calculator.calculate_statistics_overview(df, False)
@@ -100,7 +106,7 @@ class BasePipeline:
         return self.create_actions(df_transformed, new_column_types, {})
 
     @classmethod
-    def deduplicate_suggestions(self, actions, suggestions, statistics):
+    def deduplicate_suggestions(cls, actions, suggestions, statistics):
         """
         Not show duplicate outlier removal suggestions due to column value distribution changes.
         TODO: Figure out a better way to detect outliers.

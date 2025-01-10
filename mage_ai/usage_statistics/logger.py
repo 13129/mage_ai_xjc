@@ -45,7 +45,7 @@ from mage_ai.usage_statistics.constants import (
 from mage_ai.usage_statistics.utils import build_event_data_for_chart
 
 
-class UsageStatisticLogger():
+class UsageStatisticLogger:
     def __init__(
         self,
         context_data: Dict = None,

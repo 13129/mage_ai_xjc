@@ -96,11 +96,11 @@ async def validate_condition_with_permissions(
         resource_attribute=resource_attribute,
     ) -> Tuple[bool, bool]:
         if permission.access is None:
-            return (False, False)
+            return False, False
 
         # Check if user is an owner
         if permission.access & PermissionAccess.OWNER:
-            return (True, False)
+            return True, False
 
         # 1. Get permissions for current entity_name for roles belonging to current user.
         # Include permissions where entity_name is ALL or ALL_EXCEPT_RESERVED.
@@ -112,7 +112,7 @@ async def validate_condition_with_permissions(
             )
 
         if not correct_entity_name:
-            return (False, False)
+            return False, False
 
         # If the permission has an entity_id, check to see if it matches.
         if permission.entity_id is not None and resource:
@@ -124,11 +124,11 @@ async def validate_condition_with_permissions(
             if not hasattr(resource, id_attribute_name) or \
                     str(permission.entity_id) != str(getattr(resource, id_attribute_name)):
 
-                return (False, False)
+                return False, False
 
         # 2a. Don’t grant access if permission disables access to this entity for this operation.
         if disable_access is not None and permission.access & disable_access:
-            return (False, True)
+            return False, True
 
         # 3. Add additional permission access (e.g. read, list, detail for viewer)
         # to grant access to this entity and its attributes
@@ -144,12 +144,12 @@ async def validate_condition_with_permissions(
         # Access to all operations and attribute operations
         if permission_access & PermissionAccess.ALL.value:
             permission_granted = True
-            return (permission_granted, permission_disabled)
+            return permission_granted, permission_disabled
 
         # Disable all operations
         if permission_access & PermissionAccess.DISABLE_OPERATION_ALL.value:
             permission_disabled = True
-            return (permission_granted, permission_disabled)
+            return permission_granted, permission_disabled
 
         has_access_for_all_operations = permission_access & PermissionAccess.OPERATION_ALL
         valid_for_operation = has_access_for_all_operations or permission_access & access
@@ -171,7 +171,7 @@ async def validate_condition_with_permissions(
 
             if permission_access & disable_access_for_all:
                 permission_disabled = True
-                return (permission_granted, permission_disabled)
+                return permission_granted, permission_disabled
 
             has_access_for_all_attributes = permission_access & access_for_all
             valid_for_operation = valid_for_operation and \
@@ -195,7 +195,7 @@ async def validate_condition_with_permissions(
 
                 if resource_attribute in (disabled_attributes or []):
                     permission_disabled = True
-                    return (permission_granted, permission_disabled)
+                    return permission_granted, permission_disabled
 
             if not has_access_for_all_attributes:
                 if valid_for_operation and attribute_operation_type and resource_attribute:
@@ -232,9 +232,9 @@ async def validate_condition_with_permissions(
 
         if valid_for_operation:
             permission_granted = True
-            return (permission_granted, permission_disabled)
+            return permission_granted, permission_disabled
 
-        return (permission_granted, permission_disabled)
+        return permission_granted, permission_disabled
 
     validation_results = await asyncio.gather(
         *[__permission_grants_access(p) for p in permissions]

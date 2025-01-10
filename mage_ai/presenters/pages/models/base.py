@@ -77,28 +77,28 @@ class BaseModel(ABC):
     version: Union[int, str] = None
 
     @classmethod
-    def get_uuid(self) -> str:
-        return get_uuid(self)
+    def get_uuid(cls) -> str:
+        return get_uuid(cls)
 
     @classmethod
-    async def components(self, current_user: User = None, **kwargs) -> List['BaseModel']:
+    async def components(cls, current_user: User = None, **kwargs) -> List['BaseModel']:
         return []
 
     @classmethod
-    async def disabled(self, current_user: User = None, **kwargs) -> bool:
-        return self.disabled_override
+    async def disabled(cls, current_user: User = None, **kwargs) -> bool:
+        return cls.disabled_override
 
     @classmethod
-    async def enabled(self, current_user: User = None, **kwargs) -> bool:
-        return self.enabled_override
+    async def enabled(cls, current_user: User = None, **kwargs) -> bool:
+        return cls.enabled_override
 
     @classmethod
-    async def metadata(self, current_user: User = None, **kwargs) -> Dict:
+    async def metadata(cls, current_user: User = None, **kwargs) -> Dict:
         return {}
 
     @classmethod
-    async def to_dict(self, current_user: User = None, **kwargs) -> Dict:
-        return await to_dict(self, current_user=current_user, **kwargs)
+    async def to_dict(cls, current_user: User = None, **kwargs) -> Dict:
+        return await to_dict(cls, current_user=current_user, **kwargs)
 
 
 @dataclass

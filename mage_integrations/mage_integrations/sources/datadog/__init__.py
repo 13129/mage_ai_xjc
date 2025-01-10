@@ -35,9 +35,11 @@ class Datadog(Source):
         self,
         stream,
         bookmarks: Dict = None,
-        query: Dict = {},
+            query=None,
         **kwargs,
     ) -> Generator[List[Dict], None, None]:
+        if query is None:
+            query = {}
         stream_id = stream.tap_stream_id
         stream_obj = STREAMS[stream_id](
             self.config,

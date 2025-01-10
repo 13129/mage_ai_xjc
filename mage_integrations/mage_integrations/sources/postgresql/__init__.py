@@ -269,7 +269,7 @@ WHERE TABLE_NAME = '{table_name}' AND TABLE_SCHEMA = '{schema_name}'
                         payload = dict(zip(columns, values))
                         payload[INTERNAL_COLUMN_LSN] = msg.data_start
                         payload[INTERNAL_COLUMN_DELETED_AT] = \
-                            datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
+                            datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
                         yield [payload]
                     cur.send_feedback(flush_lsn=msg.data_start)
                 else:

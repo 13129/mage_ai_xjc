@@ -100,14 +100,14 @@ class User(BaseModel):
         entity: Union[Entity, None] = None,
         entity_id: Union[str, None] = None,
     ) -> int:
-        '''
+        """
         If entity is None, we will go through all of the user's permissions and
         get the "highest" permission regardless of entity type. This should only be
         used for resources that are not entity dependent.
 
         Otherwise, search for permissions for the specified entity and entity_id, and
         return the access of the user for that entity.
-        '''
+        """
         access = 0
 
         roles = self.fetch_roles([self.id])
@@ -413,10 +413,10 @@ class Role(BaseModel):
         entity,
         permissions_for_role: List['Permission'] = None,
     ) -> int:
-        '''
+        """
         This method is used when a role does not have a permission for a specified entity. Then,
         we will go up the entity chain to see if there are permissions for parent entities.
-        '''
+        """
         if entity == Entity.PIPELINE:
             return self.get_access(
                 Entity.PROJECT, get_project_uuid(),
@@ -882,4 +882,4 @@ class Oauth2AccessToken(BaseModel):
     def is_valid(self) -> bool:
         return self.token and \
             self.expires and \
-            self.expires >= datetime.utcnow().replace(tzinfo=self.expires.tzinfo)
+            self.expires >= datetime.now().replace(tzinfo=self.expires.tzinfo)

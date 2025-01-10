@@ -24,7 +24,7 @@ except Exception:
 
 class BlockFactory:
     @classmethod
-    def block_class_from_type(self, block_type: str, language=None, pipeline=None) -> 'Block':
+    def block_class_from_type(cls, block_type: str, language=None, pipeline=None) -> 'Block':
         if BlockType.CHART == block_type:
             return Widget
         elif BlockType.DBT == block_type:
@@ -54,7 +54,7 @@ class BlockFactory:
 
     @classmethod
     def get_block(
-        self,
+        cls,
         name,
         uuid,
         block_type,

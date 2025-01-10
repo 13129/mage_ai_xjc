@@ -51,7 +51,7 @@ class LinkedinAdsDiscoveryTest(TestLinkedinAdsBase):
                 # add "date_range", "pivot", "pivot_value" as automatic
                 # for "ad_analytics_by_campaign" and "ad_analytics_by_creative"
                 if stream in ["ad_analytics_by_campaign", "ad_analytics_by_creative"]:
-                    expected_automatic_fields |= set(['pivot', 'date_range', 'pivot_value'])
+                    expected_automatic_fields |= {'pivot', 'date_range', 'pivot_value'}
 
                 # collecting actual values...
                 schema_and_metadata = menagerie.get_annotated_schema(conn_id, catalog['stream_id'])

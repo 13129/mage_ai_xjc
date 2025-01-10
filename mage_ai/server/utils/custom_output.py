@@ -8,7 +8,6 @@ def __custom_output():
     import polars as pl
     import simplejson
 
-    from mage_ai.ai.utils.xgboost import create_tree_visualization
     from mage_ai.data_preparation.models.block.dynamic.utils import (
         combine_transformed_output_for_multi_output,
         transform_output_for_display,
@@ -129,8 +128,6 @@ def __custom_output():
         return _internal_output_return
     elif VariableType.MODEL_SKLEARN == variable_type:
         return _internal_output_return
-    elif VariableType.MODEL_XGBOOST == variable_type:
-        text_data, success = create_tree_visualization(_internal_output_return)
 
         if not success:
             print(text_data)

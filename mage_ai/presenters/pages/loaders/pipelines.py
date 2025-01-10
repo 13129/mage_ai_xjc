@@ -20,6 +20,6 @@ async def get_pipeline(uuid: str, repo_path: str) -> Pipeline:
 
 class Loader(BaseLoader):
     @classmethod
-    async def load(self, ids: List[Union[int, str]], query: Dict = None, **kwargs) -> List[Any]:
+    async def load(cls, ids: List[Union[int, str]], query: Dict = None, **kwargs) -> List[Any]:
         repo_path = get_repo_path()
         return await asyncio.gather(*[get_pipeline(uuid, repo_path) for uuid in ids])

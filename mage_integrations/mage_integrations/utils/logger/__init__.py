@@ -15,7 +15,7 @@ from mage_integrations.utils.logger.constants import (
 from mage_integrations.utils.parsers import encode_complex
 
 
-class Logger():
+class Logger:
     def __init__(
         self,
         caller: Any = None,
@@ -31,23 +31,31 @@ class Logger():
     def build_tags(self, **kwargs):
         return {k: v for k, v in kwargs.items() if v}
 
-    def error(self, message, tags={}, **kwargs):
+    def error(self, message, tags=None, **kwargs):
+        if tags is None:
+            tags = {}
         self.__log(LOG_LEVEL_ERROR, message, tags, **kwargs)
 
-    def exception(self, message, tags={}, **kwargs):
+    def exception(self, message, tags=None, **kwargs):
+        if tags is None:
+            tags = {}
         self.__log(LOG_LEVEL_EXCEPTION, message, tags, **kwargs)
 
-    def info(self, message, tags={}, **kwargs):
+    def info(self, message, tags=None, **kwargs):
+        if tags is None:
+            tags = {}
         self.__log(LOG_LEVEL_INFO, message, tags, **kwargs)
 
-    def debug(self, message, tags={}, **kwargs):
+    def debug(self, message, tags=None, **kwargs):
+        if tags is None:
+            tags = {}
         self.__log(LOG_LEVEL_DEBUG, message, tags, **kwargs)
 
     def __log(self, level, message, tags, **kwargs) -> None:
         if self.verbose == 0:
             return
 
-        now = datetime.utcnow()
+        now = datetime.now()
         if self.caller:
             if type(self.caller) is str:
                 caller_string = self.caller

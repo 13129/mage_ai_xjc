@@ -134,7 +134,7 @@ def raise_for_error(response):
     raise exc(message) from None
 
 
-class ChargebeeClient():
+class ChargebeeClient:
     def __init__(self, config, api_result_limit=100, include_deleted=True):
         self.config = config
 

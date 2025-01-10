@@ -69,7 +69,7 @@ class Connection(BaseConnection):
                 message = 'Execute alter table command'
 
             self.logger.info(f'{message} started.')
-            now1 = datetime.utcnow().timestamp()
+            now1 = datetime.now().timestamp()
 
             try:
                 cursor.execute(clean_query(query_string))
@@ -81,7 +81,7 @@ class Connection(BaseConnection):
                                   f'Query string: {query_string[:1000]}')
                 raise err
 
-            now2 = datetime.utcnow().timestamp()
+            now2 = datetime.now().timestamp()
             self.logger.info(f'{message} completed.', tags=dict(
                 time=now2 - now1,
             ))

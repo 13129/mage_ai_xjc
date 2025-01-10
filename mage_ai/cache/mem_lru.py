@@ -48,7 +48,7 @@ def cache_file_read(cache):
 
             file_updated_at = datetime.fromtimestamp(
                 os.path.getmtime(file_path),
-                tz=datetime.utcnow().astimezone().tzinfo,
+                tz=datetime.now().astimezone().tzinfo,
             )
 
             if file_path in cache:
@@ -83,7 +83,7 @@ def async_cache_file_read(cache):
 
             file_updated_at = datetime.fromtimestamp(
                 os.path.getmtime(file_path),
-                tz=datetime.utcnow().astimezone().tzinfo,
+                tz=datetime.now().astimezone().tzinfo,
             )
 
             if file_path in cache:

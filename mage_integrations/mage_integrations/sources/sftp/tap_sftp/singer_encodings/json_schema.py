@@ -73,7 +73,7 @@ def sample_file(conn, table_spec, f, sample_rate, max_records, config):
         # Assumes all reader objects in readers have the same fieldnames
         samples.append({name: None for name in reader.fieldnames})
 
-    return (empty_file, samples)
+    return empty_file, samples
 
 
 def sample_files(conn, table_spec, files, config,

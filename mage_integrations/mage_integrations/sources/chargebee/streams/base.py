@@ -38,7 +38,7 @@ def is_selected(stream_catalog):
     return inclusion == 'automatic'
 
 
-class BaseChargebeeStream():
+class BaseChargebeeStream:
     # GLOBAL PROPERTIES
     TABLE = None
     KEY_PROPERTIES = []

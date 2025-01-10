@@ -58,7 +58,7 @@ def process_custom_field(field):
 
     return field_schema
 
-class Stream():
+class Stream:
     name = None
     replication_method = None
     replication_key = None
@@ -117,9 +117,9 @@ class Stream():
         return self.stream is not None
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         url = self.endpoint.format(self.config['subdomain'])
         HEADERS['Authorization'] = 'Bearer {}'.format(self.config["access_token"])
 
@@ -130,9 +130,9 @@ class CursorBasedStream(Stream):
     endpoint = None
 
     def get_objects(self, **kwargs):
-        '''
+        """
         Cursor based object retrieval
-        '''
+        """
         url = self.endpoint.format(self.config['subdomain'])
         # Pass `request_timeout` parameter
         for page in http.get_cursor_based(url, self.config['access_token'], self.request_timeout, **kwargs):
@@ -143,9 +143,9 @@ class CursorBasedExportStream(Stream):
     item_key = None
 
     def get_objects(self, start_time):
-        '''
+        """
         Retrieve objects from the incremental exports endpoint using cursor based pagination
-        '''
+        """
         url = self.endpoint.format(self.config['subdomain'])
         # Pass `request_timeout` parameter
         for page in http.get_incremental_export(url, self.config['access_token'], self.request_timeout, start_time):
@@ -203,15 +203,15 @@ class Organizations(Stream):
         organizations = self.client.organizations.incremental(start_time=bookmark)
         for organization in organizations:
             self.update_bookmark(state, organization.updated_at)
-            yield (self.stream, organization)
+            yield self.stream, organization
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         # Convert datetime object to standard format with timezone. Used utcnow to reduce API call burden at discovery time.
         # Because API will return records from now which will be very less
-        start_time = datetime.datetime.utcnow().strftime(START_DATE_FORMAT)
+        start_time = datetime.datetime.now().strftime(START_DATE_FORMAT)
         self.client.organizations.incremental(start_time=start_time)
 
 class Users(Stream):
@@ -279,7 +279,7 @@ class Users(Stream):
             num_retries = 0
             for user in users:
                 if parsed_start <= user.updated_at <= parsed_end:
-                    yield (self.stream, user)
+                    yield self.stream, user
             self.update_bookmark(state, parsed_end)
 
             # Assumes that the for loop got everything
@@ -291,12 +291,12 @@ class Users(Stream):
             end = start + datetime.timedelta(seconds=search_window_size)
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         # Convert datetime object to standard format with timezone. Used utcnow to reduce API call burden at discovery time.
         # Because API will return records from now which will be very less
-        start_time = datetime.datetime.utcnow().strftime(START_DATE_FORMAT)
+        start_time = datetime.datetime.now().strftime(START_DATE_FORMAT)
         self.client.search("", updated_after=start_time, updated_before='2000-01-02T00:00:00Z', type="user")
 
 class Tickets(CursorBasedExportStream):
@@ -336,7 +336,7 @@ class Tickets(CursorBasedExportStream):
 
             ticket.pop('fields') # NB: Fields is a duplicate of custom_fields, remove before emitting
             # yielding stream name with record in a tuple as it is used for obtaining only the parent records while sync
-            yield (self.stream, ticket)
+            yield self.stream, ticket
 
             if audits_stream.is_selected():
                 try:
@@ -377,9 +377,9 @@ class Tickets(CursorBasedExportStream):
         singer.write_state(state)
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         url = self.endpoint.format(self.config['subdomain'])
         # Convert start_date parameter to timestamp to pass with request param
         start_time = datetime.datetime.strptime(self.config['start_date'], START_DATE_FORMAT).timestamp()
@@ -407,12 +407,12 @@ class TicketAudits(Stream):
         for ticket_audit in ticket_audits:
             zendesk_metrics.capture('ticket_audit')
             self.count += 1
-            yield (self.stream, ticket_audit)
+            yield self.stream, ticket_audit
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
 
         url = self.endpoint.format(self.config['subdomain'], '1')
         HEADERS['Authorization'] = 'Bearer {}'.format(self.config["access_token"])
@@ -437,12 +437,12 @@ class TicketMetrics(CursorBasedStream):
         for page in pages:
             zendesk_metrics.capture('ticket_metric')
             self.count += 1
-            yield (self.stream, page[self.item_key])
+            yield self.stream, page[self.item_key]
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         url = self.endpoint.format(self.config['subdomain'], '1')
         HEADERS['Authorization'] = 'Bearer {}'.format(self.config["access_token"])
         try:
@@ -471,12 +471,12 @@ class TicketComments(Stream):
             self.count += 1
             zendesk_metrics.capture('ticket_comment')
             ticket_comment['ticket_id'] = ticket_id
-            yield (self.stream, ticket_comment)
+            yield self.stream, ticket_comment
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         url = self.endpoint.format(self.config['subdomain'], '1')
         HEADERS['Authorization'] = 'Bearer {}'.format(self.config["access_token"])
         try:
@@ -500,7 +500,7 @@ class SatisfactionRatings(CursorBasedStream):
         for rating in ratings:
             if utils.strptime_with_tz(rating['updated_at']) >= bookmark:
                 self.update_bookmark(state, rating['updated_at'])
-                yield (self.stream, rating)
+                yield self.stream, rating
 
 
 class Groups(CursorBasedStream):
@@ -520,7 +520,7 @@ class Groups(CursorBasedStream):
                 # updated_at (we've observed out-of-order records),
                 # so we can't save state until we've seen all records
                 self.update_bookmark(state, group['updated_at'])
-                yield (self.stream, group)
+                yield self.stream, group
 
 class Macros(CursorBasedStream):
     name = "macros"
@@ -539,7 +539,7 @@ class Macros(CursorBasedStream):
                 # updated_at (we've observed out-of-order records),
                 # so we can't save state until we've seen all records
                 self.update_bookmark(state, macro['updated_at'])
-                yield (self.stream, macro)
+                yield self.stream, macro
 
 class Tags(CursorBasedStream):
     name = "tags"
@@ -552,7 +552,7 @@ class Tags(CursorBasedStream):
         tags = self.get_objects()
 
         for tag in tags:
-            yield (self.stream, tag)
+            yield self.stream, tag
 
 class TicketFields(CursorBasedStream):
     name = "ticket_fields"
@@ -571,7 +571,7 @@ class TicketFields(CursorBasedStream):
                 # updated_at (we've observed out-of-order records),
                 # so we can't save state until we've seen all records
                 self.update_bookmark(state, field['updated_at'])
-                yield (self.stream, field)
+                yield self.stream, field
 
 class TicketForms(Stream):
     name = "ticket_forms"
@@ -588,12 +588,12 @@ class TicketForms(Stream):
                 # updated_at (we've observed out-of-order records),
                 # so we can't save state until we've seen all records
                 self.update_bookmark(state, form.updated_at)
-                yield (self.stream, form)
+                yield self.stream, form
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         self.client.ticket_forms()
 
 class GroupMemberships(CursorBasedStream):
@@ -616,12 +616,12 @@ class GroupMemberships(CursorBasedStream):
                     # updated_at (we've observed out-of-order records),
                     # so we can't save state until we've seen all records
                     self.update_bookmark(state, membership['updated_at'])
-                    yield (self.stream, membership)
+                    yield self.stream, membership
             else:
                 if membership['id']:
                     LOGGER.info('group_membership record with id: ' + str(membership['id']) +
                                 ' does not have an updated_at field so it will be syncd...')
-                    yield (self.stream, membership)
+                    yield self.stream, membership
                 else:
                     LOGGER.info('Received group_membership record with no id or updated_at, skipping...')
 
@@ -631,12 +631,12 @@ class SLAPolicies(Stream):
 
     def sync(self, state): # pylint: disable=unused-argument
         for policy in self.client.sla_policies():
-            yield (self.stream, policy)
+            yield self.stream, policy
 
     def check_access(self):
-        '''
+        """
         Check whether the permission was given to access stream resources or not.
-        '''
+        """
         self.client.sla_policies()
 
 STREAMS = {

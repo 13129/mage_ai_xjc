@@ -1155,7 +1155,7 @@ class Reports(TwitterAds):
             else:
                 max_end_rounded = window_end
 
-            if entity_ids != []:
+            if entity_ids:
                 entity_id_set = {
                     'placement': placement,
                     'entity_ids': entity_ids,

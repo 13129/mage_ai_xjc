@@ -54,7 +54,7 @@ class OutreachClient(object):
 
         self.__access_token = data['access_token']
 
-        self.__expires_at = datetime.utcnow() + \
+        self.__expires_at = datetime.now() + \
             timedelta(seconds=data['expires_in'] -
                       10)  # pad by 10 seconds for clock drift
 
@@ -79,7 +79,7 @@ class OutreachClient(object):
     def request(self, method, path=None, url=None, skip_quota=False, **kwargs):
         if url is None and \
             (self.__access_token is None or
-             self.__expires_at <= datetime.utcnow()):
+             self.__expires_at <= datetime.now()):
             self.refresh()
 
         if url is None and path:

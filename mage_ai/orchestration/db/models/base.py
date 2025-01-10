@@ -21,15 +21,15 @@ class BaseModel(Base):
     __abstract__ = True
 
     @declared_attr
-    def __tablename__(cls):
-        return camel_to_snake_case(cls.__name__)
+    def __tablename__(self):
+        return camel_to_snake_case(self.__name__)
 
     @classproperty
-    def query(cls):
-        return db_connection.session.query(cls)
+    def query(self):
+        return db_connection.session.query(self)
 
     @classproperty
-    def select(cls):
+    def select(self):
         return db_connection.session.query
 
     @property
@@ -49,10 +49,10 @@ class BaseModel(Base):
     )
 
     @classmethod
-    def create(self, **kwargs):
+    def create(cls, **kwargs):
         commit = kwargs.get('commit', True)
         kwargs.pop('commit', None)
-        model = self(**kwargs)
+        model = cls(**kwargs)
         model.save(commit=commit)
         return model
 
@@ -61,8 +61,8 @@ class BaseModel(Base):
 
     @classmethod
     @safe_db_query
-    def get(self, uuid):
-        return self.query.get(uuid)
+    def get(cls, uuid):
+        return cls.query.get(uuid)
 
     def save(self, commit=True) -> None:
         # Validate decorator isn’t invoked if value for column is empty.

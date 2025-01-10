@@ -23,28 +23,28 @@ class DBTCache(BaseCache):
 
     @classmethod
     async def initialize_cache_async(
-        self,
+        cls,
         file_path: str = None,
         replace: bool = False,
         repo_path: str = None,
         root_project: bool = True,
     ) -> 'DBTCache':
         repo_path = repo_path or get_repo_path(root_project=root_project)
-        cache = self(repo_path=repo_path)
+        cache = cls(repo_path=repo_path)
         if replace or not cache.exists():
             await cache.initialize_cache_for_models_async(file_path=file_path)
         return cache
 
     @classmethod
     def initialize_cache(
-        self,
+        cls,
         file_path: str = None,
         replace: bool = False,
         repo_path: str = None,
         root_project: bool = True,
     ) -> 'DBTCache':
         repo_path = repo_path or get_repo_path(root_project=root_project)
-        cache = self(repo_path=repo_path)
+        cache = cls(repo_path=repo_path)
         if replace or not cache.exists():
             cache.initialize_cache_for_models(file_path=file_path)
         return cache

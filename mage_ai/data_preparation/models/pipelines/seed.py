@@ -84,7 +84,7 @@ def __process(
                 pipeline_uuid=pipeline.uuid,
                 schedule_interval=ScheduleInterval.DAILY,
                 schedule_type=ScheduleType.TIME,
-                start_time=datetime.utcnow(),
+                start_time=datetime.now(),
                 status=ScheduleStatus.INACTIVE,
             )
             pipeline_schedules_models.append(model)
@@ -110,11 +110,11 @@ def __process(
 
             pipeline_schedule = pipeline_schedules_models[i % pipeline_schedules_count]
             model = PipelineRun(
-                completed_at=datetime.utcnow(),
-                execution_date=datetime.utcnow(),
+                completed_at=datetime.now(),
+                execution_date=datetime.now(),
                 pipeline_schedule_id=pipeline_schedule.id,
                 pipeline_uuid=pipeline_schedule.pipeline_uuid,
-                started_at=datetime.utcnow(),
+                started_at=datetime.now(),
                 status=statuses[i % len(statuses)],
             )
             pipeline_runs_models.append(model)
@@ -142,9 +142,9 @@ def __process(
 
             model = BlockRun(
                 block_uuid=blocks[i % len(blocks)].uuid,
-                completed_at=datetime.utcnow(),
+                completed_at=datetime.now(),
                 pipeline_run_id=pipeline_run.id,
-                started_at=datetime.utcnow(),
+                started_at=datetime.now(),
                 status=statuses[i % len(statuses)],
             )
             block_runs_models.append(model)

@@ -80,7 +80,7 @@ def get_memory_usage(
             pageins=getattr(info_start, 'pageins', 0),
             pfaults=getattr(info_start, 'pfaults', 0),
             rss=value_start,
-            timestamp=int(datetime.utcnow().timestamp() * 1000),  # in milliseconds
+            timestamp=int(datetime.now().timestamp() * 1000),  # in milliseconds
             vms=info_start.vms,
         ),
     ]
@@ -101,7 +101,7 @@ def get_memory_usage(
                 pageins=getattr(info_end, 'pageins', 0),
                 pfaults=getattr(info_end, 'pfaults', 0),
                 rss=value_end,
-                timestamp=int(datetime.utcnow().timestamp() * 1000),  # in milliseconds
+                timestamp=int(datetime.now().timestamp() * 1000),  # in milliseconds
                 vms=info_end.vms,
             )
         )
@@ -143,7 +143,7 @@ async def get_memory_usage_async(
             pageins=getattr(info_start, 'pageins', 0),
             pfaults=getattr(info_start, 'pfaults', 0),
             rss=value_start,
-            timestamp=int(datetime.utcnow().timestamp() * 1000),  # in milliseconds
+            timestamp=int(datetime.now().timestamp() * 1000),  # in milliseconds
             vms=info_start.vms,
         ),
     ]
@@ -164,7 +164,7 @@ async def get_memory_usage_async(
                 pageins=getattr(info_end, 'pageins', 0),
                 pfaults=getattr(info_end, 'pfaults', 0),
                 rss=value_end,
-                timestamp=int(datetime.utcnow().timestamp() * 1000),  # in milliseconds
+                timestamp=int(datetime.now().timestamp() * 1000),  # in milliseconds
                 vms=info_end.vms,
             )
         )
@@ -586,7 +586,7 @@ def format_log_message(
     metadata: Optional[Dict] = None,
 ) -> str:
     log_type = log_type or LogType.MEMORY
-    timestamp = round(datetime.utcnow().timestamp())
+    timestamp = round(datetime.now().timestamp())
     metadata = metadata or {}
 
     msg = f'[{timestamp}][{log_type.value}]'

@@ -10,7 +10,7 @@ from mage_ai.data_preparation.storage.local_storage import LocalStorage
 from mage_ai.settings.repo import get_repo_path, get_variables_dir
 
 
-class BaseCache():
+class BaseCache:
     cache_key = None
 
     def __init__(self, repo_path: str = None, repo_config=None, root_project: bool = True):

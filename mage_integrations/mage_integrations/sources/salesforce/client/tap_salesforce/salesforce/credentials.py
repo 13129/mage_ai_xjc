@@ -30,7 +30,7 @@ def parse_credentials(config):
     raise Exception("Cannot create credentials from config.")
 
 
-class SalesforceAuth():
+class SalesforceAuth:
     def __init__(self, credentials, domain='login'):
         self.domain = domain
         self._credentials = credentials

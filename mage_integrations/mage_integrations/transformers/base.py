@@ -76,12 +76,12 @@ class Transformer(Source, Destination):
         stream: str,
         schema: Dict,
         row: Dict,
-        tags: Dict = dict(),
+        tags: Dict = None,
     ) -> None:
         super().process_schema(stream, schema, row, tags)
         self.columns = list(schema['properties'].keys())
 
-    def process_state(self, row: Dict, tags: Dict = dict()) -> None:
+    def process_state(self, row: Dict, tags: Dict = None) -> None:
         state = row.get(KEY_VALUE)
         if state:
             self._emit_state(state)
@@ -95,7 +95,7 @@ class Transformer(Source, Destination):
         stream: str,
         schema: Dict,
         row: Dict,
-        tags: Dict = {},
+        tags: Dict = None,
     ) -> None:
         record = self._validate_and_prepare_record(
             stream=stream,
@@ -143,7 +143,7 @@ class Transformer(Source, Destination):
     def load_data(
         self,
         bookmarks: Dict = None,
-        query: Dict = {},
+        query: Dict = None,
         start_date: datetime = None,
         **kwargs,
     ) -> Generator[List[Dict], None, None]:

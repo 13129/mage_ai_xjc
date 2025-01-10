@@ -1,5 +1,7 @@
 import datetime
 import time
+from typing import Dict
+
 import requests
 import backoff
 import json
@@ -15,7 +17,7 @@ DEBUG = False
 BASE_URL = "https://api.hubapi.com"
 
 
-class TestClient():
+class TestClient:
     START_DATE_FORMAT = "%Y-%m-%dT00:00:00Z"
     V3_DEALS_PROPERTY_PREFIXES = {'hs_date_entered', 'hs_date_exited', 'hs_time_in'}
     BOOKMARK_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -23,13 +25,13 @@ class TestClient():
     ### CORE METHODS
     ##########################################################################
 
-    def giveup(exc):
+    def giveup(self):
         """Checks a response status code, returns True if unsuccessful unless rate limited."""
-        if exc.response.status_code == 429:
+        if self.response.status_code == 429:
             return False
 
-        return exc.response is not None \
-            and 400 <= exc.response.status_code < 500
+        return self.response is not None \
+            and 400 <= self.response.status_code < 500
 
     @backoff.on_exception(backoff.constant,
                           (requests.exceptions.RequestException,
@@ -38,7 +40,7 @@ class TestClient():
                           jitter=None,
                           giveup=giveup,
                           interval=10)
-    def get(self, url, params=dict()):
+    def get(self, url, params:Dict=None):
         """Perform a GET using the standard requests method and logs the action"""
         response = requests.get(url, params=params, headers=self.HEADERS)
         LOGGER.info(f"TEST CLIENT | GET {url} params={params}  STATUS: {response.status_code}")
@@ -178,7 +180,7 @@ class TestClient():
     def read(self, stream, parent_ids=[], since=''):
 
         # Resets the access_token if the expiry time is less than or equal to the current time
-        if self.CONFIG["token_expires"] <= datetime.datetime.utcnow():
+        if self.CONFIG["token_expires"] <= datetime.datetime.now():
             self.acquire_access_token_from_refresh_token()
 
         if stream == 'forms':
@@ -663,7 +665,7 @@ class TestClient():
         """Dispatch create to make tests clean."""
 
         # Resets the access_token if the expiry time is less than or equal to the current time
-        if self.CONFIG["token_expires"] <= datetime.datetime.utcnow():
+        if self.CONFIG["token_expires"] <= datetime.datetime.now():
             self.acquire_access_token_from_refresh_token()
 
         if stream == 'forms':
@@ -1143,7 +1145,7 @@ class TestClient():
         NB: This will update email_events as well.
         """
         # by default, a new subscription change will be created from a previous subscription change from one week ago as defined in the get
-        if subscriptions == []:
+        if not subscriptions:
             subscriptions = self.get_subscription_changes()
         subscription_id_list = [[change.get('subscriptionId') for change in subscription['changes']] for subscription in subscriptions]
         count = 0
@@ -1233,7 +1235,7 @@ class TestClient():
     def update(self, stream, record_id):
 
         # Resets the access_token if the expiry time is less than or equal to the current time
-        if self.CONFIG["token_expires"] <= datetime.datetime.utcnow():
+        if self.CONFIG["token_expires"] <= datetime.datetime.now():
             self.acquire_access_token_from_refresh_token()
             
         if stream == 'companies':
@@ -1471,7 +1473,7 @@ class TestClient():
     def cleanup(self, stream, records, count=10):
 
         # Resets the access_token if the expiry time is less than or equal to the current time
-        if self.CONFIG["token_expires"] <= datetime.datetime.utcnow():
+        if self.CONFIG["token_expires"] <= datetime.datetime.now():
             self.acquire_access_token_from_refresh_token()
             
         if stream == 'deal_pipelines':
@@ -1551,7 +1553,7 @@ class TestClient():
         self.CONFIG['access_token'] = auth['access_token']
         self.CONFIG['refresh_token'] = auth['refresh_token']
         self.CONFIG['token_expires'] = (
-            datetime.datetime.utcnow() +
+            datetime.datetime.now() +
             datetime.timedelta(seconds=auth['expires_in'] - 600))
         self.HEADERS = {'Authorization': f"Bearer {self.CONFIG['access_token']}"}
         LOGGER.info(f"TEST CLIENT | Token refreshed. Expires at {self.CONFIG['token_expires']}")

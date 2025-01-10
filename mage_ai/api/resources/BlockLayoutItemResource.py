@@ -30,7 +30,7 @@ from mage_ai.usage_statistics.logger import UsageStatisticLogger
 
 class BlockLayoutItemResource(GenericResource):
     @classmethod
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         variables = {}
         query = kwargs.get('query') or {}
         for k, v in query.items():
@@ -199,7 +199,7 @@ class BlockLayoutItemResource(GenericResource):
 
         await UsageStatisticLogger().chart_impression(block_config_to_show)
 
-        return self(
+        return cls(
             merge_dict(
                 block_config_to_show,
                 dict(

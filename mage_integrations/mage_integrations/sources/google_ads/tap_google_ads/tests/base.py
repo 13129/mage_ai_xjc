@@ -239,7 +239,7 @@ class GoogleAdsBase(unittest.TestCase):
                                     os.getenv('TAP_ADWORDS_OAUTH_CLIENT_ID'),
                                     os.getenv('TAP_ADWORDS_OAUTH_CLIENT_SECRET'),
                                     os.getenv('TAP_ADWORDS_REFRESH_TOKEN'),
-                                    os.getenv('TAP_ADWORDS_CUSTOMER_IDS')] if x == None]
+                                    os.getenv('TAP_ADWORDS_CUSTOMER_IDS')] if x is None]
         if len(missing_envs) != 0:
             raise Exception("Missing environment variables: {}".format(missing_envs))
 
@@ -354,7 +354,7 @@ class GoogleAdsBase(unittest.TestCase):
         for field in metadata:
             is_field_metadata = len(field['breadcrumb']) > 1
             inclusion_automatic_or_selected = (
-                field['metadata']['selected'] is True or \
+                field['metadata']['selected'] is True or
                 field['metadata']['inclusion'] == 'automatic'
             )
             if is_field_metadata and inclusion_automatic_or_selected:

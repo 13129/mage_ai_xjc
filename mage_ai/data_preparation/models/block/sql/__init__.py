@@ -294,7 +294,7 @@ def execute_sql_code(
 
         unique_table_name_suffix = None
         if (configuration or block.configuration).get('unique_upstream_table_name', False):
-            unique_table_name_suffix = str(int(datetime.utcnow().timestamp()))
+            unique_table_name_suffix = str(int(datetime.now().timestamp()))
 
         with Trino.with_config(config_file_loader) as loader:
             database = database or loader.default_database()

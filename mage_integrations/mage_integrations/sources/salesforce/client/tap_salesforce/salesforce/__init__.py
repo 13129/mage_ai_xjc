@@ -25,120 +25,43 @@ LOGGER = singer.get_logger()
 BULK_API_TYPE = "BULK"
 REST_API_TYPE = "REST"
 
-STRING_TYPES = set([
-    'id',
-    'string',
-    'picklist',
-    'textarea',
-    'phone',
-    'url',
-    'reference',
-    'multipicklist',
-    'combobox',
-    'encryptedstring',
-    'email',
-    'complexvalue',  # TODO: Unverified
-    'masterrecord',
-    'datacategorygroupreference',
-    'base64'
-])
+STRING_TYPES = {'id', 'string', 'picklist', 'textarea', 'phone', 'url', 'reference', 'multipicklist', 'combobox',
+                'encryptedstring', 'email', 'complexvalue', 'masterrecord', 'datacategorygroupreference', 'base64'}
 
-NUMBER_TYPES = set([
-    'double',
-    'currency',
-    'percent'
-])
+NUMBER_TYPES = {'double', 'currency', 'percent'}
 
-DATE_TYPES = set([
-    'datetime',
-    'date'
-])
+DATE_TYPES = {'datetime', 'date'}
 
-BINARY_TYPES = set([
-    'byte'
-])
+BINARY_TYPES = {'byte'}
 
-LOOSE_TYPES = set([
-    'anyType',
-
-    # A calculated field's type can be any of the supported
-    # formula data types (see https://developer.salesforce.com/docs/#i1435527)
-    'calculated'
-])
+LOOSE_TYPES = {'anyType', 'calculated'}
 
 
 # The following objects are not supported by the bulk API.
-UNSUPPORTED_BULK_API_SALESFORCE_OBJECTS = set(['AssetTokenEvent',
-                                               'AttachedContentNote',
-                                               'EventWhoRelation',
-                                               'QuoteTemplateRichTextData',
-                                               'TaskWhoRelation',
-                                               'SolutionStatus',
-                                               'ContractStatus',
-                                               'RecentlyViewed',
-                                               'DeclinedEventRelation',
-                                               'AcceptedEventRelation',
-                                               'TaskStatus',
-                                               'PartnerRole',
-                                               'TaskPriority',
-                                               'CaseStatus',
-                                               'UndecidedEventRelation',
-                                               'OrderStatus'])
+UNSUPPORTED_BULK_API_SALESFORCE_OBJECTS = {'AssetTokenEvent', 'AttachedContentNote', 'EventWhoRelation',
+                                           'QuoteTemplateRichTextData', 'TaskWhoRelation', 'SolutionStatus',
+                                           'ContractStatus', 'RecentlyViewed', 'DeclinedEventRelation',
+                                           'AcceptedEventRelation', 'TaskStatus', 'PartnerRole', 'TaskPriority',
+                                           'CaseStatus', 'UndecidedEventRelation', 'OrderStatus'}
 
 # The following objects have certain WHERE clause restrictions so we exclude them.
-QUERY_RESTRICTED_SALESFORCE_OBJECTS = set(['Announcement',
-                                           'ContentDocumentLink',
-                                           'CollaborationGroupRecord',
-                                           'Vote',
-                                           'IdeaComment',
-                                           'FieldDefinition',
-                                           'PlatformAction',
-                                           'UserEntityAccess',
-                                           'RelationshipInfo',
-                                           'ContentFolderMember',
-                                           'ContentFolderItem',
-                                           'SearchLayout',
-                                           'SiteDetail',
-                                           'EntityParticle',
-                                           'OwnerChangeOptionInfo',
-                                           'DataStatistics',
-                                           'UserFieldAccess',
-                                           'PicklistValueInfo',
-                                           'RelationshipDomain',
-                                           'FlexQueueItem',
-                                           'NetworkUserHistoryRecent',
-                                           'FieldHistoryArchive',
-                                           'RecordActionHistory',
-                                           'FlowVersionView',
-                                           'FlowVariableView',
-                                           'AppTabMember',
-                                           'ColorDefinition',
-                                           'IconDefinition',])
+QUERY_RESTRICTED_SALESFORCE_OBJECTS = {'Announcement', 'ContentDocumentLink', 'CollaborationGroupRecord', 'Vote',
+                                       'IdeaComment', 'FieldDefinition', 'PlatformAction', 'UserEntityAccess',
+                                       'RelationshipInfo', 'ContentFolderMember', 'ContentFolderItem', 'SearchLayout',
+                                       'SiteDetail', 'EntityParticle', 'OwnerChangeOptionInfo', 'DataStatistics',
+                                       'UserFieldAccess', 'PicklistValueInfo', 'RelationshipDomain', 'FlexQueueItem',
+                                       'NetworkUserHistoryRecent', 'FieldHistoryArchive', 'RecordActionHistory',
+                                       'FlowVersionView', 'FlowVariableView', 'AppTabMember', 'ColorDefinition',
+                                       'IconDefinition'}
 
 # The following objects are not supported by the query method being used.
-QUERY_INCOMPATIBLE_SALESFORCE_OBJECTS = set(['DataType',
-                                             'ListViewChartInstance',
-                                             'FeedLike',
-                                             'OutgoingEmail',
-                                             'OutgoingEmailRelation',
-                                             'FeedSignal',
-                                             'ActivityHistory',
-                                             'EmailStatus',
-                                             'UserRecordAccess',
-                                             'Name',
-                                             'AggregateResult',
-                                             'OpenActivity',
-                                             'ProcessInstanceHistory',
-                                             'OwnedContentDocument',
-                                             'FolderedContentDocument',
-                                             'FeedTrackedChange',
-                                             'CombinedAttachment',
-                                             'AttachedContentDocument',
-                                             'ContentBody',
-                                             'NoteAndAttachment',
-                                             'LookedUpFromActivity',
-                                             'AttachedContentNote',
-                                             'QuoteTemplateRichTextData'])
+QUERY_INCOMPATIBLE_SALESFORCE_OBJECTS = {'DataType', 'ListViewChartInstance', 'FeedLike', 'OutgoingEmail',
+                                         'OutgoingEmailRelation', 'FeedSignal', 'ActivityHistory', 'EmailStatus',
+                                         'UserRecordAccess', 'Name', 'AggregateResult', 'OpenActivity',
+                                         'ProcessInstanceHistory', 'OwnedContentDocument', 'FolderedContentDocument',
+                                         'FeedTrackedChange', 'CombinedAttachment', 'AttachedContentDocument',
+                                         'ContentBody', 'NoteAndAttachment', 'LookedUpFromActivity',
+                                         'AttachedContentNote', 'QuoteTemplateRichTextData'}
 
 
 def log_backoff_attempt(details):
@@ -203,7 +126,7 @@ def field_to_property_schema(field, mdata):
     return property_schema, mdata
 
 
-class Salesforce():
+class Salesforce:
     # pylint: disable=too-many-instance-attributes,too-many-arguments
     def __init__(self,
                  credentials=None,

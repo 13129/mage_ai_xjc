@@ -7,7 +7,7 @@ from tap_zendesk.sync import sync_stream
 from tap_zendesk import Zenpy
 import json
      
-class Zenpy():
+class Zenpy:
     def __init__(self) -> None:
         pass
 
@@ -30,7 +30,7 @@ def mocked_sync_audits(ticket_id=None):
     }
     ]
     for audit in ticket_audits:
-        yield ('ticket_audits', audit)
+        yield 'ticket_audits', audit
 
 def mocked_sync_metrics(ticket_id=None):
     """
@@ -51,7 +51,7 @@ def mocked_sync_metrics(ticket_id=None):
     }
     ]
     for metric in ticket_metrics:
-        yield ('ticket_metrics', metric)
+        yield 'ticket_metrics', metric
 
 def mocked_sync_comments(ticket_id=None):
     """
@@ -72,7 +72,7 @@ def mocked_sync_comments(ticket_id=None):
     }
     ]
     for comment in ticket_comments:
-        yield ('ticket_comments', comment)
+        yield 'ticket_comments', comment
 
 def logger(logger, point):
     return "test stream"

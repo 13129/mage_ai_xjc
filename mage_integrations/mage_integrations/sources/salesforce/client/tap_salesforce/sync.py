@@ -11,7 +11,7 @@ from mage_integrations.sources.salesforce.client.tap_salesforce.salesforce.bulk 
 
 LOGGER = singer.get_logger()
 
-BLACKLISTED_FIELDS = set(['attributes'])
+BLACKLISTED_FIELDS = {'attributes'}
 
 
 def remove_blacklisted_fields(data):

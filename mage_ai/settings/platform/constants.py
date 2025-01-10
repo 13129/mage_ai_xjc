@@ -16,7 +16,7 @@ def set_project_platform_activated_flag():
     project_platform_activated_flag = os.path.exists(platform_settings_full_path())
 
 
-# Set the activated flag upon server starts instead of repeatedly checking the os path
+# 在服务器启动时设置激活标志，而不是重复检查操作系统路径
 project_platform_activated_flag = False
 set_project_platform_activated_flag()
 

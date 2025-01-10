@@ -15,7 +15,7 @@ logger_default = Logger().new_server_logger(__name__)
 
 def build_logging_callback(logging_func: Callable, log_level: LogLevel = None):
     def __callback(event, log_level=log_level, logging_func=logging_func):
-        log_levels = set([LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR])
+        log_levels = {LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR}
 
         if LogLevel.DEBUG == log_level or event.info.level in log_levels:
             logging_func(event.info.level, event.info.msg)
@@ -73,10 +73,10 @@ class DBTCli:
             for line in log_args:
                 pair.append(str(line))
                 if len(pair) == 2:
-                    pairs.append((' ').join(pair))
+                    pairs.append(' '.join(pair))
                     pair = []
             if len(pair) >= 1:
-                pairs.append((' ').join(pair))
+                pairs.append(' '.join(pair))
 
             message = ' \\\n    '.join(pairs)
 

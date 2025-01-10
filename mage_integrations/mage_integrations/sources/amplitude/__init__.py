@@ -36,7 +36,7 @@ class Amplitude(Source):
         if query is None:
             query = {}
 
-        today = datetime.utcnow()
+        today = datetime.now()
         start_date = today - timedelta(days=1)
         end_date = today
 
@@ -74,7 +74,7 @@ class Amplitude(Source):
         return VALID_REPLICATION_KEYS[stream_id]
 
     def test_connection(self):
-        today = datetime.utcnow()
+        today = datetime.now()
         self.connection.load(start_date=today, end_date=today)
 
 

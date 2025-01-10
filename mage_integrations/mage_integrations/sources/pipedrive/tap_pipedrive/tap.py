@@ -126,7 +126,7 @@ def retry_after_wait_gen():
 
 
 class PipedriveNull200Error(Exception):
-    "Raised when pipedrive api returns a 200 with null body"
+    """Raised when pipedrive api returns a 200 with null body"""
     pass
 
 

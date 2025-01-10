@@ -133,7 +133,7 @@ class SalesforceSink(BatchSink):
                 f"Data in {action} {self.stream_name}\
                     batch does not conform to target SF {self.stream_name} Object"
             )
-            raise (e)
+            raise e
 
         return results
 

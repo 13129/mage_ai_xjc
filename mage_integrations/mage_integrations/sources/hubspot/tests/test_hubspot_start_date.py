@@ -50,7 +50,7 @@ class TestHubspotStartDate(HubspotBaseTest):
 
     def get_properties(self, original=True):
         utc_today = datetime.datetime.strftime(
-            datetime.datetime.utcnow(), self.START_DATE_FORMAT
+            datetime.datetime.now(), self.START_DATE_FORMAT
         )
 
         if original:
@@ -164,7 +164,7 @@ class TestHubspotStartDateStatic(TestHubspotStartDate):
 
     def get_properties(self, original=True):
         utc_today = datetime.datetime.strftime(
-            datetime.datetime.utcnow(), self.START_DATE_FORMAT
+            datetime.datetime.now(), self.START_DATE_FORMAT
         )
 
         if original:

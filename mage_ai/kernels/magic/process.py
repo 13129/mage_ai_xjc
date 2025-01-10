@@ -117,7 +117,7 @@ class ProcessBase:
             ],
             kwds={},
         )
-        now = datetime.utcnow().timestamp()
+        now = datetime.now().timestamp()
         self.timestamp = int(now * 1000)
 
         if is_debug():

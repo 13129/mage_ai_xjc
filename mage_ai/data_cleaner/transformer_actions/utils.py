@@ -158,6 +158,6 @@ def generate_string_cols(df, columns):
         if exact_dtype is str:
             yield column
         else:
-            logger.warn(
+            logger.warning(
                 f'Attempted to perform string-only action on non-string column \'{column}\''
             )

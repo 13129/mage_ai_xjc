@@ -750,7 +750,7 @@ class PipelineScheduler:
             pipeline_schedule = self.pipeline_run.pipeline_schedule
             schedule_interval = pipeline_schedule.schedule_interval
             if ScheduleType.API == pipeline_schedule.schedule_type:
-                execution_date = datetime.utcnow()
+                execution_date = datetime.now()
             else:
                 # This will be none if trigger is API type
                 execution_date = pipeline_schedule.current_execution_date()
@@ -772,7 +772,7 @@ class PipelineScheduler:
                 date_diff = relativedelta(months=1)
 
             if date_diff is not None:
-                end_date = (execution_date).isoformat()
+                end_date = execution_date.isoformat()
                 start_date = (execution_date - date_diff).isoformat()
 
             runtime_arguments = dict(
@@ -1297,7 +1297,7 @@ def configure_pipeline_run_payload(
     payload['pipeline_uuid'] = pipeline_schedule.pipeline_uuid
     execution_date = payload.get('execution_date')
     if execution_date is None:
-        payload['execution_date'] = datetime.utcnow()
+        payload['execution_date'] = datetime.now()
     elif not isinstance(execution_date, datetime):
         payload['execution_date'] = datetime.fromisoformat(execution_date)
 

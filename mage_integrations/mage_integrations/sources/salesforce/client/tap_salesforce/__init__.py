@@ -161,7 +161,7 @@ def create_property_schema(field, mdata):
 
     property_schema, mdata = salesforce.field_to_property_schema(field, mdata)
 
-    return (property_schema, mdata)
+    return property_schema, mdata
 
 
 # pylint: disable=too-many-branches,too-many-statements

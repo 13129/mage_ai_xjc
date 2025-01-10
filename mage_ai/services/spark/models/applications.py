@@ -43,26 +43,26 @@ class Application(BaseSparkModel):
             self.attempts = arr
 
     @classmethod
-    def load(self, **kwargs):
+    def load(cls, **kwargs):
         payload = kwargs.copy() if kwargs else {}
         return super().load(**payload)
 
     @classmethod
-    def __cache_file_path(self):
-        return os.path.join(self.cache_dir_path(), 'applications.json')
+    def __cache_file_path(cls):
+        return os.path.join(cls.cache_dir_path(), 'applications.json')
 
     @classmethod
-    def clear_cache(self) -> None:
-        if os.path.exists(self.__cache_file_path()):
-            os.remove(self.__cache_file_path())
+    def clear_cache(cls) -> None:
+        if os.path.exists(cls.__cache_file_path()):
+            os.remove(cls.__cache_file_path())
 
     @classmethod
-    def cache_application(self, application) -> None:
-        os.makedirs(self.cache_dir_path(), exist_ok=True)
+    def cache_application(cls, application) -> None:
+        os.makedirs(cls.cache_dir_path(), exist_ok=True)
 
         data = {}
-        if os.path.exists(self.__cache_file_path()):
-            with open(self.__cache_file_path()) as f:
+        if os.path.exists(cls.__cache_file_path()):
+            with open(cls.__cache_file_path()) as f:
                 content = f.read()
                 if content:
                     data.update(json.loads(content) or {})
@@ -71,19 +71,19 @@ class Application(BaseSparkModel):
             application.calculated_id(): application.to_dict(),
         })
 
-        with open(self.__cache_file_path(), 'w') as f:
+        with open(cls.__cache_file_path(), 'w') as f:
             f.write(json.dumps(data))
 
     @classmethod
-    def get_applications_from_cache(self) -> Dict:
+    def get_applications_from_cache(cls) -> Dict:
         data = {}
 
-        if os.path.exists(self.__cache_file_path()):
-            with open(self.__cache_file_path()) as f:
+        if os.path.exists(cls.__cache_file_path()):
+            with open(cls.__cache_file_path()) as f:
                 content = f.read()
                 if content:
                     for application_dict in json.loads(content).values():
-                        application = self.load(**application_dict)
+                        application = cls.load(**application_dict)
                         data[application.calculated_id()] = application
 
         return data

@@ -306,7 +306,7 @@ class GoogleSheets(Source):
                 column_effective_value = first_value.get('effectiveValue', {})
 
                 if column_effective_value == {}:
-                    if ("numberFormat" in first_value.get('effectiveFormat', {})):
+                    if "numberFormat" in first_value.get('effectiveFormat', {}):
                         column_effective_value_type = "numberValue"
                     else:
                         column_effective_value_type = 'stringValue'

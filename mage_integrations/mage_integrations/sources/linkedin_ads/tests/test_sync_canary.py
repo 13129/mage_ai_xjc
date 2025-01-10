@@ -18,7 +18,7 @@ class LinkedinAdsSyncTest(TestLinkedinAdsBase):
 
         # removed "ad_analytics_by_campaign" and "ad_analytics_by_creative" as
         # it makes lots of api calls so sync canary test for these streams is covered in the start date test
-        expected_streams = self.expected_streams() - set({"ad_analytics_by_campaign", "ad_analytics_by_creative"})
+        expected_streams = self.expected_streams() - {"ad_analytics_by_campaign", "ad_analytics_by_creative"}
         test_catalogs = [catalog for catalog in found_catalogs
                                       if catalog.get('stream_name') in expected_streams]
 

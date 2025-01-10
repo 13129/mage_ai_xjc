@@ -227,7 +227,7 @@ class LinkedinClient: # pylint: disable=too-many-instance-attributes
         # data['expires_in'] is an integer of seconds until the access_token expires.
         # Technically this self.__expires is inaccurate because it was true when LinkedIn generated the token, but
         # we receive and process that response some (very) small amount of time after it was true.
-        self.__expires = datetime.utcnow() + timedelta(seconds=data['expires_in'])
+        self.__expires = datetime.now() + timedelta(seconds=data['expires_in'])
 
 
     def fetch_and_set_access_token(self):
@@ -239,7 +239,7 @@ class LinkedinClient: # pylint: disable=too-many-instance-attributes
 
         if self.__access_token:
 
-            if self.get_token_expires() > datetime.utcnow():
+            if self.get_token_expires() > datetime.now():
                 LOGGER.info('Existing token still valid; token expires %s', self.__expires.strftime("%Y-%m-%d %H:%M:%S"))
                 return
 

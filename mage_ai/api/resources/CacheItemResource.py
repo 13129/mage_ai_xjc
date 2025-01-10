@@ -14,7 +14,7 @@ from mage_ai.server.kernel_output_parser import DataType
 
 class CacheItemResource(AsyncBaseResource):
     @classmethod
-    async def collection(self, query, _meta, user, **kwargs):
+    async def collection(cls, query, _meta, user, **kwargs):
         item_type = query.get('item_type', [None])
         if item_type:
             item_type = item_type[0]
@@ -25,14 +25,14 @@ class CacheItemResource(AsyncBaseResource):
             cache = await DBTCache.initialize_cache_async(replace=False, root_project=True)
             results.extend(cache.get_cache_items())
 
-        return self.build_result_set(
+        return cls.build_result_set(
             sorted(results, key=lambda x: x.uuid),
             user,
             **kwargs,
         )
 
     @classmethod
-    async def member(self, pk: str, user, **kwargs):
+    async def member(cls, pk: str, user, **kwargs):
         query = kwargs.get('query') or {}
 
         item_type = query.get('item_type', [None])
@@ -70,7 +70,7 @@ class CacheItemResource(AsyncBaseResource):
                 upstream_blocks=lineage,
             )
 
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     async def update(self, payload, **kwargs):
         query = kwargs.get('query') or {}

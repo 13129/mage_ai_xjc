@@ -25,7 +25,7 @@ class CreateWithInteractionsComponent(BaseComponent):
     uuid_from_name = True
 
     @classmethod
-    async def enabled(self, current_user: User = None, **kwargs) -> bool:
+    async def enabled(cls, current_user: User = None, **kwargs) -> bool:
         async def __validate_pipeline_interactions_permissions(
             pipeline: Pipeline,
             current_user=current_user,
@@ -63,7 +63,7 @@ class EditComponent(BaseComponent):
     operation = OperationType.UPDATE
 
     @classmethod
-    async def components(self, current_user: User = None, **kwargs) -> List[EditAttributes]:
+    async def components(cls, current_user: User = None, **kwargs) -> List[EditAttributes]:
         mapping = {}
 
         pipeline_schedules = kwargs.get('pipeline_schedules') or []

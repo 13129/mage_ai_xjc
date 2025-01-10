@@ -99,7 +99,7 @@ def sync(client, config, catalog, state, logger=LOGGER):
             update_currently_syncing(state, None)
 
         # GET country_ids and platform_ids (targeting values) - only if reports exist
-        if report_streams != []:
+        if report_streams:
             # GET country_ids (targeting_values) based on config country_codes
             country_ids = []
             reports_obj = Reports()

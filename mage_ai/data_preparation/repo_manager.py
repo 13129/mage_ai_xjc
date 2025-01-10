@@ -221,7 +221,7 @@ def init_repo(
     root_project: bool = False,
 ) -> None:
     """
-    初始化当前路径下的存储库。
+    初始化当前路径下的项目。
     """
     if os.path.exists(repo_path):
         raise FileExistsError(f'Repository {repo_path} already exists')
@@ -321,12 +321,10 @@ def update_settings_on_metadata_change() -> None:
 
 def init_project_uuid(overwrite_uuid: str = None, root_project: bool = False) -> None:
     """
-    Initialize the project_uuid constant. The project_uuid constant is used throughout
-    the server as an identifier for the project.
-
+    初始化project_uuid常量。project_uuid常量在整个服务器中用作项目的标识符.
+    todo:修改uuid从数据库获取
     Args:
-        overwrite_uuid (str): If not null, the overwrite_uuid will overwrite the current
-            value of project_uuid.
+        overwrite_uuid (str): 如果不为空,overwrite_uuid将覆盖project_uuid的当前值.
     """
     global project_uuid
     repo_config = get_repo_config(root_project=root_project)

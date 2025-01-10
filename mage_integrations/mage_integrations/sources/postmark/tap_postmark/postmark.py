@@ -534,7 +534,7 @@ class Postmark(object):  # noqa: WPS230
         dates: rrule = rrule(
             freq=DAILY,
             dtstart=period,
-            until=datetime.utcnow(),
+            until=datetime.now(),
         )
 
         # Yield dates in YYYY-MM-DD format

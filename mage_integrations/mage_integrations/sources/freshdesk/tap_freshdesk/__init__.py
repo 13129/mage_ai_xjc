@@ -40,7 +40,7 @@ def get_url(endpoint, **kwargs):
 @utils.ratelimit(1, 2)
 def request(url, params=None):
     @backoff.on_exception(backoff.expo,
-                          (requests.exceptions.RequestException),
+                          requests.exceptions.RequestException,
                           max_tries=5,
                           giveup=lambda e: e.response is not None and 400 <= e.response.status_code < 500,
                           factor=2)

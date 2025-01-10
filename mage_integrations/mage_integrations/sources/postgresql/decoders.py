@@ -22,7 +22,7 @@ def convert_bytes_to_int(_in_bytes: bytes) -> int:
 
 
 def convert_bytes_to_utf8(_in_bytes: Union[bytes, bytearray]) -> str:
-    return (_in_bytes).decode('utf-8')
+    return _in_bytes.decode('utf-8')
 
 
 @dataclass(frozen=True)
@@ -78,7 +78,7 @@ class PgoutputMessage(ABC):
     def read_string(self):
         output = bytearray()
         next_char = self.buffer.read(1)
-        while (next_char != b'\x00'):
+        while next_char != b'\x00':
             output += next_char
             next_char = self.buffer.read(1)
         return convert_bytes_to_utf8(output)

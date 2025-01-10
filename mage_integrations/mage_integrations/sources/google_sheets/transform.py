@@ -267,14 +267,12 @@ def transform_sheet_data(spreadsheet_id, sheet_id, sheet_title, from_row, column
 
     for (row, unformatted_row) in zip(sheet_data_rows, unformatted_rows):
         # If empty row, SKIP
-        if row == []:
+        if not row:
             LOGGER.info('EMPTY ROW: {}, SKIPPING'.format(row_num))
         else:
-            sheet_data_row_tf = {}
+            sheet_data_row_tf = {'__google_spreadsheet_id': spreadsheet_id, '__google_sheet_id': sheet_id,
+                                 '__google_sheet_row': row_num}
             # Add spreadsheet_id, sheet_id, and row
-            sheet_data_row_tf['__google_spreadsheet_id'] = spreadsheet_id
-            sheet_data_row_tf['__google_sheet_id'] = sheet_id
-            sheet_data_row_tf['__google_sheet_row'] = row_num
             col_num = 1
             for (value, unformatted_value) in zip(row, unformatted_row):
                 # Select column metadata based on column index

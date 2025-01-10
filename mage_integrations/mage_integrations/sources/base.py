@@ -110,14 +110,14 @@ class Source:
             self.query = query
 
     @classmethod
-    def templates(self) -> List[Dict]:
+    def templates(cls) -> List[Dict]:
         """
         Get a list of template files.
 
         Returns:
             List[Dict]: Description
         """
-        parts = inspect.getfile(self).split('/')
+        parts = inspect.getfile(cls).split('/')
         absolute_path = get_abs_path(f"{'/'.join(parts[:len(parts) - 1])}/templates")
 
         templates = {}

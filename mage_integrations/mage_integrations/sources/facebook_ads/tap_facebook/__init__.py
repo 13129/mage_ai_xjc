@@ -231,8 +231,8 @@ class IncrementalStream(Stream):
 
 
 def batch_record_success(response, stream=None, transformer=None, schema=None):
-    '''A success callback for the FB Batch endpoint used when syncing AdCreatives. Needs the stream
-    to resolve schema refs and transform the successful response object.'''
+    """A success callback for the FB Batch endpoint used when syncing AdCreatives. Needs the stream
+    to resolve schema refs and transform the successful response object."""
     if isinstance(response, dict):
         rec = response
     else:
@@ -242,16 +242,16 @@ def batch_record_success(response, stream=None, transformer=None, schema=None):
 
 
 def batch_record_failure(response):
-    '''A failure callback for the FB Batch endpoint used when syncing AdCreatives. Raises the error
-    so it fails the sync process.'''
+    """A failure callback for the FB Batch endpoint used when syncing AdCreatives. Raises the error
+    so it fails the sync process."""
     raise response.error()
 
 
 # AdCreative is not an iterable stream as it uses the batch endpoint
 class AdCreative(Stream):
-    '''
+    """
     doc: https://developers.facebook.com/docs/marketing-api/reference/adgroup/adcreatives/
-    '''
+    """
 
     def sync_batches(self, stream_objects):
         refs = load_shared_schema_refs()
@@ -284,9 +284,9 @@ class AdCreative(Stream):
 
 
 class Ads(IncrementalStream):
-    '''
+    """
     doc: https://developers.facebook.com/docs/marketing-api/reference/adgroup
-    '''
+    """
 
     key_properties = ['id', 'updated_time']
 
@@ -345,9 +345,9 @@ class Ads(IncrementalStream):
 
 
 class AdSets(IncrementalStream):
-    '''
+    """
     doc: https://developers.facebook.com/docs/marketing-api/reference/ad-campaign
-    '''
+    """
 
     key_properties = ['id', 'updated_time']
 

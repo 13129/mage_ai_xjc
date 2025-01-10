@@ -118,7 +118,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
 
         try:
             responses = [response for response in http.get_incremental_export(url='some_url',access_token='some_token', 
-                                                                              request_timeout=REQUEST_TIMEOUT, start_time= datetime.datetime.utcnow())]
+                                                                              request_timeout=REQUEST_TIMEOUT, start_time= datetime.datetime.now())]
         except requests.exceptions.Timeout as e:
             pass
 
@@ -236,7 +236,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
         cursor_based_export_stream = streams.CursorBasedExportStream(config={'subdomain': '34', 'access_token': 'df'})
         cursor_based_export_stream.endpoint = 'https://{}'
         try:
-            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.utcnow()))
+            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.now()))
         except requests.exceptions.Timeout as e:
             pass
 
@@ -251,7 +251,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
         cursor_based_export_stream = streams.CursorBasedExportStream(config={'subdomain': '34', 'access_token': 'df', 'request_timeout': '0'})
         cursor_based_export_stream.endpoint = 'https://{}'
         try:
-            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.utcnow()))
+            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.now()))
         except requests.exceptions.Timeout as e:
             pass
 
@@ -266,7 +266,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
         cursor_based_export_stream = streams.CursorBasedExportStream(config={'subdomain': '34', 'access_token': 'df', 'request_timeout': 0})
         cursor_based_export_stream.endpoint = 'https://{}'
         try:
-            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.utcnow()))
+            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.now()))
         except requests.exceptions.Timeout as e:
             pass
 
@@ -281,7 +281,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
         cursor_based_export_stream = streams.CursorBasedExportStream(config={'subdomain': '34', 'access_token': 'df', 'request_timeout': ''})
         cursor_based_export_stream.endpoint = 'https://{}'
         try:
-            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.utcnow()))
+            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.now()))
         except requests.exceptions.Timeout as e:
             pass
 
@@ -296,7 +296,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
         cursor_based_export_stream = streams.CursorBasedExportStream(config={'subdomain': '34', 'access_token': 'df', 'request_timeout': REQUEST_TIMEOUT_STR})
         cursor_based_export_stream.endpoint = 'https://{}'
         try:
-            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.utcnow()))
+            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.now()))
         except requests.exceptions.Timeout as e:
             pass
 
@@ -311,7 +311,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
         cursor_based_export_stream = streams.CursorBasedExportStream(config={'subdomain': '34', 'access_token': 'df', 'request_timeout': REQUEST_TIMEOUT})
         cursor_based_export_stream.endpoint = 'https://{}'
         try:
-            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.utcnow()))
+            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.now()))
         except requests.exceptions.Timeout as e:
             pass
 
@@ -326,7 +326,7 @@ class TestRequestTimeoutBackoff(unittest.TestCase):
         cursor_based_export_stream = streams.CursorBasedExportStream(config={'subdomain': '34', 'access_token': 'df', 'request_timeout': REQUEST_TIMEOUT_FLOAT})
         cursor_based_export_stream.endpoint = 'https://{}'
         try:
-            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.utcnow()))
+            responses = list(cursor_based_export_stream.get_objects(datetime.datetime.now()))
         except requests.exceptions.Timeout as e:
             pass
 

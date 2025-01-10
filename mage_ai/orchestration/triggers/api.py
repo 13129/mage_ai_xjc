@@ -113,7 +113,7 @@ def __fetch_or_create_pipeline_schedule(
             dict(
                 name=schedule_name,
                 schedule_type=schedule_type,
-                start_time=datetime.utcnow(),
+                start_time=datetime.now(),
                 status=ScheduleStatus.ACTIVE,
             ),
             None,

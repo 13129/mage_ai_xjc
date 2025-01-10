@@ -111,6 +111,8 @@ def get_repo_path(
 
 
 def set_repo_path(repo_path: str) -> None:
+    """添加模块搜索路径，设置项目设置文件启用"""
+    # todo: 需改成从数据库
     os.environ[REPO_PATH_ENV_VAR] = repo_path
     sys.path.append(os.path.dirname(repo_path))
     set_project_platform_activated_flag()
@@ -139,9 +141,7 @@ def get_repo_name(repo_path: str = None, root_project: bool = False) -> str:
         # If root_project is True:
         # /home/src/test relative_to /home/src == test
 
-        return Path(repo_path).relative_to(
-            base_repo_dirname() if root_project else base_repo_path(),
-        )
+        return Path(repo_path).relative_to(base_repo_dirname() if root_project else base_repo_path(),)
 
     return os.path.basename(repo_path)
 

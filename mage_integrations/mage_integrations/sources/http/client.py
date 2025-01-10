@@ -137,7 +137,7 @@ def raise_for_error(response):
     raise exc(message) from None
 
 
-class Client():
+class Client:
     def __init__(self, config, logger=None, api_result_limit=100):
         self.config = config
         self.logger = logger if logger is not None else LOGGER

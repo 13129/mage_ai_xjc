@@ -13,12 +13,12 @@ class WorkspaceConfig(BaseConfig):
     project_uuid: str = None
 
     @classmethod
-    def parse_config(self, config: Dict = None) -> Dict:
+    def parse_config(cls, config: Dict = None) -> Dict:
         lifecycle_config = config.get('lifecycle_config')
         if lifecycle_config and type(lifecycle_config) is dict:
             config['lifecycle_config'] = LifecycleConfig.load(config=lifecycle_config)
 
-        all_fields = fields(self)
+        all_fields = fields(cls)
         keys = [field.name for field in all_fields]
         return extract(config, keys)
 

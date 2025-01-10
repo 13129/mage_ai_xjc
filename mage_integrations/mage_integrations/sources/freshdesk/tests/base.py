@@ -58,8 +58,7 @@ class FreshdeskBaseTest(unittest.TestCase):
         }
 
     def required_environment_variables(self):
-        return set(['TAP_FRESHDESK_API_KEY',
-                    'TAP_FRESHDESK_SUBDOMAIN'])
+        return {'TAP_FRESHDESK_API_KEY', 'TAP_FRESHDESK_SUBDOMAIN'}
 
     def expected_metadata(self):
         """The expected streams and metadata about the streams"""

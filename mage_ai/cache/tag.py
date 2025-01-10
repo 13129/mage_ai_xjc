@@ -59,7 +59,7 @@ class TagCache(BaseCache):
         return os.path.join(tag_uuid)
 
     def add_pipeline(self, tag_uuid: str, pipeline) -> None:
-        self.update_pipeline(tag_uuid, pipeline, added_at=datetime.utcnow().timestamp())
+        self.update_pipeline(tag_uuid, pipeline, added_at=datetime.now().timestamp())
 
     def update_pipeline(
         self,
@@ -144,7 +144,7 @@ class TagCache(BaseCache):
 
         mapping[key][KEY_FOR_PIPELINES] = pipelines_dict
 
-        if not pipelines_dict and mapping[key].keys() == set([KEY_FOR_PIPELINES]):
+        if not pipelines_dict and mapping[key].keys() == {KEY_FOR_PIPELINES}:
             mapping.pop(key, None)
 
         self.set(self.cache_key, mapping)

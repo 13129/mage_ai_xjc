@@ -27,9 +27,11 @@ class GoogleSearchConsole(Source):
         self,
         stream,
         bookmarks: Dict = None,
-        query: Dict = {},
+            query=None,
         **kwargs,
     ) -> Generator[List[Dict], None, None]:
+        if query is None:
+            query = {}
         stream_name = stream.tap_stream_id
 
         endpoint_config = STREAMS[stream_name]

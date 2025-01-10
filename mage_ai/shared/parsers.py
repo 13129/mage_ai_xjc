@@ -65,7 +65,7 @@ def encode_complex(obj):
     elif isinstance(obj, (np.ndarray,)):
         # np.array is a function
         return obj.tolist()
-    elif isinstance(obj, (np.bool_)):
+    elif isinstance(obj, np.bool_):
         return bool(obj)
     elif isinstance(obj, (np.void, pd._libs.missing.NAType)):
         # Convert pandas._libs.missing.NAType to None

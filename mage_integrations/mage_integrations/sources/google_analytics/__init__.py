@@ -96,9 +96,11 @@ class GoogleAnalytics(Source):
         self,
         stream,
         bookmarks: Dict = None,
-        query: Dict = {},
+            query=None,
         **kwargs,
     ) -> Generator[List[Dict], None, None]:
+        if query is None:
+            query = {}
         columns = extract_selected_columns(stream.metadata)
         dimensions = [c for c in columns if c in DIMENSIONS]
         metrics = [c for c in columns if c in METRICS]

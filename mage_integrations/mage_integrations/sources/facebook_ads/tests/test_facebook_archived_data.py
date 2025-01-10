@@ -30,9 +30,9 @@ class FacebookArchivedData(FacebookBaseTest):
         return return_value
 
     def test_run(self):
-        '''
+        """
             Testing the archived data with 'include_deleted' parameter
-        '''
+        """
         expected_streams = self.streams_to_test()
 
         ##########################################################################

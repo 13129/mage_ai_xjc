@@ -43,9 +43,9 @@ client = zenpy.Zenpy(oauth_token=args.oauth_token, subdomain=args.subdomain)
 bookmark = datetime.strptime(
    "2018-06-16T13:10:06+0000",
    '%Y-%m-%dT%H:%M:%S%z').astimezone(pytz.UTC)
-start_time = datetime.utcnow()
+start_time = datetime.now()
 rates = defaultdict(list)
-metrics_start_time = datetime.utcnow()
+metrics_start_time = datetime.now()
 capture_rate = 60
 raw_counts = defaultdict(int)
 def log_rates(rates):
@@ -67,20 +67,20 @@ def log_rates(rates):
        logger.info("Synced total of %s %ss in %s seconds",
                    sum(value),
                    metric,
-                   (datetime.utcnow() - start_time).seconds)
+                   (datetime.now() - start_time).seconds)
 
 def capture(metric):
    global metrics_start_time
    global rates
    raw_counts[metric] += 1
    logger.debug("Capturing %s", metric)
-   if capture_rate <= (datetime.utcnow() - metrics_start_time).seconds:
+   if capture_rate <= (datetime.now() - metrics_start_time).seconds:
        for metric in raw_counts.keys():
            rates[metric] += [raw_counts[metric]]
            raw_counts[metric] = 0
        log_rates(rates)
-       metrics_start_time = datetime.utcnow()
-   current_run_length = (datetime.utcnow() - start_time).seconds
+       metrics_start_time = datetime.now()
+   current_run_length = (datetime.now() - start_time).seconds
    if (args.run_length * 60) < current_run_length:
        logger.info("Ran for %s seconds. Emitting final metrics.",
                    current_run_length)

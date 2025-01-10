@@ -167,7 +167,7 @@ class PipelineResource(BaseResource):
         history_by_pipeline_uuid = {}
         if from_history_days is not None and is_number(from_history_days):
             timestamp_start = (
-                datetime.utcnow()
+                datetime.now()
                 - timedelta(
                     hours=24 * int(from_history_days),
                 )
@@ -741,10 +741,7 @@ class PipelineResource(BaseResource):
         try:
             kernel_name = PIPELINE_TO_KERNEL_NAME[self.model.type]
             switch_active_kernel(
-                kernel_name,
-                emr_config=self.model.executor_config
-                if kernel_name == KernelName.PYSPARK
-                else None,
+                kernel_name
             )
         except Exception as e:
             pipeline_type_updated = payload.get('type')

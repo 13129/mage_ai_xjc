@@ -82,8 +82,8 @@ ERROR_CODE_EXCEPTION_MAPPING = {
     },
     500: {
         "raise_exception": ZendeskInternalServerError,
-        "message": "The server encountered an unexpected condition which prevented" \
-            " it from fulfilling the request."
+        "message": "The server encountered an unexpected condition which prevented"
+                   " it from fulfilling the request."
     },
     501: {
         "raise_exception": ZendeskNotImplementedError,
@@ -142,7 +142,7 @@ def raise_for_error(response):
 
 def call_api(url, request_timeout, params, headers):
     @backoff.on_exception(backoff.expo,
-                          (ZendeskConflictError),
+                          ZendeskConflictError,
                           max_tries=10,
                           giveup=lambda e: not should_retry_error(e))
     @backoff.on_exception(backoff.expo,

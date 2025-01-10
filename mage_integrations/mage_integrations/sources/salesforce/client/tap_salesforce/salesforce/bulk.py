@@ -40,7 +40,7 @@ def find_parent(stream):
     return parent_stream
 
 
-class Bulk():
+class Bulk:
 
     bulk_url = "{}/services/async/53.0/{}"
 
