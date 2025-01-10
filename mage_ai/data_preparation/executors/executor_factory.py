@@ -125,7 +125,7 @@ class ExecutorFactory:
                         executor_type = self.get_default_executor_type()
 
 
-        elif executor_type == ExecutorType.K8S:
+        if executor_type == ExecutorType.K8S:
             from mage_ai.data_preparation.executors.k8s_block_executor import (
                 K8sBlockExecutor,
             )

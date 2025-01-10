@@ -6,37 +6,49 @@ USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ## System Packages
+COPY sources.list /etc/apt/sources.list
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update
+## System Packages
 RUN \
-  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-  curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-  apt-get -y update && \
-  ACCEPT_EULA=Y apt-get -y install --no-install-recommends \
-  # NFS dependencies
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+  NODE_MAJOR=20 && \
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update -y
+
+RUN  \
+  apt-get install -y --no-install-recommends \
+  nodejs \
   nfs-common \
-  # odbc dependencies
-  msodbcsql18\
-  unixodbc-dev \
-  graphviz \
-  # postgres dependencies \
-  postgresql-client \
-  # R
-  r-base && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+  graphviz
+RUN  apt-get clean &&  rm -rf /var/lib/apt/lists/*
 
 ## R Packages
-RUN \
-  R -e "install.packages('pacman', repos='http://cran.us.r-project.org')" && \
-  R -e "install.packages('renv', repos='http://cran.us.r-project.org')"
+#RUN \
+#  R -e "install.packages('pacman', repos='http://cran.us.r-project.org')" && \
+#  R -e "install.packages('renv', repos='http://cran.us.r-project.org')"
 
+# 设置 pip 使用阿里云的 HTTPS PyPI 镜像源
+RUN pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 
 ## Python Packages
 RUN \
   pip3 install --no-cache-dir sparkmagic && \
-  mkdir ~/.sparkmagic && \
-  curl https://raw.githubusercontent.com/jupyter-incubator/sparkmagic/master/sparkmagic/example_config.json > ~/.sparkmagic/config.json && \
-  sed -i 's/localhost:8998/host.docker.internal:9999/g' ~/.sparkmagic/config.json && \
+  mkdir /root/.sparkmagic
+
+COPY example_config.json /root/.sparkmagic/config.json
+  # curl https://raw.githubusercontent.com/jupyter-incubator/sparkmagic/master/sparkmagic/example_config.json > ~/.sparkmagic/config.json && \
+RUN \
+  sed -i 's/localhost:8998/host.docker.internal:9999/g' /root/.sparkmagic/config.json && \
   jupyter-kernelspec install --user "$(pip3 show sparkmagic | grep Location | cut -d' ' -f2)/sparkmagic/kernels/pysparkkernel"
+## Python Packages
+#RUN \
+#  pip3 install --no-cache-dir sparkmagic && \
+#  mkdir ~/.sparkmagic && \
+#  curl https://raw.githubusercontent.com/jupyter-incubator/sparkmagic/master/sparkmagic/example_config.json > ~/.sparkmagic/config.json && \
+#  sed -i 's/localhost:8998/host.docker.internal:9999/g' ~/.sparkmagic/config.json && \
+#  jupyter-kernelspec install --user "$(pip3 show sparkmagic | grep Location | cut -d' ' -f2)/sparkmagic/kernels/pysparkkernel"
 # Mage integrations and other related packages
 RUN \
   pip3 install --no-cache-dir "git+https://github.com/wbond/oscrypto.git@d5f3437ed24257895ae1edd9e503cfb352e635a8" && \
@@ -68,7 +80,7 @@ RUN if [ -z "$FEATURE_BRANCH" ] || [ "$FEATURE_BRANCH" = "null" ] ; then \
 COPY --chmod=0755 ./scripts/install_other_dependencies.py ./scripts/run_app.sh /app/
 
 ENV MAGE_DATA_DIR="/home/src/mage_data"
-ENV PYTHONPATH="${PYTHONPATH}:/home/src"
+ENV PYTHONPATH=".:/home/src"
 WORKDIR /home/src
 EXPOSE 6789
 EXPOSE 7789
