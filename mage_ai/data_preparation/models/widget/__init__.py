@@ -37,7 +37,7 @@ from .utils import build_x_y, convert_to_list, encode_values_in_list
 class Widget(Block):
     @classmethod
     def create(
-        self,
+        cls,
         name,
         block_type,
         repo_path,

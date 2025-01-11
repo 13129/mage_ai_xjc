@@ -9,6 +9,6 @@ from mage_ai.settings.repo import get_repo_path
 class IntegrationSourceStreamResource(GenericResource):
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         repo_path = get_repo_path(user=user)
-        return self(IntegrationPipeline.get(pk, repo_path=repo_path), user, **kwargs)
+        return cls(IntegrationPipeline.get(pk, repo_path=repo_path), user, **kwargs)

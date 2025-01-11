@@ -51,7 +51,7 @@ class K8sExecutorConfig(BaseConfig):
     meta: V1ObjectMeta = None
 
     @classmethod
-    def load(self, config_path: str = None, config: Dict = None):
+    def load(cls, config_path: str = None, config: Dict = None):
         executor_config = super().load(config_path=config_path, config=config)
 
         service_account_name = DEFAULT_SERVICE_ACCOUNT_NAME
@@ -153,7 +153,7 @@ class K8sExecutorConfig(BaseConfig):
         return executor_config
 
     @classmethod
-    def load_extra_config(self):
-        if self.config_file == '':
+    def load_extra_config(cls):
+        if cls.config_file == '':
             return {}
-        return super().load_file(self.config_file)
+        return super().load_file(cls.config_file)

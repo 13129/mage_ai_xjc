@@ -50,7 +50,7 @@ export interface ConfigurationOptionType {
 
 const SHARED_DESIGN_PROPS = [
   {
-    label: () => 'hide X grid lines',
+    label: () => 'hide x grid lines',
     type: ConfigurationItemType.TOGGLE,
     uuid: [VARIABLE_GROUP_NAME_DESIGN, VARIABLE_GROUP_NAME_DESIGN_X_GRID_LINES_HIDDEN].join('.'),
   },
@@ -87,7 +87,7 @@ const SHARED_CONFIGS = ({
 } = {}) => [
   {
     ...SHARED_CODE_PROPS,
-    label: () => 'X axis label format',
+    label: () => 'x axis label format',
     uuid: VARIABLE_NAME_X_AXIS_LABEL_FORMAT,
   },
   {
@@ -99,7 +99,7 @@ const SHARED_CONFIGS = ({
     ? [
         {
           ...SHARED_CODE_PROPS,
-          label: () => 'X tooltip format',
+          label: () => 'x tooltip format',
           uuid: VARIABLE_NAME_X_TOOLTIP_LABEL_FORMAT,
         },
       ]
@@ -154,7 +154,7 @@ const timeSeriesConfiguration: {
         'MMM Do YY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// May 15th 24',
         'YYYY [text] YYYY // 2024 text 2024',
       ],
-      label: () => 'X axis label format',
+      label: () => 'x axis label format',
       monospace: true,
       uuid: VARIABLE_NAME_X_AXIS_LABEL_FORMAT,
     },
@@ -355,7 +355,7 @@ export const CONFIGURATIONS_BY_CHART_TYPE: {
     noCode: timeSeriesConfiguration.noCode.concat([
       {
         ...SHARED_CODE_PROPS,
-        label: () => 'X tooltip format',
+        label: () => 'x tooltip format',
         uuid: VARIABLE_NAME_X_TOOLTIP_LABEL_FORMAT,
       },
       ...SHARED_DESIGN_PROPS,

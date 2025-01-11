@@ -21,7 +21,7 @@ from mage_ai.usage_statistics.logger import UsageStatisticLogger
 class SessionResource(BaseResource):
     @classmethod
     @safe_db_query
-    async def create(self, payload, _, **kwargs):
+    async def create(cls, payload, _, **kwargs):
         email = payload.get('email')
         password = payload.get('password')
         username = payload.get('username')
@@ -65,7 +65,7 @@ class SessionResource(BaseResource):
                     user.update(roles_new=roles)
 
                 oauth_token = generate_access_token(user, oauth_client)
-                return self(oauth_token, user, **kwargs)
+                return cls(oauth_token, user, **kwargs)
 
         error = ApiError.RESOURCE_NOT_FOUND
         error.update({'message': 'Email/username and/or password invalid.'})
@@ -78,7 +78,7 @@ class SessionResource(BaseResource):
         async def _create_callback(resource):
             await UsageStatisticLogger().users_impression()
 
-        self.on_create_callback = _create_callback
+        cls.on_create_callback = _create_callback
 
         user = None
         if AUTHENTICATION_MODE.lower() == 'ldap':
@@ -123,7 +123,7 @@ class SessionResource(BaseResource):
                     user.update(roles_new=roles)
 
             oauth_token = generate_access_token(user, kwargs['oauth_client'])
-            return self(oauth_token, user, **kwargs)
+            return cls(oauth_token, user, **kwargs)
 
         if email:
             user = User.query.filter(User.email == email).first()
@@ -134,14 +134,14 @@ class SessionResource(BaseResource):
 
         if verify_password(password, user.password_hash):
             oauth_token = generate_access_token(user, kwargs['oauth_client'])
-            return self(oauth_token, user, **kwargs)
+            return cls(oauth_token, user, **kwargs)
         else:
             raise ApiError(error)
 
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
-        return self(kwargs['oauth_token'], user, **kwargs)
+    def member(cls, pk, user, **kwargs):
+        return cls(kwargs['oauth_token'], user, **kwargs)
 
     @safe_db_query
     def update(self, payload, **kwargs):

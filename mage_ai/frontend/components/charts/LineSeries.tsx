@@ -412,13 +412,13 @@ const LineSeries = withTooltip<LineSeriesProps>(
                 strokeWidth={strokeWidth}
                 // Adjust the x value to account for padding
                 x={d => {
-                  const originalX = xScale(getX(d)); // Original X position
-                  const paddedXMax = xMax - endXPadding; // Maximum X value after applying end padding
+                  const originalX = xScale(getX(d)); // Original x position
+                  const paddedXMax = xMax - endXPadding; // Maximum x value after applying end padding
                   const scaleX = scaleLinear({
                     range: [startXPadding, paddedXMax], // Adjust range to account for padding
                     domain: xScale.domain(),
                   });
-                  return scaleX(getX(d)); // Returns scaled X values with padding
+                  return scaleX(getX(d)); // Returns scaled x values with padding
                 }}
                 // @ts-ignore
                 y={d => yScale(d.y && (i >= d.y.length ? yScaleMin : getY(d, i)))}

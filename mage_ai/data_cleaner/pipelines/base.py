@@ -38,6 +38,7 @@ DEFAULT_RULES = [
 
 class BasePipeline:
     def __init__(self, actions=None, rules=None, verbose=False):
+        self.column_types = None
         if rules is None:
             rules = DEFAULT_RULES
         if actions is None:

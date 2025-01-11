@@ -13,10 +13,10 @@ from mage_ai.settings.repo import get_repo_path
 class PipelineTriggerResource(GenericResource):
     @classmethod
     @safe_db_query
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         parent_model = kwargs['parent_model']
 
-        return self.build_result_set(
+        return cls.build_result_set(
             get_triggers_by_pipeline(
                 parent_model.uuid,
                 repo_path=get_repo_path(context_data=kwargs.get('context_data'), user=user),
@@ -27,7 +27,7 @@ class PipelineTriggerResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         parent_model = kwargs['parent_model']
         error = ApiError.RESOURCE_INVALID
 
@@ -62,4 +62,4 @@ class PipelineTriggerResource(GenericResource):
 
         add_or_update_trigger_for_pipeline_and_persist(trigger, parent_model.uuid)
 
-        return self(trigger, user, **kwargs)
+        return cls(trigger, user, **kwargs)

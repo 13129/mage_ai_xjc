@@ -44,7 +44,7 @@ class KafkaConfig(BaseConfig):
     timeout_ms: int = DEFAULT_TIMEOUT_MS
 
     @classmethod
-    def parse_config(self, config: Dict) -> Dict:
+    def parse_config(cls, config: Dict) -> Dict:
         ssl_config = config.get('ssl_config')
         sasl_config = config.get('sasl_config')
         if ssl_config and type(ssl_config) is dict:

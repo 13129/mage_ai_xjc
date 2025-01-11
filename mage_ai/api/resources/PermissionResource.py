@@ -9,13 +9,13 @@ class PermissionResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def collection(self, query_arg, meta, user, **kwargs):
+    def collection(cls, query_arg, meta, user, **kwargs):
         only_entity_options = query_arg.get('only_entity_options', [False])
         if only_entity_options:
             only_entity_options = only_entity_options[0]
 
         if only_entity_options:
-            return self.build_result_set(
+            return cls.build_result_set(
                 [Permission()],
                 user,
                 **kwargs,
@@ -34,7 +34,7 @@ class PermissionResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         if 'entity_name' not in payload:
             payload['entity_name'] = ''
 

@@ -1,16 +1,16 @@
-cachetools
+cachetools~=5.5.0
 Faker==4.14.0
 GitPython==3.1.41
-Jinja2==3.1.3
+Jinja2~=3.1.5
 Pillow==10.3.0
 PyGithub==1.59.0
 PyJWT==2.6.0
 aiofiles==22.1.0
-aiohttp==3.10.0
+aiohttp~=3.11.11
 alembic>=1.7.5
 bcrypt==4.0.1
 croniter==1.3.7
-cryptography==42.0.0
+cryptography~=44.0.0
 dask>=2022.2.0
 datadog==0.44.0
 freezegun==1.2.2
@@ -22,15 +22,15 @@ ipython==8.10.0
 itsdangerous~=1.1.0
 joblib>=1.1.0
 jupyter-server==2.14.1
-jupyter_client==7.4.4
+jupyter_client~=8.2.0
 ldap3==2.9.1
 memory_profiler
 newrelic==8.8.0
 numpy>=1.22.0
 pandas>=1.3.0
-polars>=0.18.0, <0.19.2
+polars>=0.18.0
 protobuf>=4.25.0
-psutil==5.9.8
+psutil~=5.9.5
 pyarrow>=14.0.1
 python-dateutil==2.8.2
 pytz>=2022.2.1
@@ -40,91 +40,62 @@ requests~=2.31.0
 ruamel.yaml==0.17.17
 scikit-learn>=1.0
 sentry-sdk==1.19.1
-setuptools==70.0.0
-simplejson
+setuptools~=67.7.2
+simplejson~=3.19.3
 six>=1.15.0
-sqlalchemy>=1.4.20, <2.0.0
+sqlalchemy==1.4.20
 sqlglot[rs]
-terminado==0.17.1
+terminado~=0.18.1
 thefuzz[speedup]==0.19.0
-tornado==6.3.3
+tornado~=6.3.1
 typer[all]==0.9.0
-typing_extensions==4.10.0
+typing_extensions~=4.12.2
 watchdog==4.0.0
 Werkzeug==3.0.3
-
-
-# extras
-astor>=0.8.1
+astor==0.8.1
 boto3==1.26.60
 botocore==1.29.60
 db-dtypes==1.0.5
 gspread==5.7.2
 kubernetes>=28.1.0
-langchain==0.1.6; python_version >= '3.8'
+langchain==0.1.6
 langchain_community<0.0.20
-mysql-connector-python~=8.4.0; python_version < '3.11'
-mysql-connector-python~=9.0.0; python_version >= '3.11'
+mysql-connector-python~=8.4.0
 opentelemetry-api==1.22.0
 opentelemetry-exporter-prometheus==0.43b0
 opentelemetry-instrumentation-tornado==0.43b0
 opentelemetry-exporter-otlp==1.22.0
 opentelemetry-instrumentation-sqlalchemy==0.43b0
-oracledb==1.3.1; python_version < '3.12'
-oracledb==2.4.1; python_version >= '3.12'
-pinotdb==5.1.0
+oracledb==1.3.1
 prometheus_client>=0.18.0
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
-pyairtable==2.3.3
-pydruid==0.6.5
-pyodbc==4.0.35; python_version < '3.12'
-pyodbc==5.0.1; python_version >= '3.12'
-redshift-connector==2.0.915
+pyodbc==4.0.35
 lxml==4.9.4
 sshtunnel==0.4.0
-tables==3.7.0; python_version < '3.11'
-tables==3.10.1; python_version >= '3.11'
+tables==3.7.0
 trino~=0.326
-
-
-
-# Streaming
 confluent-avro~=1.8.0
 elasticsearch==8.15.1
-influxdb_client==1.36.1
 kafka-python==2.0.2
 nats-py==2.6.0
 nkeys~=0.2.0
 opensearch-py==2.0.0
 pika==1.3.1
-pymongo==4.3.3
+pymongo~=4.10.1
 requests_aws4auth==1.1.2
 stomp.py==8.1.0
-
-# DBT
-dbt-bigquery==1.7.2
-dbt-clickhouse==1.7.1
 dbt-core==1.7.4
-dbt-duckdb==1.7.0
 dbt-postgres==1.7.4
-dbt-redshift==1.7.1
-dbt-snowflake==1.7.1
 dbt-spark==1.7.1
 dbt-sqlserver==1.7.4
-
-
-dbt-trino==1.7.1
-
 async-timeout==4.0.3
-attrs==22.2.0; python_version < '3.12'
-attrs==24.2.0; python_version >= '3.12'
+attrs==22.2.0
 backoff
 deltalake==0.20.2
 gnupg==2.3.1
 httpx[http2]
-pendulum==2.1.0; python_version < '3.12'
-pendulum==3.0.0; python_version >= '3.12'
+pendulum==2.1.0
 pymongo_schema==0.4.1
 python-magic==0.4.27
 simple_salesforce~=1.12.5
@@ -135,3 +106,7 @@ tzlocal==4.2
 xlsx2csv==0.8.1
 xmltodict==0.13.0
 zenpy==2.0.25
+pyodbc~=4.0.35
+mysql-connector-python~=8.4.0
+pyspark~=3.5.4
+oracledb~=1.3.1

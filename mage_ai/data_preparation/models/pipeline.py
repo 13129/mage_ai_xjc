@@ -277,7 +277,7 @@ class Pipeline:
 
     @classmethod
     def create(
-        self,
+        cls,
         name: str,
         repo_path: str = None,
         description: str = None,
@@ -325,7 +325,7 @@ class Pipeline:
         return pipeline
 
     @classmethod
-    def import_from_zip(self, zip_content: str, overwrite: bool = False) -> Tuple[File, Dict]:
+    def import_from_zip(cls, zip_content: str, overwrite: bool = False) -> Tuple[File, Dict]:
         with tempfile.TemporaryDirectory() as tmp_dir:
             zip_data = BytesIO(zip_content)
             with zipfile.ZipFile(zip_data, 'r') as zipf:
@@ -352,7 +352,7 @@ class Pipeline:
                         os.rename(source_path, destination_path)
                     os.removedirs(inner_path)  # remove root folder
 
-            pipeline_files, pipeline_config = self.__update_pipeline_yaml(
+            pipeline_files, pipeline_config = cls.__update_pipeline_yaml(
                 tmp_dir,
                 overwrite=overwrite,
             )
@@ -436,7 +436,7 @@ class Pipeline:
         )
 
     @classmethod
-    def exists(self, uuid, repo_path: str = None):
+    def exists(cls, uuid, repo_path: str = None):
         return os.path.exists(
             os.path.join(
                 repo_path or get_repo_path(),
@@ -492,13 +492,13 @@ class Pipeline:
 
     @classmethod
     def get_config(
-        self,
+        cls,
         uuid,
         repo_path: str = None,
         all_projects: bool = False,
         use_repo_path: bool = False,
     ):
-        config_path, _ = self._get_config_path(
+        config_path, _ = cls._get_config_path(
             uuid,
             repo_path=repo_path,
             all_projects=all_projects,
@@ -514,7 +514,7 @@ class Pipeline:
 
     @classmethod
     def _get_config_path(
-        self,
+        cls,
         uuid,
         repo_path: str = None,
         all_projects: bool = False,
@@ -540,7 +540,7 @@ class Pipeline:
 
     @classmethod
     async def load_metadata(
-        self,
+        cls,
         uuid: str,
         repo_path: str = None,
         raise_exception: bool = True,
@@ -579,7 +579,7 @@ class Pipeline:
 
     @classmethod
     async def get_async(
-        self,
+        cls,
         uuid,
         repo_path: str = None,
         repo_config: RepoConfig = None,
@@ -640,7 +640,7 @@ class Pipeline:
                 use_repo_path=use_repo_path,
             )
         else:
-            pipeline = self(
+            pipeline = cls(
                 uuid,
                 repo_path=repo_path,
                 config=config,
@@ -651,7 +651,7 @@ class Pipeline:
 
     @classmethod
     def get_all_pipelines_all_projects(
-        self,
+        cls,
         *args,
         **kwargs,
     ) -> Union[List[str], List[Tuple[str, str]]]:
@@ -674,7 +674,7 @@ class Pipeline:
 
     @classmethod
     def get_all_pipelines(
-        self,
+        cls,
         repo_path: str = None,
         repo_paths: List[str] = None,
         disable_pipelines_folder_creation: bool = False,
@@ -701,14 +701,14 @@ class Pipeline:
                 arr.extend([
                     (d, path) if include_repo_path else d
                     for d in os.listdir(pipelines_folder)
-                    if self.is_valid_pipeline(os.path.join(pipelines_folder, d))
+                    if cls.is_valid_pipeline(os.path.join(pipelines_folder, d))
                 ])
 
         return arr
 
     @classmethod
     def get_pipelines_by_block(
-        self, block, repo_path: str = None, widget=False
+        cls, block, repo_path: str = None, widget=False
     ) -> List['Pipeline']:
         warn_for_repo_path(repo_path)
         repo_path = repo_path or get_repo_path()
@@ -726,7 +726,7 @@ class Pipeline:
         return pipelines
 
     @classmethod
-    def is_valid_pipeline(self, pipeline_path):
+    def is_valid_pipeline(cls, pipeline_path):
         return os.path.isdir(pipeline_path) and os.path.exists(
             os.path.join(pipeline_path, PIPELINE_CONFIG_FILE)
         )
@@ -1583,7 +1583,7 @@ class Pipeline:
 
     @classmethod
     def __find_pipeline_file(
-        self,
+        cls,
         root_dir: str,
         file_name: str,
         sub_folder: str = None,
@@ -1623,7 +1623,7 @@ class Pipeline:
 
     @classmethod
     def __update_pipeline_yaml(
-        self, tmp_dir: str, overwrite: bool = False
+        cls, tmp_dir: str, overwrite: bool = False
     ) -> Tuple[List[str], Dict]:
         """
         Updates the pipeline config yaml during the import process.
@@ -1641,7 +1641,7 @@ class Pipeline:
                     for each resource needed to be writen at the end of the import process
                 - config (dict): the pipeline config fetched from the zip file
         """
-        config_zip_path = self.__find_pipeline_file(
+        config_zip_path = cls.__find_pipeline_file(
             tmp_dir, PIPELINE_CONFIG_FILE, PIPELINES_FOLDER
         )
         if config_zip_path is None or not os.path.exists(config_zip_path):
@@ -1655,7 +1655,7 @@ class Pipeline:
         if not overwrite:
             uuid = config['uuid']
             index = 0
-            while self.exists(uuid):
+            while cls.exists(uuid):
                 index += 1
                 uuid = f'{config["uuid"]}_{index}'
             config['uuid'] = uuid
@@ -1691,7 +1691,7 @@ class Pipeline:
             block_destination_path = block_inst.file_path
             _, file_extension = os.path.splitext(block_destination_path)
             block_directory = os.path.basename(os.path.dirname(block_destination_path))
-            block_zip_path = self.__find_pipeline_file(
+            block_zip_path = cls.__find_pipeline_file(
                 tmp_dir, f'{uuid}{file_extension}', block_directory
             )
 

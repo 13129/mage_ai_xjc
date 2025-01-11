@@ -7,7 +7,7 @@ from mage_ai.services.spark.utils import get_compute_service
 class API:
     @classmethod
     def build(
-        self,
+        cls,
         all_applications: bool = True,
         application_id: str = None,
         application_spark_ui_url: str = None,

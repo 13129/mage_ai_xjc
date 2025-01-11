@@ -14,7 +14,7 @@ from mage_ai.shared.code import is_pyspark_code
 
 class ExecutorFactory:
     @classmethod
-    def get_default_executor_type(self):
+    def get_default_executor_type(cls):
         executor_type = os.getenv('DEFAULT_EXECUTOR_TYPE', ExecutorType.LOCAL_PYTHON)
         if ExecutorType.is_valid_type(executor_type):
             return executor_type
@@ -22,7 +22,7 @@ class ExecutorFactory:
 
     @classmethod
     def get_pipeline_executor_type(
-        self,
+        cls,
         pipeline: Pipeline,
         executor_type: Union[ExecutorType, str, None] = None,
     ):
@@ -33,12 +33,12 @@ class ExecutorFactory:
                 executor_type = pipeline.get_executor_type()
                 if executor_type == ExecutorType.LOCAL_PYTHON or executor_type is None:
                     # Use default executor type
-                    executor_type = self.get_default_executor_type()
+                    executor_type = cls.get_default_executor_type()
         return executor_type
 
     @classmethod
     def get_pipeline_executor(
-        self,
+        cls,
         pipeline: Pipeline,
         execution_partition: Union[str, None] = None,
         executor_type: Union[ExecutorType, str, None] = None,
@@ -62,7 +62,7 @@ class ExecutorFactory:
             executor_type (Union[ExecutorType, str, None], optional): If the executor_type is
                 specified. Use this executor_type directly.        """
 
-        executor_type = self.get_pipeline_executor_type(pipeline, executor_type=executor_type)
+        executor_type = cls.get_pipeline_executor_type(pipeline, executor_type=executor_type)
 
         if executor_type == ExecutorType.K8S:
             from mage_ai.data_preparation.executors.k8s_pipeline_executor import (

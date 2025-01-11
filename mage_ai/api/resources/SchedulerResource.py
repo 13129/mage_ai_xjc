@@ -5,9 +5,9 @@ from mage_ai.server.scheduler_manager import scheduler_manager
 
 class SchedulerResource(GenericResource):
     @classmethod
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         scheduler = dict(status=scheduler_manager.get_status())
-        return self.build_result_set(
+        return cls.build_result_set(
             [scheduler],
             user,
             **kwargs,
@@ -15,7 +15,7 @@ class SchedulerResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         action_type = payload.get('action_type')
 
         if action_type == 'start':
@@ -23,4 +23,4 @@ class SchedulerResource(GenericResource):
         elif action_type == 'stop':
             scheduler_manager.stop_scheduler()
 
-        return self(dict(status=scheduler_manager.get_status()), user, **kwargs)
+        return cls(dict(status=scheduler_manager.get_status()), user, **kwargs)

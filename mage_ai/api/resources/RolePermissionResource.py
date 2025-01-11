@@ -9,7 +9,7 @@ class RolePermissionResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         payload_updated = merge_dict(payload, dict(
             user_id=user.id if user else None,
         ))
@@ -24,7 +24,7 @@ class RolePermissionResource(DatabaseResource):
                     dict(permission_id=permission_id),
                 ), user, **kwargs))
 
-            return resources[0] if len(resources) >= 1 else self(None, user, **kwargs)
+            return resources[0] if len(resources) >= 1 else cls(None, user, **kwargs)
 
         return super().create(payload_updated, user, **kwargs)
 

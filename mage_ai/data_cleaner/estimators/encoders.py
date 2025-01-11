@@ -18,13 +18,13 @@ class CustomLabelEncoder(BaseEstimator):
     def inverse_transform(self, y):
         return self.encoder.inverse_transform(y)
 
-    def fit(self, X, y=None):
-        self.encoder.fit(X)
+    def fit(self, x, y=None):
+        self.encoder.fit(x)
         self.fitted = True
         return self
 
-    def transform(self, X, **kwargs):
-        self.label_values = sorted(set(X))
+    def transform(self, x, **kwargs):
+        self.label_values = sorted(set(x))
         class_mappings = dict(
             zip(
                 [str(c) for c in self.encoder.classes_],
@@ -42,13 +42,13 @@ class CustomLabelEncoder(BaseEstimator):
 
         if unknown_found:
             # TODO(christhetree): why are these multiplied by 2?
-            if np.issubdtype(X.dtype, np.floating):
+            if np.issubdtype(x.dtype, np.floating):
                 self.unknown_class = float(self.label_values[-1] * 2)
-            elif np.issubdtype(X.dtype, np.integer):
+            elif np.issubdtype(x.dtype, np.integer):
                 self.unknown_class = int(self.label_values[-1] * 2)
             else:
                 self.unknown_class = 'unknown_class_'
-        y = np.array([_build(x) for x in X])
+        y = np.array([_build(x) for x in x])
         return y
 
     def label_classes(self):
@@ -62,43 +62,43 @@ class MultipleColumnLabelEncoder(BaseEstimator):
         self.input_type = input_type
         self.encoders = {}
 
-    def fit(self, X, y=None):
+    def fit(self, x, y=None):
         execute_parallel(
-            [(self.fit_column, [X[column], column]) for column in X.columns],
+            [(self.fit_column, [x[column], column]) for column in x.columns],
         )
         return self
 
-    def fit_column(self, X, column):
+    def fit_column(self, x, column):
         self.encoders[column] = CustomLabelEncoder()
         if self.input_type:
-            self.encoders[column].fit(X.apply(self.input_type))
+            self.encoders[column].fit(x.apply(self.input_type))
         else:
-            self.encoders[column].fit(X)
+            self.encoders[column].fit(x)
 
-    def transform(self, X, parallel=False):
+    def transform(self, x, parallel=False):
         if parallel:
             output_dict = OrderedDict()
             output_dicts = execute_parallel(
-                [(self.transform_column, [X[column], column]) for column in X.columns],
+                [(self.transform_column, [x[column], column]) for column in x.columns],
             )
 
             for od in output_dicts:
                 output_dict.update(od)
             return fd_to_df(output_dict)
 
-        X_output = X.copy(deep=True)
-        for col in X_output.columns:
+        x_output = x.copy(deep=True)
+        for col in x_output.columns:
             if self.input_type:
-                X_output[col] = self.encoders[col].transform(
-                    X_output[col].apply(self.input_type),
+                x_output[col] = self.encoders[col].transform(
+                    x_output[col].apply(self.input_type),
                 )
             else:
-                X_output[col] = self.encoders[col].transform(X_output[col])
-        return X_output
+                x_output[col] = self.encoders[col].transform(x_output[col])
+        return x_output
 
-    def transform_column(self, X, column):
+    def transform_column(self, x, column):
         if self.input_type:
-            nd_arr = self.encoders[column].transform(X.apply(self.input_type))
+            nd_arr = self.encoders[column].transform(x.apply(self.input_type))
         else:
-            nd_arr = self.encoders[column].transform(X)
+            nd_arr = self.encoders[column].transform(x)
         return np_to_fd(nd_arr, feature_names=[column])

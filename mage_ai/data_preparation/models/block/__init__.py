@@ -870,7 +870,7 @@ class Block(
 
     @classmethod
     def __build_file_path(
-        self,
+        cls,
         repo_path: str,
         block_uuid: str,
         block_type: BlockType,
@@ -1044,7 +1044,7 @@ class Block(
 
     @classmethod
     def create(
-        self,
+        cls,
         name: str,
         block_type: str,
         repo_path: str,
@@ -1109,7 +1109,7 @@ class Block(
                 and (BlockType.DBT != block_type or BlockLanguage.YAML == language)
                 and BlockType.GLOBAL_DATA_PRODUCT != block_type
             ):
-                block_directory = self.file_directory_name(block_type)
+                block_directory = cls.file_directory_name(block_type)
                 if absolute_file_path:
                     block_dir_path = os.path.dirname(absolute_file_path)
                 else:
@@ -1157,7 +1157,7 @@ class Block(
                 configuration['file_source'] = {}
             if not configuration['file_source'].get('path'):
                 relative_path = str(Path(repo_path).relative_to(base_repo_path_directory_name()))
-                configuration['file_source']['path'] = self.__build_file_path(
+                configuration['file_source']['path'] = cls.__build_file_path(
                     relative_path,
                     uuid,
                     block_type,
@@ -1186,7 +1186,7 @@ class Block(
                 block.file.create_parent_directories(block.file_path)
                 block.file.update_content('')
 
-        self.after_create(
+        cls.after_create(
             block,
             config=config,
             pipeline=pipeline,
@@ -1198,12 +1198,12 @@ class Block(
         return block
 
     @classmethod
-    def file_directory_name(self, block_type: BlockType) -> str:
+    def file_directory_name(cls, block_type: BlockType) -> str:
         return f'{block_type}s' if block_type != BlockType.CUSTOM else block_type
 
     @classmethod
     def block_type_from_path(
-        self, block_file_absolute_path: str, repo_path: str = None
+        cls, block_file_absolute_path: str, repo_path: str = None
     ) -> BlockType:
         warn_for_repo_path(repo_path)
         if not repo_path:
@@ -1222,7 +1222,7 @@ class Block(
                 return block_type
 
     @classmethod
-    def get_all_blocks(self, repo_path) -> Dict:
+    def get_all_blocks(cls, repo_path) -> Dict:
         block_uuids = dict()
         for t in BlockType:
             block_dir = os.path.join(repo_path, f'{t.value}s')
@@ -1235,7 +1235,7 @@ class Block(
         return block_uuids
 
     @classmethod
-    def get_block_from_file_path(self, file_path: str) -> 'Block':
+    def get_block_from_file_path(cls, file_path: str) -> 'Block':
         parts = get_path_parts(file_path)
 
         if parts and len(parts) >= 3:

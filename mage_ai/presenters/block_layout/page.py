@@ -27,7 +27,7 @@ class PageBlockLayout(BaseConfig):
     uuid: str = None
 
     @classmethod
-    def load(self, uuid: str, repo_config=None, repo_path: str = None):
+    def load(cls, uuid: str, repo_config=None, repo_path: str = None):
         repo_path_to_use = repo_path or get_repo_path()
 
         if repo_config is None:
@@ -53,7 +53,7 @@ class PageBlockLayout(BaseConfig):
         if os.path.isfile(file_path):
             block_layout = super().load(file_path)
         else:
-            block_layout = self()
+            block_layout = cls()
 
         block_layout.directory_path = directory_path
         block_layout.uuid = uuid

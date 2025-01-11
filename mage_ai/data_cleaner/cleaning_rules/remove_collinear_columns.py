@@ -25,12 +25,12 @@ class RemoveCollinearColumns(BaseRule):
         sigma = self.numeric_df.cov().to_numpy()
         std = self.numeric_df.std().to_numpy()
         pairwise_std = std * np.expand_dims(std, axis=1)
-        C = sigma / (pairwise_std + self.EPSILON)
+        c = sigma / (pairwise_std + self.EPSILON)
 
         collinear_columns = []
         good_columns = self.numeric_columns.copy()
         while True:
-            e_vals = np.linalg.eigvalsh(C)
+            e_vals = np.linalg.eigvalsh(c)
             vifs = np.sign(e_vals) / (abs(e_vals) + self.EPSILON)
             collinearity = vifs >= self.VIF_UB
 
@@ -40,8 +40,8 @@ class RemoveCollinearColumns(BaseRule):
             if i == 0 and collinearity[0] == 0:
                 break
             else:
-                C = np.delete(C, i, axis=0)
-                C = np.delete(C, i, axis=1)
+                c = np.delete(c, i, axis=0)
+                c = np.delete(c, i, axis=1)
                 collinear_columns.append(good_columns.pop(i))
 
         if len(collinear_columns) != 0:

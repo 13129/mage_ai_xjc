@@ -164,7 +164,7 @@ class User(BaseModel):
 
     @classmethod
     @safe_db_query
-    def batch_update_user_roles(self):
+    def batch_update_user_roles(cls):
         for user in User.query.all():
             roles_new = []
             if user._owner:
@@ -179,7 +179,7 @@ class User(BaseModel):
         db_connection.session.commit()
 
     @classmethod
-    def fetch_roles(self, user_ids: List[str]) -> List:
+    def fetch_roles(cls, user_ids: List[str]) -> List:
         query = (
             Role.
             select(
@@ -215,7 +215,7 @@ class User(BaseModel):
         return arr
 
     @classmethod
-    def fetch_permissions(self, user_ids: List[str]) -> List:
+    def fetch_permissions(cls, user_ids: List[str]) -> List:
         row_number_column = (
                 func.
                 row_number().
@@ -370,7 +370,7 @@ class Role(BaseModel):
 
     @classmethod
     @safe_db_query
-    def get_role(self, name) -> 'Role':
+    def get_role(cls, name) -> 'Role':
         return Role.query.filter(Role.name == name).first()
 
     def get_access(
@@ -431,7 +431,7 @@ class Role(BaseModel):
             return 0
 
     @classmethod
-    def fetch_permissions(self, ids: List[str]) -> List:
+    def fetch_permissions(cls, ids: List[str]) -> List:
         query = (
             Permission.
             query.
@@ -442,7 +442,7 @@ class Role(BaseModel):
         return query.all()
 
     @classmethod
-    def fetch_role_permissions(self, ids: List[str]) -> List:
+    def fetch_role_permissions(cls, ids: List[str]) -> List:
         query = (
             Permission.
             select(
@@ -488,7 +488,7 @@ class Role(BaseModel):
         return arr
 
     @classmethod
-    def fetch_users(self, ids: List[str]) -> List:
+    def fetch_users(cls, ids: List[str]) -> List:
         query = (
             User.
             select(
@@ -666,7 +666,7 @@ class Permission(BaseModel):
     @classmethod
     @safe_db_query
     def create_default_permissions(
-        self,
+        cls,
         entity: Entity = None,
         entity_id: str = None,
     ) -> List['Permission']:
@@ -684,9 +684,9 @@ class Permission(BaseModel):
         """
         if entity is None:
             entity = Entity.GLOBAL
-        permissions = self.query.filter(
-            self.entity == entity,
-            self.entity_id == entity_id,
+        permissions = cls.query.filter(
+            cls.entity == entity,
+            cls.entity_id == entity_id,
         ).all()
         new_permissions = []
         if len(permissions) == 0:
@@ -697,7 +697,7 @@ class Permission(BaseModel):
                 Permission.Access.VIEWER,
             ]:
                 new_permissions.append(
-                    self.create(
+                    cls.create(
                         entity=entity,
                         entity_id=entity_id,
                         access=permission_access.value,
@@ -708,7 +708,7 @@ class Permission(BaseModel):
         return new_permissions
 
     @classmethod
-    def add_accesses(self, accesses: List[PermissionAccess]) -> int:
+    def add_accesses(cls, accesses: List[PermissionAccess]) -> int:
         current = 0
         for access in accesses:
             access_current = bin(current)
@@ -864,8 +864,8 @@ class Oauth2Application(BaseModel):
 
     @classmethod
     @safe_db_query
-    def query_client(self, api_key: str):
-        return self.query.filter(
+    def query_client(cls, api_key: str):
+        return cls.query.filter(
             Oauth2Application.client_id == api_key,
         ).first()
 

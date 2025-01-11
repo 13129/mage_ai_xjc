@@ -27,7 +27,7 @@ def pull_request_to_dict(pr) -> Dict:
 
 class PullRequestResource(GenericResource):
     @classmethod
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         arr = []
 
         remote_url = query.get('remote_url', None)
@@ -49,10 +49,10 @@ class PullRequestResource(GenericResource):
                     access_token.token
                 ).get_pull_requests(repository)
 
-        return self.build_result_set(arr, user, **kwargs)
+        return cls.build_result_set(arr, user, **kwargs)
 
     @classmethod
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         error = ApiError.RESOURCE_INVALID
 
         for key in [
@@ -97,7 +97,7 @@ class PullRequestResource(GenericResource):
 
         client = GitClient.get_client_for_provider(provider)(access_token.token)
 
-        return self(
+        return cls(
             client.create_pull_request(
                 repository,
                 payload.get('base_branch'),

@@ -35,7 +35,7 @@ class PipelineRunResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    async def collection(self, query_arg, meta, user, **kwargs):
+    async def collection(cls, query_arg, meta, user, **kwargs):
         pipeline_schedule_id = None
         parent_model = kwargs.get('parent_model')
         if parent_model:
@@ -172,7 +172,7 @@ class PipelineRunResource(DatabaseResource):
         if end_timestamp is not None:
             results = results.filter(PipelineRun.created_at <= end_timestamp)
 
-        limit = int((meta or {}).get(META_KEY_LIMIT, self.DEFAULT_LIMIT))
+        limit = int((meta or {}).get(META_KEY_LIMIT, cls.DEFAULT_LIMIT))
 
         # No need to order the results if limit is 0
         if limit == 0:
@@ -194,12 +194,12 @@ class PipelineRunResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    async def process_collection(self, query_arg, meta, user, **kwargs):
+    async def process_collection(cls, query_arg, meta, user, **kwargs):
         context_data = kwargs.get('context_data')
-        total_results = await self.collection(query_arg, meta, user, **kwargs)
+        total_results = await cls.collection(query_arg, meta, user, **kwargs)
         total_count = total_results.count()
 
-        limit = int((meta or {}).get(META_KEY_LIMIT, self.DEFAULT_LIMIT))
+        limit = int((meta or {}).get(META_KEY_LIMIT, cls.DEFAULT_LIMIT))
         offset = int((meta or {}).get(META_KEY_OFFSET, 0))
 
         include_pipeline_uuids = query_arg.get('include_pipeline_uuids', [False])
@@ -294,7 +294,7 @@ class PipelineRunResource(DatabaseResource):
             ):
                 db_connection.session.expire(run)
 
-        result_set = self.build_result_set(
+        result_set = cls.build_result_set(
             results[0:final_end_idx],
             user,
             **kwargs,
@@ -317,7 +317,7 @@ class PipelineRunResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         pipeline_schedule = kwargs.get('parent_model')
 
         repo_path = get_repo_path(user=user)
@@ -338,7 +338,7 @@ class PipelineRunResource(DatabaseResource):
                     schedule.schedule_interval == ScheduleInterval.ONCE:
                 schedule.update(status=ScheduleStatus.ACTIVE)
 
-        self.on_create_callback = _create_callback
+        cls.on_create_callback = _create_callback
 
         return super().create(configured_payload, user, **kwargs)
 

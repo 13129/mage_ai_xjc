@@ -54,7 +54,7 @@ class PostStart(BaseConfig):
     hook_path: str = None
 
     @classmethod
-    def parse_config(self, config: Dict = None) -> Dict:
+    def parse_config(cls, config: Dict = None) -> Dict:
         hook_path = config.get('hook_path')
         if hook_path and not os.path.isabs(hook_path):
             config['hook_path'] = os.path.join(
@@ -71,7 +71,7 @@ class LifecycleConfig(BaseConfig):
     post_start: PostStart = None
 
     @classmethod
-    def parse_config(self, config: Dict = None) -> Dict:
+    def parse_config(cls, config: Dict = None) -> Dict:
         pre_start_script_path = config.get('pre_start_script_path')
         if pre_start_script_path and not os.path.isabs(pre_start_script_path):
             config['pre_start_script_path'] = os.path.join(

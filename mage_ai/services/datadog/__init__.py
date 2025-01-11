@@ -100,9 +100,9 @@ def timing(metric, value, host='mage', tags=None):
     )
 
 
-class timed_decorator(object):
+class TimedDecorator(object):
     """
-    @timed_decorator('metric.metric', tags={ 'key': 'value' })
+    @TimedDecorator('metric.metric', tags={ 'key': 'value' })
     """
     def __init__(self, metric, tags=None):
         if tags is None:

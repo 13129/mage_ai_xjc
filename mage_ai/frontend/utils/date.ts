@@ -144,11 +144,11 @@ export function timeDifference({
 /**
  * Given a UTC datetime string, find how much time has elapsed between then
  * and now. Return the elapsed time in the first matching format:
- *   - >= 1 year: X year(s) ago
- *   - >= 1 month: X month(s) ago
- *   - >= 1 day: X day(s) ago
- *   - >= 1 hr: X hr(s) Y min(s) ago
- *   - < 1 hr: X min(s) ago
+ *   - >= 1 year: x year(s) ago
+ *   - >= 1 month: x month(s) ago
+ *   - >= 1 day: x day(s) ago
+ *   - >= 1 hr: x hr(s) Y min(s) ago
+ *   - < 1 hr: x min(s) ago
  */
 export function utcStringToElapsedTime(datetime: string) {
   const then = moment.utc(datetime);

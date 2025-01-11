@@ -4,11 +4,11 @@ from mage_ai.api.resources.mixins.spark import SparkApplicationChild
 
 class SparkStageAttemptResource(GenericResource, SparkApplicationChild):
     @classmethod
-    async def collection(self, _query, _meta, user, **kwargs):
+    async def collection(cls, _query, _meta, user, **kwargs):
         parent_model = kwargs.get('parent_model')
 
-        return self.build_result_set(
-            await self.build_api().stage_attempts(
+        return cls.build_result_set(
+            await cls.build_api().stage_attempts(
                 stage_id=parent_model.id,
             ),
             user,
@@ -16,11 +16,11 @@ class SparkStageAttemptResource(GenericResource, SparkApplicationChild):
         )
 
     @classmethod
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         parent_model = kwargs.get('parent_model')
 
-        return self(
-            await self.build_api().stage_attempt(
+        return cls(
+            await cls.build_api().stage_attempt(
                 attempt_id=pk,
                 stage_id=parent_model.id,
             ),

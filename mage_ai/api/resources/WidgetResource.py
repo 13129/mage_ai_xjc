@@ -11,7 +11,7 @@ from mage_ai.settings.repo import get_repo_path
 class WidgetResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
+    async def collection(cls, query, meta, user, **kwargs):
         pipeline = kwargs['parent_model']
 
         include_outputs = query.get('include_outputs', [True])
@@ -25,7 +25,7 @@ class WidgetResource(GenericResource):
               ) for widget in pipeline.widgets_by_uuid.values()]
         )
 
-        return self.build_result_set(
+        return cls.build_result_set(
             collection,
             user,
             **kwargs,
@@ -33,7 +33,7 @@ class WidgetResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    async def create(self, payload: Dict, user, **kwargs) -> 'WidgetResource':
+    async def create(cls, payload: Dict, user, **kwargs) -> 'WidgetResource':
         pipeline = kwargs['parent_model']
 
         resource = Widget.create(
@@ -54,11 +54,11 @@ class WidgetResource(GenericResource):
             resource.configuration = payload['configuration']
             pipeline.save()
 
-        return self(resource, user, **kwargs)
+        return cls(resource, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         pipeline = kwargs['parent_model']
         widget = pipeline.get_block(pk, widget=True)
 
@@ -67,7 +67,7 @@ class WidgetResource(GenericResource):
             error.update(message=f'Widget {pk} does not exist in pipeline {pipeline.uuid}.')
             raise ApiError(error)
 
-        return self(widget, user, **kwargs)
+        return cls(widget, user, **kwargs)
 
     @safe_db_query
     def delete(self, **kwargs):

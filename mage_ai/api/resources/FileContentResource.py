@@ -16,7 +16,7 @@ from mage_ai.shared.path_fixer import add_absolute_path
 class FileContentResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         file = None
 
         if 'payload' in kwargs and 'file_content' in kwargs['payload']:
@@ -42,7 +42,7 @@ class FileContentResource(GenericResource):
             error.update(
                 message=f'File at path: {file.file_path} is not in the project directory.')
             raise ApiError(error)
-        return self(file, user, **kwargs)
+        return cls(file, user, **kwargs)
 
     async def update(self, payload, **kwargs):
         error = ApiError.RESOURCE_INVALID.copy()

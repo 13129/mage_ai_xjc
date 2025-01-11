@@ -12,7 +12,7 @@ from mage_ai.shared.hash import merge_dict
 
 class StatusPolicy(BasePolicy, UserPermissionMixIn):
     @classmethod
-    def action_rule_with_permissions(self, operation: OperationType) -> Dict:
+    def action_rule_with_permissions(cls, operation: OperationType) -> Dict:
         return merge_dict(super().action_rule_with_permissions(operation), {
             OauthScope.CLIENT_PRIVATE: [
                 dict(condition=lambda _policy: OperationType.LIST == operation),
@@ -24,15 +24,15 @@ class StatusPolicy(BasePolicy, UserPermissionMixIn):
 
     @classmethod
     def attribute_rule_with_permissions(
-        self,
+        cls,
         attribute_operation_type: AttributeOperationType,
         resource_attribute: str,
     ) -> Dict:
         config = {}
         if AttributeOperationType.READ == attribute_operation_type:
-            config = self.read_rules[self.__name__].get(resource_attribute)
+            config = cls.read_rules[cls.__name__].get(resource_attribute)
         else:
-            config = self.write_rules[self.__name__].get(resource_attribute)
+            config = cls.write_rules[cls.__name__].get(resource_attribute)
 
         return merge_dict(super().attribute_rule_with_permissions(
             attribute_operation_type,

@@ -86,12 +86,12 @@ async def build_project(
 class ProjectResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
-        project = await self.member(None, user, **kwargs)
+    async def collection(cls, query, meta, user, **kwargs):
+        project = await cls.member(None, user, **kwargs)
 
         other_projects = []
         if not project.model.get('root_project') and project_platform_activated():
-            root_project = await self.member(None, user, root_project=True, **kwargs)
+            root_project = await cls.member(None, user, root_project=True, **kwargs)
             if root_project and root_project.model and root_project.model.get('projects'):
                 other_projects.append(root_project)
 
@@ -107,7 +107,7 @@ class ProjectResource(GenericResource):
 
         project.features = features2
 
-        return self.build_result_set(
+        return cls.build_result_set(
             [project] + other_projects,
             user,
             **kwargs,
@@ -115,7 +115,7 @@ class ProjectResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    async def create(self, payload, user, **kwargs):
+    async def create(cls, payload, user, **kwargs):
         project_uuid = payload.get('uuid')
         project_repo_path = payload.get('repo_path')
         project_type = payload.get('type')
@@ -161,13 +161,13 @@ class ProjectResource(GenericResource):
                 })
                 f.write(content)
 
-        return self({}, user, **kwargs)
+        return cls({}, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    async def member(self, _, user, **kwargs):
+    async def member(cls, _, user, **kwargs):
         model = await build_project(user=user, **kwargs)
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     @safe_db_query
     async def update(self, payload, **kwargs):
@@ -212,14 +212,6 @@ class ProjectResource(GenericResource):
             await UsageStatisticLogger().project_deny_improve_mage(
                 repo_config.project_uuid or data.get('project_uuid'),
             )
-
-        if 'openai_api_key' in payload:
-            openai_api_key = payload.get('openai_api_key')
-            if repo_config.openai_api_key != openai_api_key:
-                data['openai_api_key'] = payload.get('openai_api_key')
-
-        if 'emr_config' in payload:
-            data['emr_config'] = payload['emr_config']
 
         if 'pipelines' in payload:
             data['pipelines'] = payload['pipelines']

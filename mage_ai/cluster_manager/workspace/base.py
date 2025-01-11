@@ -18,7 +18,7 @@ from mage_ai.settings.repo import get_repo_path
 from mage_ai.shared.hash import merge_dict
 
 
-class classproperty(property):
+class ClassProperty(property):
     def __get__(self, owner_self, owner_cls):
         return self.fget(owner_cls)
 
@@ -31,7 +31,7 @@ class Workspace(abc.ABC):
         self.name = name
         self._config = None
 
-    @classproperty
+    @ClassProperty
     def project_folder(self) -> str:
         return os.path.join(get_repo_path(root_project=True), 'projects')
 

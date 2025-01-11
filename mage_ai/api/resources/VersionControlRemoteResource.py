@@ -9,30 +9,30 @@ from mage_ai.version_control.models import Remote
 
 class VersionControlRemoteResource(VersionControlErrors, AsyncBaseResource):
     @classmethod
-    async def collection(self, query: Dict, _meta: Dict, user: User, **kwargs):
+    async def collection(cls, query: Dict, _meta: Dict, user: User, **kwargs):
         project = kwargs.get('parent_model')
 
         models = Remote.load_all(project=project)
-        return self.build_result_set(
+        return cls.build_result_set(
             models,
             user,
             **kwargs,
         )
 
     @classmethod
-    async def create(self, payload: Dict, user: User, **kwargs):
+    async def create(cls, payload: Dict, user: User, **kwargs):
         project = kwargs.get('parent_model')
         model = Remote.load(**payload)
         model.project = project
         model.create()
 
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res
 
     @classmethod
-    async def member(self, pk: str, user: User, **kwargs):
+    async def member(cls, pk: str, user: User, **kwargs):
         project = kwargs.get('parent_model')
 
         query = kwargs.get('query') or {}
@@ -46,7 +46,7 @@ class VersionControlRemoteResource(VersionControlErrors, AsyncBaseResource):
         )
         model.project = project
 
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res

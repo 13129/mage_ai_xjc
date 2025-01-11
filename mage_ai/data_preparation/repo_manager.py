@@ -145,7 +145,7 @@ class RepoConfig:
                 raise err
 
     @classmethod
-    def from_dict(self, config_dict: Dict, root_project: bool = False) -> 'RepoConfig':
+    def from_dict(cls, config_dict: Dict, root_project: bool = False) -> 'RepoConfig':
         repo_path = config_dict.get('repo_path')
         repo_config = RepoConfig(
             repo_path=repo_path,

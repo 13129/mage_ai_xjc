@@ -10,7 +10,7 @@ from mage_ai.settings.repo import get_repo_path
 class FileVersionResource(GenericResource):
     @classmethod
     @safe_db_query
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         parent_model = kwargs.get('parent_model')
 
         pipeline_uuid = query.get('pipeline_uuid', [False])
@@ -32,7 +32,7 @@ class FileVersionResource(GenericResource):
         if isinstance(parent_model, Block):
             pass
         elif isinstance(parent_model, File):
-            return self.build_result_set(
+            return cls.build_result_set(
                 parent_model.file_versions(),
                 user,
                 **kwargs,

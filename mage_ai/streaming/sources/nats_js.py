@@ -45,7 +45,7 @@ class NATSConfig(BaseConfig):
     use_queue_group: bool = True
 
     @classmethod
-    def parse_config(self, config: Dict = None) -> Dict:
+    def parse_config(cls, config: Dict = None) -> Dict:
         ssl_config = config.get('ssl_config')
         if ssl_config and type(ssl_config) is dict:
             config['ssl_config'] = SSLConfig(**ssl_config)

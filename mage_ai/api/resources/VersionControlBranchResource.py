@@ -9,7 +9,7 @@ from mage_ai.version_control.models import Branch, Remote
 
 class VersionControlBranchResource(VersionControlErrors, AsyncBaseResource):
     @classmethod
-    async def collection(self, query: Dict, _meta: Dict, user: User, **kwargs):
+    async def collection(cls, query: Dict, _meta: Dict, user: User, **kwargs):
         project = kwargs.get('parent_model')
 
         remote = query.get('remote', [None])
@@ -22,29 +22,29 @@ class VersionControlBranchResource(VersionControlErrors, AsyncBaseResource):
             remote.hydrate()
 
         models = Branch.load_all(project=project, remote=remote)
-        return self.build_result_set(
+        return cls.build_result_set(
             models,
             user,
             **kwargs,
         )
 
     @classmethod
-    async def create(self, payload: Dict, user: User, **kwargs):
-        model = self.hydrate_models(user, **kwargs)
+    async def create(cls, payload: Dict, user: User, **kwargs):
+        model = cls.hydrate_models(user, **kwargs)
         model.name = payload.get('name')
         model.create()
 
         if payload.get('clone'):
             model.update(clone=True)
 
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res
 
     @classmethod
-    async def member(self, pk: str, user: User, **kwargs):
-        model = self.hydrate_models(user, name=urllib.parse.unquote(pk), **kwargs)
+    async def member(cls, pk: str, user: User, **kwargs):
+        model = cls.hydrate_models(user, name=urllib.parse.unquote(pk), **kwargs)
 
         query = kwargs.get('query') or {}
         log = query.get('log', [None])
@@ -53,7 +53,7 @@ class VersionControlBranchResource(VersionControlErrors, AsyncBaseResource):
         if log:
             model.detail(log=True)
 
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res
@@ -73,7 +73,7 @@ class VersionControlBranchResource(VersionControlErrors, AsyncBaseResource):
         self.validate_output()
 
     @classmethod
-    def hydrate_models(self, user: User, name: str = None, **kwargs):
+    def hydrate_models(cls, user: User, name: str = None, **kwargs):
         project = kwargs.get('parent_model')
 
         query = kwargs.get('query') or {}

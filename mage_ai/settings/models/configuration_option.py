@@ -77,7 +77,7 @@ class ConfigurationOption(BaseDataClass):
 
     @classmethod
     async def fetch(
-        self,
+        cls,
         configuration_type: ConfigurationType,
         option_type: OptionType,
         resource_type: EntityName,

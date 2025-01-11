@@ -38,13 +38,13 @@ class BaseClass:
         pass
 
     @classmethod
-    def all_annotations(self) -> Dict:
+    def all_annotations(cls) -> Dict:
         annotations = {}
 
-        for key, value in self.__dataclass_fields__.items():
+        for key, value in cls.__dataclass_fields__.items():
             annotations[key] = value.type
 
-        for parent_class in self.__bases__:
+        for parent_class in cls.__bases__:
             if issubclass(parent_class, BaseDataClass):
                 for key, value in parent_class.__dataclass_fields__.items():
                     if key not in annotations:
@@ -101,7 +101,7 @@ class BaseClass:
 
     @classmethod
     def convert_value(
-        self,
+        cls,
         value,
         annotation=None,
         convert_enum: bool = False,
@@ -113,7 +113,7 @@ class BaseClass:
                 return None
 
             return [
-                self.convert_value(
+                cls.convert_value(
                     v,
                     convert_enum=convert_enum,
                     ignore_empty=ignore_empty,
@@ -126,7 +126,7 @@ class BaseClass:
 
         is_dict_class = isinstance(value, dict)
 
-        def _build_dict(acc, kv, cls=self):
+        def _build_dict(acc, kv, cls=cls):
             key, value = kv
             acc[key] = cls.convert_value(
                 value,
@@ -183,10 +183,10 @@ class BaseClass:
         return value
 
     @classmethod
-    def load_to_dict(self, **kwargs) -> Dict:
+    def load_to_dict(cls, **kwargs) -> Dict:
         data = {}
         for key, value in kwargs.items():
-            if not self.disable_attribute_snake_case:
+            if not cls.disable_attribute_snake_case:
                 key = inflection.underscore(key)
             data[key] = value
         return data
@@ -320,7 +320,7 @@ class BaseClass:
 @dataclass
 class BaseDataClass(BaseClass):
     @classmethod
-    def dynamic_fields(self, *args, **kwargs) -> List:
+    def dynamic_fields(cls, *args, **kwargs) -> List:
         return None
 
     def __new__(cls, *args, **kwargs):

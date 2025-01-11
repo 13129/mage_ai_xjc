@@ -19,7 +19,7 @@ class GitHubClient(Client):
             headers={
                 'Accept': 'application/vnd.github+json',
                 'Authorization': f'Bearer {self.access_token}',
-                'X-GitHub-Api-Version': '2022-11-28',
+                'x-GitHub-Api-Version': '2022-11-28',
             },
             timeout=10,
         )

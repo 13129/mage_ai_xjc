@@ -25,6 +25,9 @@ class BaseObjectStorageConfig(BaseConfig):
 
 
 class BaseObjectStorageSink(BaseSink):
+    last_upload_time = None
+    timer = None
+
     def init_storage_client(self):
         """
         Initialize the storage client.
@@ -38,9 +41,9 @@ class BaseObjectStorageSink(BaseSink):
         raise NotImplementedError('init_storage_client method not implemented')
 
     def upload_data_with_client(
-        self,
-        buffer,
-        key: str,
+            self,
+            buffer,
+            key: str,
     ):
         """
         Upload data using the initialized storage client.

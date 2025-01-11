@@ -52,7 +52,7 @@ def filter_results(result: Dict) -> bool:
 
 class SearchResultResource(GenericResource):
     @classmethod
-    async def create(self, payload: Dict, user, **kwargs):
+    async def create(cls, payload: Dict, user, **kwargs):
         pipeline_type = payload.get('pipeline_type', None) or None
         query = payload.get('query', None) or None
         ratio = payload.get('ratio', None) or None
@@ -72,7 +72,7 @@ class SearchResultResource(GenericResource):
 
                 results = results[:12]
 
-        return self(dict(
+        return cls(dict(
             results=results,
             type=search_type,
             uuid=query,

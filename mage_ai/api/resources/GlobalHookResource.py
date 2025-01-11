@@ -23,7 +23,7 @@ from mage_ai.shared.hash import ignore_keys
 
 class GlobalHookResource(AsyncBaseResource):
     @classmethod
-    async def collection(self, query: Dict, _meta: Dict, user: User, **kwargs):
+    async def collection(cls, query: Dict, _meta: Dict, user: User, **kwargs):
         operation_types = query.get('operation_type[]', [])
         if operation_types:
             operation_types = operation_types[0]
@@ -45,7 +45,7 @@ class GlobalHookResource(AsyncBaseResource):
             repo_path=base_repo_path() if root_project else None,
         )
 
-        return self.build_result_set(
+        return cls.build_result_set(
             global_hooks.hooks(
                 operation_types=operation_types,
                 resource_types=resource_types,
@@ -55,7 +55,7 @@ class GlobalHookResource(AsyncBaseResource):
         )
 
     @classmethod
-    async def create(self, payload: Dict, user: User, **kwargs) -> 'GlobalHookResource':
+    async def create(cls, payload: Dict, user: User, **kwargs) -> 'GlobalHookResource':
         query = kwargs.get('query') or {}
 
         root_project = query.get('root_project', [False])
@@ -114,10 +114,10 @@ class GlobalHookResource(AsyncBaseResource):
         global_hooks.add_hook(hook, snapshot=True)
         global_hooks.save(repo_path=base_repo_path() if root_project else None)
 
-        return self(hook, user, **kwargs)
+        return cls(hook, user, **kwargs)
 
     @classmethod
-    async def member(self, pk: str, user: User, **kwargs):
+    async def member(cls, pk: str, user: User, **kwargs):
         query = kwargs.get('query') or {}
 
         resource_type = query.get('resource_type', [None])
@@ -153,7 +153,7 @@ class GlobalHookResource(AsyncBaseResource):
         if not hook and not include_operation_types and not include_resource_types:
             raise ApiError(ApiError.RESOURCE_NOT_FOUND)
 
-        return self(hook, user, **kwargs)
+        return cls(hook, user, **kwargs)
 
     async def update(self, payload: Dict, **kwargs):
         query = kwargs.get('query') or {}

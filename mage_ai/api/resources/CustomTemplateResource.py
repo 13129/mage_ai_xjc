@@ -30,7 +30,7 @@ OBJECT_TYPE_KEY = 'object_type'
 
 class CustomTemplateResource(GenericResource):
     @classmethod
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         object_type = query.get(OBJECT_TYPE_KEY, [None])
         if object_type:
             object_type = object_type[0]
@@ -49,14 +49,14 @@ class CustomTemplateResource(GenericResource):
             file_dicts_flat = flatten_files(file_dicts)
             templates = group_and_hydrate_files(file_dicts_flat, template_class)
 
-        return self.build_result_set(
+        return cls.build_result_set(
             templates,
             user,
             **kwargs,
         )
 
     @classmethod
-    async def create(self, payload, user, **kwargs):
+    async def create(cls, payload, user, **kwargs):
         custom_template = None
         object_type = payload.get(OBJECT_TYPE_KEY)
         template_uuid = payload.get('template_uuid')
@@ -118,10 +118,10 @@ class CustomTemplateResource(GenericResource):
         if custom_template:
             await UsageStatisticLogger().custom_template_create(custom_template)
 
-            return self(custom_template, user, **kwargs)
+            return cls(custom_template, user, **kwargs)
 
     @classmethod
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         query = kwargs.get('query', {})
         object_type = query.get(OBJECT_TYPE_KEY, [None])
         if object_type:
@@ -132,13 +132,13 @@ class CustomTemplateResource(GenericResource):
         repo_path = get_repo_path(user=user)
         try:
             if DIRECTORY_FOR_BLOCK_TEMPLATES == object_type:
-                return self(
+                return cls(
                     CustomBlockTemplate.load(repo_path, template_uuid=template_uuid),
                     user,
                     **kwargs,
                 )
             elif DIRECTORY_FOR_PIPELINE_TEMPLATES == object_type:
-                return self(
+                return cls(
                     CustomPipelineTemplate.load(
                         repo_path,
                         template_uuid=template_uuid,

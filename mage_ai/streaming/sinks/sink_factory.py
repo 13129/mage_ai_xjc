@@ -6,7 +6,7 @@ from mage_ai.streaming.constants import GENERIC_IO_SINK_TYPES, SinkType
 
 class SinkFactory:
     @classmethod
-    def get_sink(self, config: Dict, **kwargs):
+    def get_sink(cls, config: Dict, **kwargs):
         connector_type = config['connector_type']
         if connector_type == SinkType.ACTIVEMQ:
             from mage_ai.streaming.sinks.activemq import ActiveMQSink
@@ -54,7 +54,7 @@ class SinkFactory:
         )
 
     @classmethod
-    def get_python_sink(self, content: str, **kwargs):
+    def get_python_sink(cls, content: str, **kwargs):
         """
         Find the class that's decorated with streaming_sink from the source code.
 

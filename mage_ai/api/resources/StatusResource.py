@@ -24,7 +24,7 @@ from mage_ai.shared.hash import merge_dict
 class StatusResource(GenericResource):
     @classmethod
     @safe_db_query
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         from mage_ai.cluster_manager.constants import (
             KUBE_NAMESPACE,
         )
@@ -103,4 +103,4 @@ class StatusResource(GenericResource):
 
             status = merge_dict(status, activity_details)
 
-        return self.build_result_set([status], user, **kwargs)
+        return cls.build_result_set([status], user, **kwargs)

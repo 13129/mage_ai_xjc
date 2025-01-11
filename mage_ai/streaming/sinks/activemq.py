@@ -20,6 +20,7 @@ class ActiveMQConfig(BaseConfig):
 
 class ActiveMQSink(BaseSink):
     config_class = ActiveMQConfig
+    connection = None
 
     def init_client(self):
         self._print('Start initializing producer.')

@@ -29,7 +29,7 @@ class OutlierRemover(BaseEstimator):
             raise ValueError(f'The method specified \'{method}\' is not supported.')
         self.method = method
 
-    def estimate_contamination_rate(self, X: np.ndarray) -> float:
+    def estimate_contamination_rate(self, x: np.ndarray) -> float:
         """
         Guesses the outlier contamination rate from the data. Uses the IQR
         rule to estimate outliers dimensionwise, and then aggregates the entire
@@ -47,41 +47,41 @@ class OutlierRemover(BaseEstimator):
         6. Return the ratio of these potential outliers in the region
 
         Args:
-            X (np.ndarray): Input array of shape (n_samples, n_dimensions)
+            x (np.ndarray): Input array of shape (n_samples, n_dimensions)
 
         Returns:
             float: The guessed contamination rate
         """
         # TODO - use PCA to calculate the iqrs along the axes of greatest variance
-        first = np.quantile(X, 0.25, axis=0)
-        third = np.quantile(X, 0.75, axis=0)
+        first = np.quantile(x, 0.25, axis=0)
+        third = np.quantile(x, 0.75, axis=0)
         iqr_diffs = 1.5 * (third - first)
 
         lower_bound = first - iqr_diffs
         upper_bound = third + iqr_diffs
 
         # select all rows with at least 50% potential outliers
-        mask = (X < lower_bound) | (X > upper_bound)
+        mask = (x < lower_bound) | (x > upper_bound)
         mask = mask.sum(axis=1) / mask.shape[1]
         mask = mask >= 0.5
         return mask.sum() / mask.size
 
-    def fit(self, X: np.ndarray, y: np.ndarray = None) -> None:
+    def fit(self, x: np.ndarray, y: np.ndarray = None) -> None:
         """
         Fits the outlier remover on the given data.
 
         Args:
-            X (np.ndarray): Input array of shape (n_samples, n_dimensions)
+            x (np.ndarray): Input array of shape (n_samples, n_dimensions)
             y (np.ndarray, optional): Not used. Defaults to None.
         """
-        count, ndim = X.shape
+        count, ndim = x.shape
         pca_transformer = PCA(n_components=20, random_state=42)
         # Clamp contamination rate in case that IQR method gives bad results
-        contamination_rate = max(self.estimate_contamination_rate(X), MIN_CONTAMINATION_RATE)
+        contamination_rate = max(self.estimate_contamination_rate(x), MIN_CONTAMINATION_RATE)
         contamination_rate = min(contamination_rate, MAX_CONTAMINATION_RATE)
 
         if ndim > 20:
-            X = pca_transformer.fit_transform(X)
+            x = pca_transformer.fit_transform(x)
         if self.method == 'auto':
             if ndim <= 5:
                 self.method = 'lof'
@@ -108,21 +108,21 @@ class OutlierRemover(BaseEstimator):
                 n_jobs=-1,
                 random_state=42,
             )
-            self.outlier_remover.fit(X, y)
+            self.outlier_remover.fit(x, y)
 
-    def transform(self, X: np.ndarray, **kwargs) -> np.ndarray:
+    def transform(self, x: np.ndarray, **kwargs) -> np.ndarray:
         """
         Determines the labels of outliers in the input data
 
         Args:
-            X (np.ndarray): Input array of shape (n_samples, n_dimensions)
+            x (np.ndarray): Input array of shape (n_samples, n_dimensions)
 
         Returns:
             np.ndarray: Array of shape (n_samples,) containing labels for the entries.
             Label is True if outlier, else False.
         """
         if self.method == 'lof':
-            labels = self.outlier_remover.fit_predict(X, **kwargs)
+            labels = self.outlier_remover.fit_predict(x, **kwargs)
         else:
-            labels = self.outlier_remover.predict(X, **kwargs)
+            labels = self.outlier_remover.predict(x, **kwargs)
         return labels == -1

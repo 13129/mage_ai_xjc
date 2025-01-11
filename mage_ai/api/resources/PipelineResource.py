@@ -407,7 +407,7 @@ class PipelineResource(BaseResource):
 
     @classmethod
     @safe_db_query
-    async def create(self, payload, user, **kwargs):
+    async def create(cls, payload, user, **kwargs):
         context_data = kwargs.get('context_data')
 
         clone_pipeline_uuid = payload.get('clone_pipeline_uuid')
@@ -533,14 +533,14 @@ class PipelineResource(BaseResource):
                 for tag_uuid in tags:
                     cache.add_pipeline(tag_uuid, resource.model)
 
-        self.on_create_callback = _on_create_callback
+        cls.on_create_callback = _on_create_callback
 
         pipeline.context_data = context_data
-        return self(pipeline, user, **kwargs)
+        return cls(pipeline, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    async def __fetch_model(self, pipeline_uuid: str, repo_path: str, **kwargs):
+    async def __fetch_model(cls, pipeline_uuid: str, repo_path: str, **kwargs):
         all_projects = project_platform_activated()
 
         if all_projects:
@@ -559,22 +559,22 @@ class PipelineResource(BaseResource):
     @classmethod
     @safe_db_query
     async def get_model(
-        self,
+        cls,
         pk,
         **kwargs,
     ):
         pipeline_uuid = urllib.parse.unquote(pk)
         user = kwargs.get('user')
         repo_path = get_repo_path(context_data=kwargs.get('context_data'), user=user)
-        return await self.__fetch_model(pipeline_uuid, repo_path, **kwargs)
+        return await cls.__fetch_model(pipeline_uuid, repo_path, **kwargs)
 
     @classmethod
     @safe_db_query
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         context_data = kwargs.get('context_data')
 
         repo_path = get_repo_path(context_data=context_data, user=user)
-        pipeline = await self.__fetch_model(pk, repo_path, **kwargs)
+        pipeline = await cls.__fetch_model(pk, repo_path, **kwargs)
 
         api_operation_action = kwargs.get('api_operation_action', None)
         if api_operation_action != DELETE:
@@ -615,7 +615,7 @@ class PipelineResource(BaseResource):
                 pipeline.schedules = mapping[pipeline.uuid] or []
 
         pipeline.context_data = context_data
-        return self(pipeline, user, **kwargs)
+        return cls(pipeline, user, **kwargs)
 
     @safe_db_query
     async def delete(self, **kwargs):

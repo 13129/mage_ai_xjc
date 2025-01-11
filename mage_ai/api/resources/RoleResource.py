@@ -12,7 +12,7 @@ class RoleResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         from mage_ai.orchestration.db.models.oauth import Permission
 
         limit_roles = query.get('limit_roles', [None])
@@ -60,11 +60,11 @@ class RoleResource(DatabaseResource):
                 roles,
             ))
 
-        return self.build_result_set(roles, user, **kwargs)
+        return cls.build_result_set(roles, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         return super().create(merge_dict(extract(payload, [
             'name',
         ]), dict(

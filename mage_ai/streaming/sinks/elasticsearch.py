@@ -22,14 +22,15 @@ class ElasticSearchConfig(BaseConfig):
 
 class ElasticSearchSink(BaseSink):
     config_class = ElasticSearchConfig
+    client = None
 
     def init_client(self):
         # Initialize elasticsearch client
         self.client = Elasticsearch(
-                hosts=[self.config.host],
-                api_key=self.config.api_key,
-                ca_certs=self.config.ca_cert,
-                verify_certs=self.config.verify_certs,
+            hosts=[self.config.host],
+            api_key=self.config.api_key,
+            ca_certs=self.config.ca_cert,
+            verify_certs=self.config.verify_certs,
         )
 
     def test_connection(self):

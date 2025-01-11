@@ -2,12 +2,12 @@ from sklearn import base
 
 
 class BaseEstimator(base.BaseEstimator):
-    def fit(self, X, y=None):
+    def fit(self, x, y=None):
         return self
 
-    def fit_transform(self, X, y=None):
-        self.fit(X, y)
-        return self.transform(X)
+    def fit_transform(self, x, y=None):
+        self.fit(x, y)
+        return self.transform(x)
 
-    def transform(self, X, **kwargs):
-        return X
+    def transform(self, x, **kwargs):
+        return x

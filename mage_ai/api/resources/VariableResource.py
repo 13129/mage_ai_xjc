@@ -40,7 +40,7 @@ def get_variable_value(
 class VariableResource(GenericResource):
     @classmethod
     @safe_db_query
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         context_data = kwargs.get('context_data')
         repo_path = get_repo_path(context_data=context_data, user=user)
         variables_dir = get_variables_dir(repo_path=repo_path)
@@ -94,7 +94,7 @@ class VariableResource(GenericResource):
                 if uuid != 'global'
             ] + global_variables_arr
 
-        return self.build_result_set(
+        return cls.build_result_set(
             variables,
             user,
             **kwargs,
@@ -102,7 +102,7 @@ class VariableResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload: Dict, user, **kwargs) -> 'VariableResource':
+    def create(cls, payload: Dict, user, **kwargs) -> 'VariableResource':
         pipeline_uuid = kwargs['parent_model'].uuid
 
         error = ApiError.RESOURCE_INVALID.copy()
@@ -127,7 +127,7 @@ class VariableResource(GenericResource):
 
         global_variables = get_global_variables(pipeline_uuid)
 
-        return self(
+        return cls(
             dict(
                 block=dict(uuid='global'),
                 name=variable_uuid,
@@ -141,8 +141,8 @@ class VariableResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
-        return self(dict(name=pk), user, **kwargs)
+    def member(cls, pk, user, **kwargs):
+        return cls(dict(name=pk), user, **kwargs)
 
     @safe_db_query
     def update(self, payload, **kwargs):

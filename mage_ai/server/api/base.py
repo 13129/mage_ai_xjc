@@ -123,6 +123,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class BaseApiHandler(BaseHandler, OAuthMiddleware):
+    is_health_check = None
+
     def initialize(self, **kwargs) -> None:
         super().initialize(**kwargs)
         self.is_health_check = kwargs.get('is_health_check', False)

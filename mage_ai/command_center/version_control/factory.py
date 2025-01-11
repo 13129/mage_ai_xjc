@@ -49,6 +49,9 @@ from mage_ai.version_control.models import Branch, Project, Remote
 
 
 class VersionControlFactory(BaseFactory):
+    remotes = None
+    branches = None
+
     async def fetch_items(self, **kwargs) -> List[Dict]:
         self.branches = []
         self.remotes = []

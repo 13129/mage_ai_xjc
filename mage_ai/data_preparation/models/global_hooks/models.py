@@ -740,30 +740,30 @@ class GlobalHooks(BaseDataClass):
             self.resources.update_attributes()
 
     @classmethod
-    def file_path(self, repo_path: str = None) -> str:
+    def file_path(cls, repo_path: str = None) -> str:
         return os.path.join(repo_path or get_repo_path(), GLOBAL_HOOKS_FILENAME)
 
     @classmethod
-    def __load_from_file(self, file_path: str = None, repo_path: str = None) -> 'GlobalHooks':
+    def __load_from_file(cls, file_path: str = None, repo_path: str = None) -> 'GlobalHooks':
         yaml_config = {}
 
-        file_path_to_use = file_path or self.file_path(repo_path=repo_path)
+        file_path_to_use = file_path or cls.file_path(repo_path=repo_path)
         if os.path.exists(file_path_to_use):
             with open(file_path_to_use, 'r') as fp:
                 content = fp.read()
                 if content:
                     yaml_config = yaml.safe_load(content) or {}
 
-        return self.load(**yaml_config)
+        return cls.load(**yaml_config)
 
     @classmethod
     def load_from_file(
-        self,
+        cls,
         all_global_hooks: bool = True,
         file_path: str = None,
         repo_path: str = None,
     ) -> 'GlobalHooks':
-        model = self.__load_from_file(file_path=file_path, repo_path=repo_path)
+        model = cls.__load_from_file(file_path=file_path, repo_path=repo_path)
 
         if all_global_hooks and project_platform_activated():
             model.project_global_hooks = {}
@@ -772,7 +772,7 @@ class GlobalHooks(BaseDataClass):
                 full_path = settings['full_path']
 
                 model.project_global_hooks[project_name] = dict(
-                    global_hooks=self.__load_from_file(
+                    global_hooks=cls.__load_from_file(
                         file_path=os.path.join(full_path, GLOBAL_HOOKS_FILENAME),
                     ),
                     project=settings,

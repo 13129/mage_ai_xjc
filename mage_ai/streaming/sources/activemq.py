@@ -1,7 +1,7 @@
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, Dict
 
 import stomp
 from stomp.exception import ConnectFailedException
@@ -20,7 +20,7 @@ class ActiveMQConfig(BaseConfig):
     password: str = 'admin'
 
 
-def messageProcessingFunction(message, handler):
+def message_processing_function(message, handler):
     print('Recieved message: "%s"' % message)
     handler([message])
 
@@ -29,8 +29,8 @@ class ActiveMQMsgListener(stomp.ConnectionListener):
     processMessage = None
     conn = None
 
-    def __init__(self, processMessage, conn, handler):
-        self.processMessage = processMessage
+    def __init__(self, process_message, conn, handler):
+        self.processMessage = process_message
         self.conn = conn
         self.handler = handler
 
@@ -43,6 +43,7 @@ class ActiveMQMsgListener(stomp.ConnectionListener):
 
 class ActiveMQSource(BaseSource):
     config_class = ActiveMQConfig
+    connection = None
 
     def init_client(self):
         queue_name = self.config.queue_name
@@ -73,7 +74,7 @@ class ActiveMQSource(BaseSource):
 
     def batch_read(self, handler: Callable):
         self._print('Start consuming messages.')
-        listener = ActiveMQMsgListener(processMessage=messageProcessingFunction,
+        listener = ActiveMQMsgListener(process_message=message_processing_function,
                                        conn=self.connection,
                                        handler=handler)
         self.connection.set_listener('ActiceMQListerner', listener)

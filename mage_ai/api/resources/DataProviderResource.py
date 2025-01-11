@@ -26,7 +26,7 @@ DATA_PROVIDERS_NAME = {
 class DataProviderResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
+    async def collection(cls, query, meta, user, **kwargs):
         file_path = f'{get_repo_path(user=user)}/io_config.yaml'
         profiles = []
         if os.path.exists(file_path):
@@ -40,7 +40,7 @@ class DataProviderResource(GenericResource):
             value=ds.value,
         ) for ds in DATA_PROVIDERS]
 
-        return self.build_result_set(
+        return cls.build_result_set(
             collection,
             user,
             **kwargs,

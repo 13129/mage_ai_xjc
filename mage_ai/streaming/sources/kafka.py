@@ -60,7 +60,7 @@ class KafkaConfig(BaseConfig):
     max_partition_fetch_bytes: int = 1048576
 
     @classmethod
-    def parse_config(self, config: Dict) -> Dict:
+    def parse_config(cls, config: Dict) -> Dict:
         ssl_config = config.get('ssl_config')
         sasl_config = config.get('sasl_config')
         serde_config = config.get('serde_config')

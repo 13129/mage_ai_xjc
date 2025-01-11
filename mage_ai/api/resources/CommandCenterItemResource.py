@@ -9,7 +9,7 @@ from mage_ai.shared.hash import dig
 
 class CommandCenterItemResource(AsyncBaseResource):
     @classmethod
-    async def create(self, payload: Dict, user: User, **kwargs) -> 'CommandCenterItemResource':
+    async def create(cls, payload: Dict, user: User, **kwargs) -> 'CommandCenterItemResource':
         items = []
         settings = None
 
@@ -28,4 +28,4 @@ class CommandCenterItemResource(AsyncBaseResource):
             items = await search_items(user=user, **state, **timeline)
             settings = CommandCenterSettings.load_from_file_path()
 
-        return self(dict(items=items, settings=settings), user, **kwargs)
+        return cls(dict(items=items, settings=settings), user, **kwargs)

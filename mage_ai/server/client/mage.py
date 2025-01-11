@@ -34,7 +34,7 @@ class Mage:
                     data=json.dumps(data),
                     headers={
                         'Content-Type': 'application/json',
-                        'X-API-KEY': api_key,
+                        'x-API-KEY': api_key,
                     },
                     url=f'{self.url_prefix}/data_cleaning_pipelines/{remote_id}',
                 )
@@ -43,7 +43,7 @@ class Mage:
                     data=json.dumps(data),
                     headers={
                         'Content-Type': 'application/json',
-                        'X-API-KEY': api_key,
+                        'x-API-KEY': api_key,
                     },
                     url=f'{self.url_prefix}/data_cleaning_pipelines',
                 ).json()
@@ -66,7 +66,7 @@ class Mage:
             response = requests.get(
                 headers={
                     'Content-Type': 'application/json',
-                    'X-API-KEY': api_key,
+                    'x-API-KEY': api_key,
                 },
                 url=f'{self.url_prefix}/data_cleaning_pipelines/{id}',
             ).json()

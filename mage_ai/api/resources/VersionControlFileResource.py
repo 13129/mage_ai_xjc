@@ -20,7 +20,7 @@ async def get_content(model: File) -> File:
 
 class VersionControlFileResource(VersionControlErrors, AsyncBaseResource):
     @classmethod
-    async def collection(self, query: Dict, _meta: Dict, user: User, **kwargs):
+    async def collection(cls, query: Dict, _meta: Dict, user: User, **kwargs):
         project = kwargs.get('parent_model')
 
         models = File.load_all(project=project)
@@ -45,31 +45,31 @@ class VersionControlFileResource(VersionControlErrors, AsyncBaseResource):
 
                 models.append(model1)
 
-        return self.build_result_set(
+        return cls.build_result_set(
             models,
             user,
             **kwargs,
         )
 
     @classmethod
-    async def create(self, payload: Dict, user: User, **kwargs):
+    async def create(cls, payload: Dict, user: User, **kwargs):
         project = kwargs.get('parent_model')
         model = File()
         model.project = project
         model.name = payload.get('name')
         model.create()
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res
 
     @classmethod
-    async def member(self, pk: str, user: User, **kwargs):
+    async def member(cls, pk: str, user: User, **kwargs):
         project = kwargs.get('parent_model')
         model = File.load(name=urllib.parse.unquote(pk))
         model.project = project
 
-        res = self(model, user, **kwargs)
+        res = cls(model, user, **kwargs)
         res.validate_output()
 
         return res

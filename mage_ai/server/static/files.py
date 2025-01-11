@@ -6,14 +6,14 @@ class StaticFileHandler(TornadoStaticFileHandler):
         super().set_default_headers()
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header(
-            'Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'
+            'Access-Control-Allow-Headers', 'Content-Type, Authorization, x-Requested-With'
         )
         self.set_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
 
     def set_extra_headers(self, path):
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header(
-            'Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'
+            'Access-Control-Allow-Headers', 'Content-Type, Authorization, x-Requested-With'
         )
         self.set_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
 
@@ -24,7 +24,7 @@ class StaticFileHandler(TornadoStaticFileHandler):
     def write_error(self, status_code, **kwargs):
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header(
-            'Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'
+            'Access-Control-Allow-Headers', 'Content-Type, Authorization, x-Requested-With'
         )
         self.set_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
         if status_code == 404:

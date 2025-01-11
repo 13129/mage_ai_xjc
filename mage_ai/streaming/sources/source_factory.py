@@ -6,7 +6,7 @@ from mage_ai.streaming.constants import SourceType
 
 class SourceFactory:
     @classmethod
-    def get_source(self, config: Dict, **kwargs):
+    def get_source(cls, config: Dict, **kwargs):
         connector_type = config['connector_type']
         if connector_type == SourceType.KAFKA:
             from mage_ai.streaming.sources.kafka import KafkaSource
@@ -36,7 +36,7 @@ class SourceFactory:
         )
 
     @classmethod
-    def get_python_source(self, content: str, **kwargs):
+    def get_python_source(cls, content: str, **kwargs):
         """
         Find the class that's decorated with streaming_source from the source code.
 

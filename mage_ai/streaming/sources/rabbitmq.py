@@ -29,7 +29,7 @@ class RabbitMQConfig(BaseConfig):
     consume_config: ConsumeConfig = None
 
     @classmethod
-    def parse_config(self, config: Dict) -> Dict:
+    def parse_config(cls, config: Dict) -> Dict:
         consume_config = config.get('consume_config')
         if consume_config is not None and type(consume_config) is dict:
             config['consume_config'] = ConsumeConfig(**consume_config)

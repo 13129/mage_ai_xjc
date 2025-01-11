@@ -98,7 +98,7 @@ def get_state_data_for_blocks(
 class IntegrationSourceResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
+    async def collection(cls, query, meta, user, **kwargs):
         collection = []
 
         parent_model = kwargs.get('parent_model')
@@ -128,7 +128,7 @@ class IntegrationSourceResource(GenericResource):
         else:
             collection = get_collection('sources', SOURCES)
 
-        return self.build_result_set(
+        return cls.build_result_set(
             collection,
             user,
             **kwargs,
@@ -136,7 +136,7 @@ class IntegrationSourceResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         error_message = None
         success = False
         streams = []
@@ -177,7 +177,7 @@ class IntegrationSourceResource(GenericResource):
             streams = list(streams_updated)
             success = True
 
-        return self(dict(
+        return cls(dict(
             error_message=error_message,
             streams=streams,
             success=success,
@@ -185,7 +185,7 @@ class IntegrationSourceResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         parent_model = kwargs.get('parent_model')
         query = kwargs.get('query', {})
 
@@ -222,8 +222,8 @@ class IntegrationSourceResource(GenericResource):
                     **kwargs,
                 )
 
-            return self(state_data, user, **kwargs)
+            return cls(state_data, user, **kwargs)
 
         repo_path = get_repo_path(user=user)
 
-        return self(IntegrationPipeline.get(pk, repo_path=repo_path), user, **kwargs)
+        return cls(IntegrationPipeline.get(pk, repo_path=repo_path), user, **kwargs)

@@ -20,9 +20,9 @@ class KernelProcessResource(GenericResource):
         )
 
     @classmethod
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         if TERMINATE_INACTIVE == pk:
-            return self(KernelProcess.load(pid=TERMINATE_INACTIVE), user, **kwargs)
+            return cls(KernelProcess.load(pid=TERMINATE_INACTIVE), user, **kwargs)
 
         query = kwargs.get('query', {})
         check_active_status = query.get('check_active_status', [False])
@@ -35,7 +35,7 @@ class KernelProcessResource(GenericResource):
             raise ApiError(ApiError.RESOURCE_NOT_FOUND)
 
         kernel_process = KernelProcess.load(**info)
-        return self(kernel_process, user, **kwargs)
+        return cls(kernel_process, user, **kwargs)
 
     async def delete(self, **kwargs):
         if self.model.pid == TERMINATE_INACTIVE:

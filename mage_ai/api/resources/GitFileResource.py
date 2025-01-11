@@ -10,7 +10,7 @@ from mage_ai.settings.utils import base_repo_path
 
 class GitFileResource(GenericResource):
     @classmethod
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         query = kwargs.get('query', {})
 
         git_manager = Git.get_manager(user=user)
@@ -67,7 +67,7 @@ class GitFileResource(GenericResource):
             except git.exc.GitCommandError as err:
                 error = str(err)
 
-        return self(dict(
+        return cls(dict(
             content=file.content() if os.path.isfile(file.file_path) else None,
             content_from_base=content_from_base,
             content_from_compare=content_from_compare,

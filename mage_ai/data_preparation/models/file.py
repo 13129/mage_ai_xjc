@@ -54,12 +54,12 @@ class File:
         return os.path.join(self.repo_path, self.dir_path, self.filename)
 
     @classmethod
-    def file_exists(self, file_path: str) -> bool:
+    def file_exists(cls, file_path: str) -> bool:
         return os.path.isfile(file_path)
 
     @classmethod
-    def create_parent_directories(self, file_path: str, raise_exception: bool = False) -> bool:
-        will_create = not self.file_exists(file_path)
+    def create_parent_directories(cls, file_path: str, raise_exception: bool = False) -> bool:
+        will_create = not cls.file_exists(file_path)
         if will_create:
             try:
                 os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -71,7 +71,7 @@ class File:
 
     @classmethod
     def create(
-        self,
+        cls,
         filename,
         dir_path,
         content: str = None,
@@ -83,7 +83,7 @@ class File:
         repo_path = repo_path or get_repo_path(file_path=os.path.join(dir_path, filename))
         file = File(filename, dir_path, repo_path)
 
-        self.write(
+        cls.write(
             repo_path,
             dir_path,
             filename,
@@ -153,7 +153,7 @@ class File:
         return result
 
     @classmethod
-    def from_path(self, file_path, repo_path: str = None):
+    def from_path(cls, file_path, repo_path: str = None):
         repo_path_alt = repo_path
         if repo_path_alt is None:
             repo_path_alt = get_repo_path(file_path=file_path)
@@ -165,7 +165,7 @@ class File:
 
     @classmethod
     def get_all_files(
-        self,
+        cls,
         repo_path,
         exclude_dir_pattern: str = None,
         exclude_pattern: str = None,
@@ -218,7 +218,7 @@ class File:
 
     @classmethod
     def file_path_versions_dir(
-        self,
+        cls,
         repo_path: str,
         dir_path: str,
         filename: str,
@@ -231,7 +231,7 @@ class File:
         )
 
     @classmethod
-    def validate_content(self, dir_path, filename, content):
+    def validate_content(cls, dir_path, filename, content):
         if dir_path.startswith(PIPELINES_FOLDER_PREFIX) and filename == 'triggers.yaml':
             from mage_ai.data_preparation.models.triggers import load_trigger_configs
 
@@ -240,7 +240,7 @@ class File:
 
     @classmethod
     def write_preprocess(
-        self,
+        cls,
         repo_path: str,
         dir_path: str,
         filename: str,
@@ -250,7 +250,7 @@ class File:
         overwrite: bool = True,
     ):
         file_path_main = os.path.join(repo_path, dir_path, filename)
-        file_path_versions_dir = self.file_path_versions_dir(repo_path, dir_path, filename)
+        file_path_versions_dir = cls.file_path_versions_dir(repo_path, dir_path, filename)
         file_path_versions = os.path.join(
             file_path_versions_dir,
             str(round(datetime.now().timestamp())),
@@ -283,18 +283,18 @@ class File:
 
         for tup in arr:
             file_path, should_overwrite, should_create_directories = tup
-            if self.file_exists(file_path) and not should_overwrite:
+            if cls.file_exists(file_path) and not should_overwrite:
                 raise FileExistsError(f'File at {file_path} already exists.')
 
             if should_create_directories:
-                self.create_parent_directories(file_path)
+                cls.create_parent_directories(file_path)
 
             write_type = 'wb' if content and type(content) is bytes else 'w'
             yield file_path, write_type
 
     @classmethod
     def write(
-        self,
+        cls,
         repo_path: str,
         dir_path: str,
         filename: str,
@@ -303,7 +303,7 @@ class File:
         file_version_only: bool = False,
         overwrite: bool = True,
     ) -> None:
-        for file_path, write_type in self.write_preprocess(
+        for file_path, write_type in cls.write_preprocess(
             repo_path,
             dir_path,
             filename,
@@ -320,7 +320,7 @@ class File:
             with open(file_path, **kwargs) as f:
                 if content:
                     f.write(content or '')
-        self.validate_content(dir_path, filename, content)
+        cls.validate_content(dir_path, filename, content)
 
         update_caches(repo_path, dir_path, filename)
 
@@ -328,7 +328,7 @@ class File:
 
     @classmethod
     async def write_async(
-        self,
+        cls,
         repo_path: str,
         dir_path: str,
         filename: str,
@@ -337,7 +337,7 @@ class File:
         file_version_only: bool = False,
         overwrite: bool = True,
     ) -> None:
-        for file_path, write_type in self.write_preprocess(
+        for file_path, write_type in cls.write_preprocess(
             repo_path,
             dir_path,
             filename,

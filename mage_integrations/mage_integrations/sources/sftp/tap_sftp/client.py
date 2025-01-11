@@ -23,6 +23,8 @@ def handle_backoff(details):
 
 
 class SFTPConnection:
+    __sftp = None
+
     def __init__(self,
                  host,
                  username,
@@ -119,7 +121,7 @@ class SFTPConnection:
         try:
             result = self.sftp.listdir_attr(prefix)
         except FileNotFoundError as e:
-            raise Exception("Directory '{}' does not exist".format(prefix)) from e # noqa
+            raise Exception("Directory '{}' does not exist".format(prefix)) from e  # noqa
 
         for file_attr in result:
             # NB: This only looks at the immediate level
@@ -141,7 +143,8 @@ class SFTPConnection:
                 # NB: SFTP specifies path characters to be '/'
                 #     https://tools.ietf.org/html/draft-ietf-secsh-filexfer-13#section-6
                 files.append({"filepath": prefix + '/' + file_attr.filename,
-                              "last_modified": datetime.utcfromtimestamp(last_modified).replace(tzinfo=pytz.UTC)})  # noqa
+                              "last_modified": datetime.utcfromtimestamp(last_modified).replace(
+                                  tzinfo=pytz.UTC)})  # noqa
 
         return files
 
@@ -166,7 +169,7 @@ class SFTPConnection:
             LOGGER.info("Found file: %s", f['filepath'])
 
         if modified_since is not None:
-            matching_files = [f for f in matching_files if f["last_modified"] > modified_since] # noqa
+            matching_files = [f for f in matching_files if f["last_modified"] > modified_since]  # noqa
 
         return matching_files
 

@@ -19,7 +19,7 @@ from mage_ai.settings.repo import get_repo_path
 class OutputResource(GenericResource):
     @classmethod
     @safe_db_query
-    def collection(self, query_arg, meta, user, **kwargs):
+    def collection(cls, query_arg, meta, user, **kwargs):
         query = {}
         for key in [
             'sample_count',
@@ -39,7 +39,7 @@ class OutputResource(GenericResource):
                 exclude_blank_variable_uuids=True,
             )
 
-        return self.build_result_set(
+        return cls.build_result_set(
             outputs,
             user,
             **kwargs,
@@ -47,7 +47,7 @@ class OutputResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload: Dict, user, **kwargs) -> 'OutputResource':
+    def create(cls, payload: Dict, user, **kwargs) -> 'OutputResource':
         block_uuid = payload.get('block_uuid')
         pipeline_uuid = payload.get('pipeline_uuid')
         partition = payload.get('partition')
@@ -128,11 +128,11 @@ class OutputResource(GenericResource):
                                 output,
                                 partition=partition,
                             )
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         query = kwargs.get('query', {})
 
         payload = {}
@@ -190,4 +190,4 @@ class OutputResource(GenericResource):
                             )
                         )
 
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)

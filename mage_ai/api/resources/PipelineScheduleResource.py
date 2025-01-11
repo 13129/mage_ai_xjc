@@ -42,7 +42,7 @@ class PipelineScheduleResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def collection(self, query_arg, meta, user, **kwargs):
+    def collection(cls, query_arg, meta, user, **kwargs):
         """
         The result of this method will be a ResultSet of dictionaries. Each dict will already
         contain the additional fields that are needed for the pipeline schedule LIST endpoint.
@@ -92,7 +92,7 @@ class PipelineScheduleResource(DatabaseResource):
         if len(tag_names) >= 1:
             tag_associations = tag_query.filter(
                 Tag.name.in_(tag_names),
-                TagAssociation.taggable_type == self.model_class.__name__,
+                TagAssociation.taggable_type == cls.model_class.__name__,
             ).all()
             query = query.filter(
                 PipelineSchedule.id.in_([ta.taggable_id for ta in tag_associations]),
@@ -217,7 +217,7 @@ class PipelineScheduleResource(DatabaseResource):
         # a record of (taggable_id, taggable_type, tag_id, tag_name).
         tags = tag_query.filter(
             TagAssociation.taggable_id.in_(schedule_ids),
-            TagAssociation.taggable_type == self.model_class.__name__,
+            TagAssociation.taggable_type == cls.model_class.__name__,
         ).all()
 
         tags_by_pipeline_schedule = collections.defaultdict(list)
@@ -240,7 +240,7 @@ class PipelineScheduleResource(DatabaseResource):
                 )
             )
 
-        return self.build_result_set(
+        return cls.build_result_set(
             results,
             user,
             **kwargs,
@@ -248,7 +248,7 @@ class PipelineScheduleResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         pipeline = kwargs['parent_model']
         payload['pipeline_uuid'] = pipeline.uuid
 
@@ -276,7 +276,7 @@ class PipelineScheduleResource(DatabaseResource):
                     **kwargs,
                 )
 
-            self.on_create_callback = _callback
+            cls.on_create_callback = _callback
 
         return super().create(payload, user, **kwargs)
 

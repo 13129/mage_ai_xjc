@@ -15,8 +15,8 @@ class TagCache(BaseCache):
     cache_key = CACHE_KEY_TAGS_TO_OBJECT_MAPPING
 
     @classmethod
-    async def initialize_cache(self, replace: bool = False) -> 'TagCache':
-        cache = self()
+    async def initialize_cache(cls, replace: bool = False) -> 'TagCache':
+        cache = cls()
         if replace or not cache.exists():
             await cache.initialize_cache_for_all_objects()
 

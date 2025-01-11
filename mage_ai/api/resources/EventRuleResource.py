@@ -5,6 +5,6 @@ from mage_ai.orchestration.db import safe_db_query
 class EventRuleResource(GenericResource):
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         rules = []
-        return self(dict(rules=rules), user, **kwargs)
+        return cls(dict(rules=rules), user, **kwargs)

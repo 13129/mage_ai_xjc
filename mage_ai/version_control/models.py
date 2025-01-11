@@ -136,8 +136,8 @@ class Provider(BaseVersionControl):
     name: ProviderName = field(default_factory=lambda: ProviderName.GITHUB)
 
     @classmethod
-    def load(self, name: ProviderName = None, url: str = None) -> 'Provider':
-        return self(name=name or get_provider_from_remote_url(url) if url else ProviderName.GITHUB)
+    def load(cls, name: ProviderName = None, url: str = None) -> 'Provider':
+        return cls(name=name or get_provider_from_remote_url(url) if url else ProviderName.GITHUB)
 
 
 @dataclass
@@ -147,12 +147,12 @@ class Remote(BaseVersionControl):
     url: str = None
 
     @classmethod
-    def load_all(self, project: 'Project' = None) -> List['Remote']:
-        lines = self(project=project).list()
+    def load_all(cls, project: 'Project' = None) -> List['Remote']:
+        lines = cls(project=project).list()
 
         arr = []
         for remote in unique_by(
-            [self.load_from_text(line) for line in lines if len(line) >= 1],
+            [cls.load_from_text(line) for line in lines if len(line) >= 1],
             lambda x: x.name,
         ):
             remote.project = project
@@ -161,7 +161,7 @@ class Remote(BaseVersionControl):
         return arr
 
     @classmethod
-    def load_from_text(self, line: str) -> Dict:
+    def load_from_text(cls, line: str) -> Dict:
         name = ''
         url = ''
         parts = line.split('\t')
@@ -171,7 +171,7 @@ class Remote(BaseVersionControl):
                 url = parts[1]
                 url = url.split('(')[0].strip()
 
-        return self.load(
+        return cls.load(
             name=name.strip(),
             url=url.strip(),
         )
@@ -221,19 +221,19 @@ class Branch(BaseVersionControl):
     remote: Remote = None
 
     @classmethod
-    def clean(self, line: str) -> str:
+    def clean(cls, line: str) -> str:
         if line.startswith('*'):
             line = line[1:].strip()
         return line.strip()
 
     @classmethod
     def load_all(
-        self,
+        cls,
         lines: List[str] = None,
         remote: Remote = None,
         project: 'Project' = None,
     ) -> List['Branch']:
-        base = self(project=project)
+        base = cls(project=project)
 
         if not lines:
             lines = base.list(include_all=True)
@@ -245,10 +245,10 @@ class Branch(BaseVersionControl):
                 continue
 
             current = line.startswith('*')
-            name = self.clean(line)
+            name = cls.clean(line)
             if name not in mapping:
                 mapping[name] = True
-                model = self.load(current=current, name=name)
+                model = cls.load(current=current, name=name)
                 model.remote = remote
                 model.project = project
                 arr.append(model)
@@ -383,10 +383,10 @@ class File(BaseVersionControl):
     untracked: bool = False
 
     @classmethod
-    def load_all(self, project: 'Project' = None) -> List['File']:
-        lines_staged = self(project=project).list(staged=True)
-        lines_unstaged = self(project=project).list(unstaged=True)
-        lines_untracked = self(project=project).list(untracked=True)
+    def load_all(cls, project: 'Project' = None) -> List['File']:
+        lines_staged = cls(project=project).list(staged=True)
+        lines_unstaged = cls(project=project).list(unstaged=True)
+        lines_untracked = cls(project=project).list(untracked=True)
 
         mapping = {}
         for opts, arr in [
@@ -598,13 +598,13 @@ class Project(BaseVersionControl):
         self.hydrate()
 
     @classmethod
-    def load_all(self, user: User = None) -> List['Project']:
+    def load_all(cls, user: User = None) -> List['Project']:
         settings = (platform_settings() or {}).get('version_control') or {}
         uuids = list(settings.keys() if settings else [])
-        return [self.load(user=user, uuid=uuid) for uuid in uuids]
+        return [cls.load(user=user, uuid=uuid) for uuid in uuids]
 
     @classmethod
-    def create(sefl, uuid: str) -> 'Project':
+    def create(cls, uuid: str) -> 'Project':
         settings = platform_settings() or {}
         if not settings.get('version_control'):
             settings['version_control'] = {}

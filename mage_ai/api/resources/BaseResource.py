@@ -30,6 +30,12 @@ class BaseResource(Resource, ResultSetMixIn):
     parent_models_attr = {}
     parent_resource_attr = {}
 
+    on_delete_callback = None
+    on_delete_failure_callback = None
+
+    on_update_callback = None
+    on_update_failure_callback = None
+
     @classmethod
     def model_name(cls) -> str:
         return cls.__name__.replace('Resource', '')
@@ -134,7 +140,7 @@ class BaseResource(Resource, ResultSetMixIn):
 
     @classmethod
     def register_child_resource(
-        cls, resource_name_plural: str, resource_class: BaseResource, **kwargs
+            cls, resource_name_plural: str, resource_class: BaseResource, **kwargs
     ):
         cls.child_resources()[resource_name_plural] = resource_class
 
@@ -156,7 +162,7 @@ class BaseResource(Resource, ResultSetMixIn):
 
     @classmethod
     def create(
-        cls, payload, user, **kwargs
+            cls, payload, user, **kwargs
     ) -> Union['BaseResource', Coroutine[None, None, 'BaseResource']]:
         """
         Subclasses override this method
@@ -176,10 +182,10 @@ class BaseResource(Resource, ResultSetMixIn):
 
     @classmethod
     async def process_create(
-        cls,
-        payload,
-        user,
-        **kwargs,
+            cls,
+            payload,
+            user,
+            **kwargs,
     ):
         cls.on_create_callback = None
         cls.on_create_failure_callback = None

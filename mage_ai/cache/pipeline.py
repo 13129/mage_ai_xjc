@@ -15,11 +15,11 @@ class PipelineCache(BaseCache):
 
     @classmethod
     async def initialize_cache(
-        self,
+        cls,
         replace: bool = False,
         pipelines: List[Dict] = None,
     ) -> 'PipelineCache':
-        cache = self()
+        cache = cls()
         if replace or not cache.exists():
             await cache.initialize_cache_for_models(pipelines=pipelines)
 

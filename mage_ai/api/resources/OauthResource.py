@@ -28,7 +28,7 @@ from mage_ai.orchestration.db.models.oauth import Oauth2AccessToken, Oauth2Appli
 class OauthResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
+    async def collection(cls, query, meta, user, **kwargs):
         redirect_uri = query.get('redirect_uri', [None])
         if redirect_uri:
             redirect_uri = redirect_uri[0]
@@ -80,11 +80,11 @@ class OauthResource(GenericResource):
             except Exception:
                 pass
 
-        return self.build_result_set(oauths, user, **kwargs)
+        return cls.build_result_set(oauths, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         error = ApiError.RESOURCE_INVALID.copy()
 
         provider = payload.get('provider')
@@ -141,7 +141,7 @@ class OauthResource(GenericResource):
                 token=token,
             )
 
-        return self(
+        return cls(
             dict(
                 authenticated=True,
                 expires=access_token.expires,
@@ -152,7 +152,7 @@ class OauthResource(GenericResource):
         )
 
     @classmethod
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         error = ApiError.RESOURCE_INVALID.copy()
         if pk not in VALID_OAUTH_PROVIDERS:
             error.update(dict(message='Invalid provider.'))
@@ -184,7 +184,7 @@ class OauthResource(GenericResource):
             model['expires'] = max(
                 [access_token.expires for access_token in access_tokens]
             )
-            return self(model, user, **kwargs)
+            return cls(model, user, **kwargs)
 
         provider_class = NAME_TO_PROVIDER.get(provider)
         provider_instance = None
@@ -252,7 +252,7 @@ class OauthResource(GenericResource):
                 if resp:
                     model.update(resp)
 
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     def update(self, payload, **kwargs):
         provider = self.model.get('provider')

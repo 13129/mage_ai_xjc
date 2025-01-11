@@ -69,13 +69,13 @@ class BaseFactory:
 
     @classmethod
     async def create_items(
-        self,
+        cls,
         factory_or_items: List[Union['BaseFactory', List[Dict]]],
         **kwargs,
     ) -> List[Item]:
         async def process_factory_items(
             class_or_items: Union['BaseFactory', List[Dict]],
-            cls=self,
+            cls=cls,
             kwargs=kwargs,
         ) -> List[Item]:
             is_iterable = isinstance(class_or_items, Iterable)

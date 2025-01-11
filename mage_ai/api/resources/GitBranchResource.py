@@ -36,7 +36,7 @@ def build_file_object(obj):
 class GitBranchResource(GenericResource):
     @classmethod
     def get_git_manager(
-        self,
+        cls,
         user=None,
         context_data: Dict = None,
         preferences=None,
@@ -53,7 +53,7 @@ class GitBranchResource(GenericResource):
         )
 
     @classmethod
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         arr = []
 
         include_remote_branches = query.get('include_remote_branches', None)
@@ -79,7 +79,7 @@ class GitBranchResource(GenericResource):
                 ).get_branches(repository)
                 arr = [dict(name=branch) for branch in branches]
         else:
-            git_manager = self.get_git_manager(user=user)
+            git_manager = cls.get_git_manager(user=user)
             arr += [dict(name=branch) for branch in git_manager.branches]
 
             if include_remote_branches:
@@ -93,23 +93,23 @@ class GitBranchResource(GenericResource):
                 except Exception:
                     logger.warning('Failed to fetch remote branches')
 
-        return self.build_result_set(
+        return cls.build_result_set(
             arr,
             user,
             **kwargs,
         )
 
     @classmethod
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         branch = payload.get('name')
         remote = payload.get('remote')
-        git_manager = self.get_git_manager(user=user)
+        git_manager = cls.get_git_manager(user=user)
         git_manager.switch_branch(branch, remote=remote)
 
-        return self(dict(name=git_manager.current_branch), user, **kwargs)
+        return cls(dict(name=git_manager.current_branch), user, **kwargs)
 
     @classmethod
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         context_data = kwargs.get('context_data')
         repo_path = get_repo_path(context_data=context_data, user=user)
         preferences = get_preferences(
@@ -119,7 +119,7 @@ class GitBranchResource(GenericResource):
         setup_repo = False
         if preferences.is_git_integration_enabled():
             setup_repo = True
-        git_manager = self.get_git_manager(
+        git_manager = cls.get_git_manager(
             user=user,
             context_data=context_data,
             preferences=preferences,
@@ -129,7 +129,7 @@ class GitBranchResource(GenericResource):
 
         display_format = kwargs.get('meta', {}).get('_format')
         if 'with_basic_details' == display_format:
-            return self(
+            return cls(
                 dict(
                     files={},
                     is_git_integration_enabled=preferences.is_git_integration_enabled(),
@@ -147,7 +147,7 @@ class GitBranchResource(GenericResource):
         staged_files = await git_manager.staged_files()
         untracked_files = await git_manager.untracked_files()
 
-        return self(
+        return cls(
             dict(
                 files={},
                 is_git_integration_enabled=preferences.is_git_integration_enabled(),

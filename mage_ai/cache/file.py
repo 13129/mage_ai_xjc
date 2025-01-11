@@ -20,12 +20,12 @@ class FileCache(BaseCache):
 
     @classmethod
     def initialize_cache(
-        self,
+        cls,
         absolute_paths: List[str],
         replace: bool = False,
     ) -> "FileCache":
         repo_path = get_repo_path(root_project=True)
-        cache = self(repo_path=repo_path)
+        cache = cls(repo_path=repo_path)
 
         if replace or not cache.exists():
             cache.build_cache(absolute_paths)
@@ -33,7 +33,7 @@ class FileCache(BaseCache):
         return cache
 
     @classmethod
-    def initialize_cache_with_settings(self, replace: bool = False) -> "FileCache":
+    def initialize_cache_with_settings(cls, replace: bool = False) -> "FileCache":
         # Include all projects from platform
         # Relative to the base repo path
         base_path = base_repo_path()
@@ -69,7 +69,7 @@ class FileCache(BaseCache):
         if not paths:
             paths = [base_path]
 
-        return self.initialize_cache(paths, replace=replace)
+        return cls.initialize_cache(paths, replace=replace)
 
     def exists(self) -> bool:
         return os.path.exists(self.build_path(self.cache_key))

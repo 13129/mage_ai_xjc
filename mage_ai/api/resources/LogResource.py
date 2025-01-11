@@ -26,16 +26,16 @@ server_logger = Logger().new_server_logger(__name__)
 class LogResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
+    async def collection(cls, query, meta, user, **kwargs):
         parent_model = kwargs['parent_model']
 
         arr = []
         if type(parent_model) is BlockRun:
             arr = parent_model.logs
         elif issubclass(parent_model.__class__, Pipeline):
-            arr = await self.__pipeline_logs(parent_model, query, meta)
+            arr = await cls.__pipeline_logs(parent_model, query, meta)
 
-        return self.build_result_set(
+        return cls.build_result_set(
             arr,
             user,
             **kwargs,
@@ -43,7 +43,7 @@ class LogResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    async def __pipeline_logs(self, pipeline: Pipeline, query_arg, meta) -> List[Dict]:
+    async def __pipeline_logs(cls, pipeline: Pipeline, query_arg, meta) -> List[Dict]:
         pipeline_uuid = pipeline.uuid
 
         start_timestamp, end_timestamp = get_query_timestamps(query_arg)

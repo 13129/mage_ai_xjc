@@ -38,7 +38,7 @@ class CustomPipelineTemplate(BaseConfig):
     user: Dict = field(default_factory=dict)
 
     @classmethod
-    def load(self, repo_path: str, template_uuid: str = None, uuid: str = None):
+    def load(cls, repo_path: str, template_uuid: str = None, uuid: str = None):
         uuid_use = uuid
         template_uuid_use = template_uuid
 
@@ -68,7 +68,7 @@ class CustomPipelineTemplate(BaseConfig):
 
     @classmethod
     def create_from_pipeline(
-        self,
+        cls,
         pipeline: Pipeline,
         template_uuid: str,
         name: str = None,
@@ -79,7 +79,7 @@ class CustomPipelineTemplate(BaseConfig):
             include_extensions=True,
         )
 
-        custom_template = self(
+        custom_template = cls(
             description=description,
             name=name,
             pipeline=pipeline_dict,

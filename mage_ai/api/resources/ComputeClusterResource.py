@@ -5,35 +5,35 @@ from mage_ai.services.spark.constants import ComputeServiceUUID
 
 class ComputeClusterResource(GenericResource):
     @classmethod
-    async def collection(self, query_arg, _meta, user, **kwargs):
+    async def collection(cls, query_arg, _meta, user, **kwargs):
         parent_model = kwargs.get('parent_model')
 
         include_all_states = query_arg.get('include_all_states', [None])
         if include_all_states:
             include_all_states = include_all_states[0]
         clusters = []
-        return self.build_result_set(
+        return cls.build_result_set(
             clusters,
             user,
             **kwargs,
         )
 
     @classmethod
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         parent_model = kwargs.get('parent_model')
 
         cluster = None
-        return self(dict(
+        return cls(dict(
             cluster=cluster,
         ), user, **kwargs)
 
     @classmethod
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         parent_model = kwargs.get('parent_model')
 
         cluster = None
 
-        return self(dict(
+        return cls(dict(
             cluster=cluster,
         ), user, **kwargs)
 

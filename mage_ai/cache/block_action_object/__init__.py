@@ -85,11 +85,11 @@ class BlockActionObjectCache(BaseCache):
 
     @classmethod
     async def initialize_cache(
-        self,
+        cls,
         project: Project = None,
         replace: bool = False,
     ) -> 'BlockActionObjectCache':
-        cache = self()
+        cache = cls()
         if replace or not cache.exists():
             await cache.initialize_cache_for_all_objects(project=project)
 

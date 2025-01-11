@@ -30,7 +30,7 @@ from mage_ai.version_control.models import Project
 class FileResource(GenericResource):
     @classmethod
     @safe_db_query
-    async def collection(self, query, meta, user, **kwargs):
+    async def collection(cls, query, meta, user, **kwargs):
         pattern = query.get('pattern', [None])
         if pattern:
             pattern = pattern[0]
@@ -100,7 +100,7 @@ class FileResource(GenericResource):
                     modified_timestamp=modified_timestamp,
                 )
 
-            return self.build_result_set(
+            return cls.build_result_set(
                 get_absolute_paths_from_all_files(
                     starting_full_path_directory=base_repo_path(),
                     comparator=lambda path: (
@@ -113,7 +113,7 @@ class FileResource(GenericResource):
                 **kwargs,
             )
 
-        return self.build_result_set(
+        return cls.build_result_set(
             [File.get_all_files(
                 repo_path or get_repo_path(root_project=True),
                 exclude_dir_pattern=exclude_dir_pattern,
@@ -128,7 +128,7 @@ class FileResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    async def create(self, payload: Dict, user, **kwargs) -> 'FileResource':
+    async def create(cls, payload: Dict, user, **kwargs) -> 'FileResource':
         dir_path = payload['dir_path']
         repo_path = get_repo_path(root_project=True)
         pipeline_zip = payload.get('pipeline_zip', False)
@@ -164,7 +164,7 @@ class FileResource(GenericResource):
                     for block in pipeline.blocks_by_uuid.values():
                         block_cache.add_pipeline(block, pipeline, repo_path)
 
-                return self(pipeline_file, user, **kwargs)
+                return cls(pipeline_file, user, **kwargs)
             else:
                 file_path = File(filename, dir_path, repo_path).file_path
                 ensure_file_is_in_project(file_path)
@@ -183,7 +183,7 @@ class FileResource(GenericResource):
                     cache_block_action_object = await BlockActionObjectCache.initialize_cache()
                     cache_block_action_object.update_block(block_file_absolute_path=file.file_path)
 
-                return self(file, user, **kwargs)
+                return cls(file, user, **kwargs)
 
         except FileExistsError as err:
             error.update(dict(message=str(err)))
@@ -205,18 +205,18 @@ class FileResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
-        file = self.get_model(pk)
+    def member(cls, pk, user, **kwargs):
+        file = cls.get_model(pk)
         if not file.exists():
             error = ApiError.RESOURCE_NOT_FOUND.copy()
             error.update(message=f'File at {pk} cannot be found.')
             raise ApiError(error)
 
-        return self(file, user, **kwargs)
+        return cls(file, user, **kwargs)
 
     @classmethod
     @safe_db_query
-    def get_model(self, pk, **kwargs):
+    def get_model(cls, pk, **kwargs):
         file_path = add_absolute_path(urllib.parse.unquote(pk))
         return File.from_path(file_path, get_repo_path(root_project=True))
 

@@ -6,7 +6,7 @@ from mage_ai.orchestration.monitor.monitor_stats import MonitorStats
 class MonitorStatResource(GenericResource):
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         query = kwargs.get('query', {})
 
         pipeline_uuids = query.get('pipeline_uuid', None)
@@ -48,7 +48,7 @@ class MonitorStatResource(GenericResource):
             group_by_pipeline_type=group_by_pipeline_type,
         )
 
-        return self(dict(
+        return cls(dict(
             stats_type=pk,
             stats=stats,
         ), user, **kwargs)

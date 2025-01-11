@@ -7,7 +7,7 @@ from mage_ai.shared.hash import ignore_keys
 
 class GlobalDataProductResource(GenericResource):
     @classmethod
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         repo_path = query.get('repo_path', [None])
         if repo_path:
             repo_path = repo_path[0]
@@ -19,14 +19,14 @@ class GlobalDataProductResource(GenericResource):
         if current_project:
             repo_path = get_repo_path(user=user)
 
-        return self.build_result_set(
+        return cls.build_result_set(
             sorted(GlobalDataProduct.load_all(repo_path), key=lambda x: x.uuid),
             user,
             **kwargs,
         )
 
     @classmethod
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         repo_path = get_repo_path(user=user)
         uuid = payload.get('uuid')
         if GlobalDataProduct.get(uuid, repo_path):
@@ -43,16 +43,16 @@ class GlobalDataProductResource(GenericResource):
         )
         model.save()
 
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     @classmethod
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         query = kwargs.get('query', {})
         project = query.get('project', [None])
         if project:
             project = project[0]
         repo_path = get_repo_path(user=user)
-        return self(
+        return cls(
             GlobalDataProduct.get(
                 pk, repo_path=repo_path if not project else None, project=project
             ),

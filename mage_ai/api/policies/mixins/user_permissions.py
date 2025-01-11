@@ -255,18 +255,18 @@ async def validate_condition_with_permissions(
 
 class UserPermissionMixIn:
     @classmethod
-    def action_rule_with_permissions(self, operation: OperationType) -> Dict:
+    def action_rule_with_permissions(cls, operation: OperationType) -> Dict:
         return {
             OauthScope.CLIENT_PRIVATE: [
                 dict(
-                    condition=self.build_validate_condition(operation),
+                    condition=cls.build_validate_condition(operation),
                 ),
             ]
         }
 
     @classmethod
     def attribute_rule_with_permissions(
-        self,
+        cls,
         attribute_operation_type: AttributeOperationType,
         resource_attribute: str,
     ) -> Dict:
@@ -274,7 +274,7 @@ class UserPermissionMixIn:
         for operation in OperationType:
             conditions[operation.value] = [
                 dict(
-                    condition=self.build_validate_attribute(
+                    condition=cls.build_validate_attribute(
                         operation,
                         attribute_operation_type,
                         resource_attribute,
@@ -288,7 +288,7 @@ class UserPermissionMixIn:
 
     @classmethod
     def build_validate_attribute(
-        self,
+        cls,
         operation: OperationType,
         attribute_operation_type: AttributeOperationType,
         resource_attribute: str,
@@ -304,7 +304,7 @@ class UserPermissionMixIn:
         return _validate_condition
 
     @classmethod
-    def build_validate_condition(self, operation: OperationType) -> Callable[[Any], bool]:
+    def build_validate_condition(cls, operation: OperationType) -> Callable[[Any], bool]:
         def _validate_condition(policy) -> bool:
             return validate_condition_with_cache(policy, operation)
 

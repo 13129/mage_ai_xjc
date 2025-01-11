@@ -21,7 +21,7 @@ from mage_ai.data_preparation.models.triggers import (
 )
 from mage_ai.data_preparation.variable_manager import get_global_variables
 from mage_ai.orchestration.db import safe_db_query
-from mage_ai.orchestration.db.models.base import classproperty
+from mage_ai.orchestration.db.models.base import ClassProperty
 from mage_ai.settings.platform import build_repo_path_for_all_projects
 from mage_ai.settings.platform.utils import (
     get_pipeline_from_platform,
@@ -34,8 +34,8 @@ from mage_ai.shared.utils import clean_name
 
 
 class PipelineScheduleProjectPlatformMixin:
-    @classproperty
-    def repo_query_project_platform(cls):
+    @ClassProperty
+    def repo_query_project_platform(self):
         repo_paths = []
 
         context_data = dict()
@@ -55,10 +55,10 @@ class PipelineScheduleProjectPlatformMixin:
             ).values()
         ])
 
-        return cls.query.filter(
+        return self.query.filter(
             or_(
-                cls.repo_path.in_(repo_paths),
-                cls.repo_path.is_(None),
+                self.repo_path.in_(repo_paths),
+                self.repo_path.is_(None),
             )
         )
 

@@ -495,8 +495,8 @@ class CommandCenterSettings(CommandCenterBaseClass):
         self.serialize_attribute_class('interface', InterfaceSettings)
 
     @classmethod
-    def load_from_file_path(self, file_path: str = None) -> 'CommandCenterSettings':
-        return self.load(**(load_settings(full_path=file_path) or {}))
+    def load_from_file_path(cls, file_path: str = None) -> 'CommandCenterSettings':
+        return cls.load(**(load_settings(full_path=file_path) or {}))
 
     def save(self, file_path: str = None):
         save_settings(self.to_dict(), full_path=file_path)

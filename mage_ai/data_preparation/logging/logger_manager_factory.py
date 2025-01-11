@@ -6,7 +6,7 @@ from mage_ai.data_preparation.repo_manager import RepoConfig
 class LoggerManagerFactory:
     @classmethod
     def get_logger_manager(
-        self,
+        cls,
         repo_config: RepoConfig = None,
         **kwargs,
     ):

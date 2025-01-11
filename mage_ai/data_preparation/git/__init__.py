@@ -158,7 +158,7 @@ class Git:
 
     @classmethod
     def get_manager(
-        self,
+        cls,
         auth_type: str = None,
         config_overwrite: Dict = None,
         context_data: Dict = None,
@@ -212,7 +212,7 @@ class Git:
         else:
             await check_connection_async(self.repo.git, self.origin.name)
 
-    def _remote_command(func: Callable) -> None:
+    def _remote_command(self: Callable) -> None:
         """
         Decorator method for commands that need to connect to the remote repo. This decorator
         will configure and test SSH settings before executing the Git command.
@@ -247,7 +247,7 @@ class Git:
                                 "Connecting to remote timed out, make sure your SSH key is set up properly"  # noqa: E501
                                 " and your repository host is added as a known host. More information here:"  # noqa: E501
                                 " https://docs.mage.ai/developing-in-the-cloud/setting-up-git#5-add-github-com-to-known-hosts")  # noqa: E501
-                    return func(self, *args, **kwargs)
+                    return self(self, *args, **kwargs)
             elif self.auth_type == AuthType.HTTPS:
                 token = self.get_access_token()
                 url_original = list(self.origin.urls)[0]
@@ -261,7 +261,7 @@ class Git:
                     self.origin.set_url(remote_repo_link)
                 try:
                     asyncio.run(self.check_connection(remote_url=remote_repo_link))
-                    return func(self, *args, **kwargs)
+                    return self(self, *args, **kwargs)
                 finally:
                     self.origin.set_url(url_original)
         return wrapper

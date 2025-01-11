@@ -31,7 +31,7 @@ class SecretResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def collection(self, query, meta, user, **kwargs):
+    def collection(cls, query, meta, user, **kwargs):
         entity = query.get('entity', [Entity.GLOBAL])
         if entity:
             entity = entity[0]
@@ -41,31 +41,31 @@ class SecretResource(DatabaseResource):
             pipeline_uuid = pipeline_uuid[0]
         secrets = get_valid_secrets_for_repo()
         return list(filter(
-            lambda s: self._filter_secrets(s, user),
+            lambda s: cls._filter_secrets(s, user),
             secrets
         ))
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
-        return self(create_secret(
+    def create(cls, payload, user, **kwargs):
+        return cls(create_secret(
             **extract(payload, ALLOWED_PAYLOAD_KEYS),
             project_uuid=get_project_uuid(),
         ), user, **kwargs)
 
     @classmethod
     @safe_db_query
-    def member(self, pk, user, **kwargs):
+    def member(cls, pk, user, **kwargs):
         repo_path = get_repo_path(user=user)
         model = Secret.query.filter(Secret.repo_name == repo_path, Secret.name == pk).first()
 
         if not model:
             raise ApiError(ApiError.RESOURCE_NOT_FOUND)
 
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     @classmethod
-    def _filter_secrets(self, secret: Secret, user) -> bool:
+    def _filter_secrets(cls, secret: Secret, user) -> bool:
         # Only include git secrets that were created by the current user.
         preferences = GitConfig(get_preferences(user=user).sync_config)
         whitelist_secrets = [

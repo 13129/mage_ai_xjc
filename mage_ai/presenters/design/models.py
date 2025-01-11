@@ -95,18 +95,18 @@ class CustomDesign(BaseDataClass):
         self.serialize_attribute_class('project', ProjectDataClass)
 
     @classmethod
-    def file_path(self, repo_path: str = None) -> str:
+    def file_path(cls, repo_path: str = None) -> str:
         return os.path.join(repo_path or get_repo_path(), CUSTOM_DESIGN_FILENAME)
 
     @classmethod
     def load_from_file(
-        self,
+        cls,
         all_configurations: bool = True,
         file_path: str = None,
         repo_path: str = None,
         project: Dict = None,
     ) -> 'CustomDesign':
-        model = self.__load_from_file(file_path=file_path, project=project, repo_path=repo_path)
+        model = cls.__load_from_file(file_path=file_path, project=project, repo_path=repo_path)
 
         if all_configurations and project_platform_activated():
             model.custom_designs = {}
@@ -116,7 +116,7 @@ class CustomDesign(BaseDataClass):
             ).items():
                 full_path = project['full_path']
                 if os.path.exists(full_path):
-                    model.custom_designs[project_name] = self.__load_from_file(
+                    model.custom_designs[project_name] = cls.__load_from_file(
                         file_path=os.path.join(full_path, CUSTOM_DESIGN_FILENAME),
                         project=project,
                     )
@@ -125,21 +125,21 @@ class CustomDesign(BaseDataClass):
 
     @classmethod
     def __load_from_file(
-        self,
+        cls,
         file_path: str = None,
         project: Dict = None,
         repo_path: str = None,
     ) -> 'CustomDesign':
         yaml_config = {}
 
-        file_path_to_use = file_path or self.file_path(repo_path=repo_path)
+        file_path_to_use = file_path or cls.file_path(repo_path=repo_path)
         if os.path.exists(file_path_to_use):
             with open(file_path_to_use, 'r') as fp:
                 content = fp.read()
                 if content:
                     yaml_config = yaml.safe_load(content) or {}
 
-        return self.load(
+        return cls.load(
             project=project,
             uuid=(project.get('uuid') if project else None) or (
                 remove_base_repo_directory_name(
@@ -150,8 +150,8 @@ class CustomDesign(BaseDataClass):
         )
 
     @classmethod
-    def get_all(self) -> List['CustomDesign']:
-        custom_design = self.load_from_file(all_configurations=True)
+    def get_all(cls) -> List['CustomDesign']:
+        custom_design = cls.load_from_file(all_configurations=True)
 
         arr = []
 
@@ -163,8 +163,8 @@ class CustomDesign(BaseDataClass):
         return arr
 
     @classmethod
-    def combine_in_order_of_priority(self) -> 'CustomDesign':
-        custom_design = self.load_from_file(
+    def combine_in_order_of_priority(cls) -> 'CustomDesign':
+        custom_design = cls.load_from_file(
             all_configurations=True,
             repo_path=base_repo_path(),
         )
@@ -185,7 +185,7 @@ class CustomDesign(BaseDataClass):
         # Active project settings supercede root project settings
         combine_into(child, parent)
 
-        return self.load(uuid=active_project_uuid, **parent)
+        return cls.load(uuid=active_project_uuid, **parent)
 
     def save(self, file_path: str = None, repo_path: str = None) -> None:
         if not file_path:

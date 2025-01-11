@@ -4,7 +4,7 @@ from mage_ai.settings.models.configuration_option import ConfigurationOption
 
 class ConfigurationOptionResource(AsyncBaseResource):
     @classmethod
-    async def collection(self, query, _meta, user, **kwargs):
+    async def collection(cls, query, _meta, user, **kwargs):
         pipeline = kwargs.get('parent_model')
 
         configuration_type = query.get('configuration_type', [None])
@@ -31,7 +31,7 @@ class ConfigurationOptionResource(AsyncBaseResource):
             resource_uuid=resource_uuid,
         )
 
-        return self.build_result_set(
+        return cls.build_result_set(
             results,
             user,
             **kwargs,

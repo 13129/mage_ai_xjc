@@ -33,8 +33,8 @@ class ApiDownloadHandler(BaseHandler):
                     oauth_token, valid = authenticate_client_and_token(oauth_client.id, token)
                     user = oauth_token.user
                     authenticated = valid and \
-                        oauth_token and \
-                        oauth_token.user
+                                    oauth_token and \
+                                    oauth_token.user
             if not authenticated:
                 raise Exception('Unauthorized access to download block output.')
 
@@ -75,6 +75,8 @@ class ApiDownloadHandler(BaseHandler):
 
 
 class ApiResourceDownloadHandler(BaseHandler):
+    ignore_folder_structure = None
+    abs_repo_path = None
 
     def get(self, token):
         try:

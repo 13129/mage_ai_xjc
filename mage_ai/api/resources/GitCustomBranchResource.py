@@ -8,7 +8,7 @@ from mage_ai.data_preparation.sync import AuthType
 class GitCustomBranchResource(GitBranchResource):
     @classmethod
     def get_git_manager(
-        self, user, setup_repo: bool = False, config_overwrite: Dict = None
+        cls, user, setup_repo: bool = False, config_overwrite: Dict = None
     ) -> Git:
         return Git.get_manager(
             auth_type=AuthType.OAUTH,
@@ -46,13 +46,13 @@ class GitCustomBranchResource(GitBranchResource):
         return cls(dict(name=git_manager.current_branch), user, **kwargs)
 
     @classmethod
-    async def member(self, pk, user, **kwargs):
+    async def member(cls, pk, user, **kwargs):
         resource = await GitBranchResource.member(pk, user, **kwargs)
         model = resource.model
         model['access_token_exists'] = (
-            self.get_git_manager(user=user).get_access_token() is not None
+                cls.get_git_manager(user=user).get_access_token() is not None
         )
-        return self(model, user, **kwargs)
+        return cls(model, user, **kwargs)
 
     def remotes(self, limit: int = None) -> List[Dict]:
         git_manager = self.get_git_manager(user=self.current_user)

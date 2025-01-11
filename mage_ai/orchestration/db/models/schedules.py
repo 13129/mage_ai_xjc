@@ -58,7 +58,7 @@ from mage_ai.data_preparation.models.triggers import (
 from mage_ai.data_preparation.variable_manager import get_global_variables
 from mage_ai.orchestration.db import db_connection, safe_db_query
 from mage_ai.orchestration.db.errors import ValidationError
-from mage_ai.orchestration.db.models.base import Base, BaseModel, classproperty
+from mage_ai.orchestration.db.models.base import Base, BaseModel, ClassProperty
 from mage_ai.orchestration.db.models.dynamic.controller import is_ready_to_process_data
 from mage_ai.orchestration.db.models.schedules_project_platform import (
     BlockRunProjectPlatformMixin,
@@ -108,12 +108,12 @@ class PipelineSchedule(PipelineScheduleProjectPlatformMixin, BaseModel):
         back_populates='pipeline_schedules',
     )
 
-    @classproperty
-    def repo_query(cls):
+    @ClassProperty
+    def repo_query(self):
         if project_platform_activated():
-            return cls.repo_query_project_platform
+            return self.repo_query_project_platform
 
-        return cls.query.filter(
+        return self.query.filter(
             or_(
                 PipelineSchedule.repo_path == get_repo_path(),
                 PipelineSchedule.repo_path.is_(None),
@@ -134,14 +134,14 @@ class PipelineSchedule(PipelineScheduleProjectPlatformMixin, BaseModel):
         return value
 
     @classmethod
-    def fetch_pipeline_runs(self, ids: List[int]) -> List:
+    def fetch_pipeline_runs(cls, ids: List[int]) -> List:
         query = PipelineRun.query
         query.cache = True
         query = query.filter(PipelineRun.pipeline_schedule_id.in_(ids))
         return query.all()
 
     @classmethod
-    def fetch_latest_pipeline_runs_without_retries(self, ids: List[int]) -> List:
+    def fetch_latest_pipeline_runs_without_retries(cls, ids: List[int]) -> List:
         sub_query = (
             PipelineRun.select(
                 PipelineRun.id,
@@ -290,9 +290,9 @@ class PipelineSchedule(PipelineScheduleProjectPlatformMixin, BaseModel):
 
     @classmethod
     @safe_db_query
-    def active_schedules(self, pipeline_uuids: List[str] = None) -> List['PipelineSchedule']:
-        query = self.repo_query.filter(
-            self.status == ScheduleStatus.ACTIVE,
+    def active_schedules(cls, pipeline_uuids: List[str] = None) -> List['PipelineSchedule']:
+        query = cls.repo_query.filter(
+            cls.status == ScheduleStatus.ACTIVE,
         )
         if pipeline_uuids is not None:
             query = query.filter(PipelineSchedule.pipeline_uuid.in_(pipeline_uuids))
@@ -307,7 +307,7 @@ class PipelineSchedule(PipelineScheduleProjectPlatformMixin, BaseModel):
 
     @classmethod
     @safe_db_query
-    def create_or_update_batch(self, trigger_configs: List[Trigger]):
+    def create_or_update_batch(cls, trigger_configs: List[Trigger]):
         trigger_names = []
         trigger_pipeline_uuids = []
         for trigger_config in trigger_configs:
@@ -396,11 +396,11 @@ class PipelineSchedule(PipelineScheduleProjectPlatformMixin, BaseModel):
 
     @classmethod
     @safe_db_query
-    def create_or_update(self, trigger_config: Trigger):
+    def create_or_update(cls, trigger_config: Trigger):
         try:
             existing_trigger = PipelineSchedule.repo_query.filter(
-                self.name == trigger_config.name,
-                self.pipeline_uuid == trigger_config.pipeline_uuid,
+                cls.name == trigger_config.name,
+                cls.pipeline_uuid == trigger_config.pipeline_uuid,
             ).one_or_none()
         except Exception:
             traceback.print_exc()
@@ -421,7 +421,7 @@ class PipelineSchedule(PipelineScheduleProjectPlatformMixin, BaseModel):
         if existing_trigger:
             existing_trigger.update(**kwargs)
         else:
-            self.create(**kwargs)
+            cls.create(**kwargs)
 
     def current_execution_date(self) -> datetime:
         """
@@ -881,22 +881,22 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
 
     @classmethod
     def recently_completed_pipeline_runs(
-        self,
+        cls,
         pipeline_uuid: str,
         pipeline_run_id: int = None,
         pipeline_schedule_id: int = None,
         sample_size: int = None,
     ):
-        pipeline_runs = self.query.filter(
-            self.pipeline_uuid == pipeline_uuid,
-            self.status == self.PipelineRunStatus.COMPLETED,
+        pipeline_runs = cls.query.filter(
+            cls.pipeline_uuid == pipeline_uuid,
+            cls.status == cls.PipelineRunStatus.COMPLETED,
         )
 
         if pipeline_run_id is not None:
-            pipeline_runs = pipeline_runs.filter(self.id != pipeline_run_id)
+            pipeline_runs = pipeline_runs.filter(cls.id != pipeline_run_id)
 
         if pipeline_schedule_id is not None:
-            pipeline_runs = pipeline_runs.filter(self.pipeline_schedule_id == pipeline_schedule_id)
+            pipeline_runs = pipeline_runs.filter(cls.pipeline_schedule_id == pipeline_schedule_id)
 
         pipeline_runs = pipeline_runs.order_by(PipelineRun.execution_date.desc())
 
@@ -1291,7 +1291,7 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
     @classmethod
     @safe_db_query
     def active_runs_for_pipelines(
-        self,
+        cls,
         pipeline_uuids: List[str],
         include_block_runs: bool = False,
     ) -> List['PipelineRun']:
@@ -1301,9 +1301,9 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
             PipelineSchedule.pipeline_uuid.in_(pipeline_uuids)
         ).all()
         schedule_ids = [s.id for s in repo_schedules]
-        query = self.query.filter(
-            self.status == self.PipelineRunStatus.RUNNING,
-            self.pipeline_schedule_id.in_(schedule_ids),
+        query = cls.query.filter(
+            cls.status == cls.PipelineRunStatus.RUNNING,
+            cls.pipeline_schedule_id.in_(schedule_ids),
         )
         if include_block_runs:
             query = query.options(joinedload(PipelineRun.block_runs))
@@ -1312,7 +1312,7 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
     @classmethod
     @safe_db_query
     def active_runs_for_pipelines_grouped(
-        self,
+        cls,
         pipeline_uuids: List[str],
         include_block_runs: bool = False,
     ) -> DefaultDict[str, List['PipelineRun']]:
@@ -1320,7 +1320,7 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
         Get a dictionary of active pipeline runs grouped by pipeline uuid.
         """
 
-        active_runs = self.active_runs_for_pipelines(
+        active_runs = cls.active_runs_for_pipelines(
             pipeline_uuids,
             include_block_runs=include_block_runs,
         )
@@ -1331,7 +1331,7 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
 
     @classmethod
     @safe_db_query
-    def batch_update_status(self, pipeline_run_ids: List[int], status):
+    def batch_update_status(cls, pipeline_run_ids: List[int], status):
         PipelineRun.query.filter(PipelineRun.id.in_(pipeline_run_ids)).update(
             {PipelineRun.status: status}, synchronize_session=False
         )
@@ -1378,14 +1378,14 @@ class PipelineRun(PipelineRunProjectPlatformMixin, BaseModel):
     @classmethod
     @safe_db_query
     def in_progress_runs(
-        self,
+        cls,
         pipeline_schedules: List[int],
     ):
-        return self.query.filter(
+        return cls.query.filter(
             PipelineRun.pipeline_schedule_id.in_(pipeline_schedules),
             PipelineRun.status.in_([
-                self.PipelineRunStatus.INITIAL,
-                self.PipelineRunStatus.RUNNING,
+                cls.PipelineRunStatus.INITIAL,
+                cls.PipelineRunStatus.RUNNING,
             ]),
             (coalesce(PipelineRun.passed_sla, False) == False),  # noqa: E712
         ).all()
@@ -1692,7 +1692,7 @@ class BlockRun(BlockRunProjectPlatformMixin, BaseModel):
 
     @classmethod
     @safe_db_query
-    def batch_update_status(self, block_run_ids: List[int], status):
+    def batch_update_status(cls, block_run_ids: List[int], status):
         BlockRun.query.filter(BlockRun.id.in_(block_run_ids)).update(
             {BlockRun.status: status}, synchronize_session=False
         )
@@ -1700,7 +1700,7 @@ class BlockRun(BlockRunProjectPlatformMixin, BaseModel):
 
     @classmethod
     @safe_db_query
-    def batch_delete(self, block_run_ids: List[int]):
+    def batch_delete(cls, block_run_ids: List[int]):
         BlockRun.query.filter(BlockRun.id.in_(block_run_ids)).delete(synchronize_session=False)
         db_connection.session.commit()
 
@@ -1822,13 +1822,13 @@ class EventMatcher(BaseModel):
         return f'EventMatcher(id={self.id}, name={self.name}, pattern={self.pattern})'
 
     @classmethod
-    def active_event_matchers(self) -> List['EventMatcher']:
-        return self.query.filter(
+    def active_event_matchers(cls) -> List['EventMatcher']:
+        return cls.query.filter(
             EventMatcher.pipeline_schedules.any(PipelineSchedule.status == ScheduleStatus.ACTIVE)
         ).all()
 
     @classmethod
-    def upsert_batch(self, event_matchers_payload):
+    def upsert_batch(cls, event_matchers_payload):
         keys_to_ignore = [
             'created_at',
             'id',
@@ -1856,8 +1856,8 @@ class EventMatcher(BaseModel):
         event_matchers_and_pipeline_schedule_ids = []
         event_matchers_by_id = index_by(
             lambda x: x.id,
-            self.query.filter(
-                self.id.in_([p['id'] for p in existing_arr]),
+            cls.query.filter(
+                cls.id.in_([p['id'] for p in existing_arr]),
             ).all(),
         )
         for payload in existing_arr:
@@ -1868,7 +1868,7 @@ class EventMatcher(BaseModel):
 
         for payload in new_arr:
             ids = payload.pop('pipeline_schedule_ids', None)
-            event_matcher = self.create(**ignore_keys(payload, keys_to_ignore))
+            event_matcher = cls.create(**ignore_keys(payload, keys_to_ignore))
             event_matchers_and_pipeline_schedule_ids.append((event_matcher, ids))
 
         for event_matcher, ids in event_matchers_and_pipeline_schedule_ids:
@@ -1939,7 +1939,7 @@ class Backfill(BaseModel):
 
     @classmethod
     @safe_db_query
-    def filter(self, pipeline_schedule_ids: List = None):
+    def filter(cls, pipeline_schedule_ids: List = None):
         if pipeline_schedule_ids is not None:
             return Backfill.query.filter(
                 Backfill.pipeline_schedule_id.in_(pipeline_schedule_ids),

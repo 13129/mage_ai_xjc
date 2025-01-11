@@ -17,7 +17,7 @@ import { ErrorDetailsType } from '@interfaces/ErrorsType';
 //   ],
 //   "timeout": 0,
 //   "xsrfCookieName": "XSRF-TOKEN",
-//   "xsrfHeaderName": "X-XSRF-TOKEN",
+//   "xsrfHeaderName": "x-XSRF-TOKEN",
 //   "maxContentLength": -1,
 //   "maxBodyLength": -1,
 //   "env": {

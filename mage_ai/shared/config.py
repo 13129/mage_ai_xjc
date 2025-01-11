@@ -13,30 +13,30 @@ from mage_ai.shared.yaml import load_yaml
 @dataclass
 class BaseConfig:
     @classmethod
-    def load(self, config_path: str = None, config: Dict = None):
-        config_class_name = self.__name__
+    def load(cls, config_path: str = None, config: Dict = None):
+        config_class_name = cls.__name__
         config_class_key = camel_to_snake_case(config_class_name)
         if config is None:
-            self.config_path = config_path
-            if self.config_path is None:
+            cls.config_path = config_path
+            if cls.config_path is None:
                 raise Exception(
                     'Please provide a config_path or a config dictionary to initialize'
                     f' an {config_class_name} object',
                 )
-            if not os.path.exists(self.config_path):
-                raise Exception(f'{config_class_name} {self.config_path} does not exist.')
-            with open(self.config_path) as fp:
+            if not os.path.exists(cls.config_path):
+                raise Exception(f'{config_class_name} {cls.config_path} does not exist.')
+            with open(cls.config_path) as fp:
                 config = yaml.full_load(fp) or {}
 
         if config_class_key in config:
             config = config[config_class_key]
 
-        config = self.parse_config(config)
-        extra_config = self.load_extra_config()
+        config = cls.parse_config(config)
+        extra_config = cls.load_extra_config()
         config = merge_dict(extra_config, config)
 
         for config_key, config_value in config.items():
-            config_key_type = self.__annotations__.get(config_key, None)
+            config_key_type = cls.__annotations__.get(config_key, None)
             if config_key_type is None or config_value is None:
                 continue
             if is_dataclass(config_key_type) and isinstance(config_value, dict):
@@ -45,21 +45,21 @@ class BaseConfig:
                 except Exception:
                     traceback.print_exc()
                     config[config_key] = None
-        return self(**config)
+        return cls(**config)
 
     @classmethod
-    def parse_config(self, config: Dict = None) -> Dict:
+    def parse_config(cls, config: Dict = None) -> Dict:
         return config
 
     @classmethod
-    def load_extra_config(self) -> Dict:
+    def load_extra_config(cls) -> Dict:
         return dict()
 
     def to_dict(self) -> Dict:
         return asdict(self)
 
     @classmethod
-    def load_file(self, config_path: Optional[str] = None, config: Optional[Dict] = None) -> Dict:
+    def load_file(cls, config_path: Optional[str] = None, config: Optional[Dict] = None) -> Dict:
         """
         Load configuration from a file and merge it with the provided config.
 

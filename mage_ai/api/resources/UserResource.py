@@ -24,7 +24,7 @@ class UserResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def collection(self, query_arg, meta, user, **kwargs):
+    def collection(cls, query_arg, meta, user, **kwargs):
         results = (
             User.
             query.
@@ -38,7 +38,7 @@ class UserResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    async def create(self, payload, user, **kwargs):
+    async def create(cls, payload, user, **kwargs):
         email = payload.get('email')
         password = payload.get('password')
         password_confirmation = payload.get('password_confirmation')
@@ -47,7 +47,7 @@ class UserResource(DatabaseResource):
         error = ApiError.RESOURCE_INVALID.copy()
 
         role_ids = payload.get('roles_new', [])
-        roles_new = self.check_roles(role_ids)
+        roles_new = cls.check_roles(role_ids)
 
         payload['roles_new'] = roles_new
 
@@ -109,7 +109,7 @@ class UserResource(DatabaseResource):
         async def _create_callback(resource):
             await UsageStatisticLogger().users_impression()
 
-        self.on_create_callback = _create_callback
+        cls.on_create_callback = _create_callback
 
         return resource
 
@@ -227,7 +227,7 @@ class UserResource(DatabaseResource):
 
     @classmethod
     @safe_db_query
-    def check_roles(self, role_ids):
+    def check_roles(cls, role_ids):
         missing_ids = []
         roles_new = []
         for role_id in role_ids:

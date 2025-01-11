@@ -12,7 +12,7 @@ from mage_ai.shared.strings import camel_to_snake_case
 Base = declarative_base()
 
 
-class classproperty(property):
+class ClassProperty(property):
     def __get__(self, owner_self, owner_cls):
         return self.fget(owner_cls)
 
@@ -24,11 +24,11 @@ class BaseModel(Base):
     def __tablename__(self):
         return camel_to_snake_case(self.__name__)
 
-    @classproperty
+    @ClassProperty
     def query(self):
         return db_connection.session.query(self)
 
-    @classproperty
+    @ClassProperty
     def select(self):
         return db_connection.session.query
 

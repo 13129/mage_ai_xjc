@@ -6,7 +6,7 @@ from mage_ai.settings.repo import get_repo_path
 
 class ExecutionStateResource(GenericResource):
     @classmethod
-    async def collection(self, query, _meta, user, **kwargs):
+    async def collection(cls, query, _meta, user, **kwargs):
         arr = []
 
         pipeline_uuid = query.get('pipeline_uuid', [False])
@@ -27,7 +27,7 @@ class ExecutionStateResource(GenericResource):
                         spark=block.execution_states(),
                     ))
 
-        return self.build_result_set(
+        return cls.build_result_set(
             arr,
             user,
             **kwargs,

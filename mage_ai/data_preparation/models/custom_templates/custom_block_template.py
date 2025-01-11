@@ -43,7 +43,7 @@ class CustomBlockTemplate(BaseConfig):
     user: Dict = field(default_factory=dict)
 
     @classmethod
-    def load(self, repo_path, template_uuid: str = None, uuid: str = None):
+    def load(cls, repo_path, template_uuid: str = None, uuid: str = None):
         uuid_use = uuid
         template_uuid_use = template_uuid
 

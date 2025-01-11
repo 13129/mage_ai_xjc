@@ -38,10 +38,10 @@ def get_access_token_secret_name(user: User = None) -> str:
 
 class SyncResource(GenericResource):
     @classmethod
-    def collection(self, query, meta, user, **kwargs):
-        sync_config = self.get_project_sync_config(user)
+    def collection(cls, query, meta, user, **kwargs):
+        sync_config = cls.get_project_sync_config(user)
 
-        return self.build_result_set(
+        return cls.build_result_set(
             [sync_config],
             user,
             **kwargs,
@@ -49,12 +49,12 @@ class SyncResource(GenericResource):
 
     @classmethod
     @safe_db_query
-    def create(self, payload, user, **kwargs):
+    def create(cls, payload, user, **kwargs):
         repo_name = kwargs.get('repo_name')
 
         user_settings = payload.pop('user_git_settings', dict())
 
-        updated_payload = self.update_user_settings(payload, repo_name=repo_name)
+        updated_payload = cls.update_user_settings(payload, repo_name=repo_name)
         preferences = get_preferences(repo_path=repo_name)
         updated_config = dict(preferences.sync_config, **updated_payload)
         # default repo_path to os.getcwd()
@@ -64,7 +64,7 @@ class SyncResource(GenericResource):
         # Update user git settings if they are included
         if user:
             # Validate payloads
-            user_payload = self.update_user_settings(user_settings, user=user, repo_name=repo_name)
+            user_payload = cls.update_user_settings(user_settings, user=user, repo_name=repo_name)
             UserGitConfig.load(config=user_payload)
 
             repo_path = kwargs.get('repo_path') or get_repo_path(user=user)
@@ -94,12 +94,12 @@ class SyncResource(GenericResource):
             error.update(dict(message=message))
             raise ApiError(error)
 
-        return self(get_preferences(repo_path=repo_name).sync_config, user, **kwargs)
+        return cls(get_preferences(repo_path=repo_name).sync_config, user, **kwargs)
 
     @classmethod
-    def member(self, _pk, user, **kwargs):
-        sync_config = self.get_project_sync_config(user, repo_path=(kwargs or {}).get('repo_path'))
-        return self(sync_config, user, **kwargs)
+    def member(cls, _pk, user, **kwargs):
+        sync_config = cls.get_project_sync_config(user, repo_path=(kwargs or {}).get('repo_path'))
+        return cls(sync_config, user, **kwargs)
 
     def update(self, payload, **kwargs):
         self.model.pop('user_git_settings')
@@ -126,7 +126,7 @@ class SyncResource(GenericResource):
 
     @classmethod
     def get_project_sync_config(
-        self,
+        cls,
         user,
         repo_path: str = None,
     ):
@@ -140,7 +140,7 @@ class SyncResource(GenericResource):
         return sync_config
 
     @classmethod
-    def update_user_settings(self, payload, user=None, repo_name: str = None) -> Dict:
+    def update_user_settings(cls, payload, user=None, repo_name: str = None) -> Dict:
         user_payload = payload.copy()
         ssh_public_key = user_payload.pop('ssh_public_key', None)
         ssh_private_key = user_payload.pop('ssh_private_key', None)
