@@ -44,19 +44,16 @@ RUN \
   pip3 install --no-cache-dir "git+https://github.com/mage-ai/sqlglot#egg=sqlglot" && \
   pip3 install --no-cache-dir faster-fifo
 
-COPY mage_integrations /tmp/mage_integrations
-RUN \
-  pip3 install --no-cache-dir /tmp/mage_integrations && \
-  rm -rf /tmp/mage_integrations
-# Mage Dependencies
-COPY requirements.txt /tmp/requirements.txt
-RUN \
-  pip3 install --no-cache-dir -r /tmp/requirements.txt && \
-  rm /tmp/requirements.txt
 
-COPY ./mage_ai /home/src/mage_ai
-WORKDIR /home/src/mage_ai/frontend
-RUN yarn install && yarn cache clean
+# Mage
+COPY ./mage_ai/server/constants.py /tmp/constants.py
+RUN if [ -z "$FEATURE_BRANCH" ] || [ "$FEATURE_BRANCH" = "null" ] ; then \
+  tag=$(tail -n 1 /tmp/constants.py) && \
+  VERSION=$(echo "$tag" | tr -d "'") && \
+  pip3 install --no-cache-dir "mage-ai[all]==$VERSION"; \
+  else \
+  pip3 install --no-cache-dir "git+https://github.com/mage-ai/mage-ai.git@$FEATURE_BRANCH#egg=mage-ai[all]"; \
+  fi
 
 
 ## Startup Script
