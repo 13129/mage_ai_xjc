@@ -10,8 +10,6 @@ def readme():
 requirements = []
 with open('requirements.txt') as f:
     for line in f.read().splitlines():
-        if line.startswith('# extras'):
-            break
         requirements.append(line)
 
 setuptools.setup(
@@ -24,7 +22,7 @@ setuptools.setup(
     description='Mage is a tool for building and deploying data pipelines.',
     long_description=readme(),
     long_description_content_type='text/markdown',
-    url='https://github.com/mage-ai/mage-ai',
+    url='',
     packages=setuptools.find_packages('.'),
     include_package_data=True,
     classifiers=[
@@ -40,11 +38,6 @@ setuptools.setup(
         ],
     },
     extras_require={
-        'ai': [
-            'astor>=0.8.1',
-            'langchain==0.1.6',
-            'langchain_community<0.0.20',
-        ],
         'dbt': [
             'dbt-core==1.7.4',
             'dbt-postgres==1.7.4',
@@ -86,13 +79,13 @@ setuptools.setup(
             'astor>=0.8.1',
             'boto3==1.26.60',
             'botocore==1.29.60',
-            'confluent-avro~=1.8.0',
+            'confluent-avro==1.8.0',
             'db-dtypes==1.0.5',
             'dbt-core==1.7.4',
             'dbt-postgres==1.7.4',
             'dbt-spark==1.7.1',
             'elasticsearch==8.15.1',
-            'gspread==5.7.2'
+            'gspread==5.7.2',
             'kafka-python==2.0.2',
             'kubernetes>=28.1.0',
             'langchain==0.1.6',

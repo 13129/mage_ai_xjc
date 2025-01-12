@@ -47,7 +47,16 @@ RUN \
 
 # Mage
 COPY ./mage_ai/server/constants.py /tmp/constants.py
-RUN pip3 install --no-cache-dir "git+https://github.com/13129/mage_ai_xjc.git@$FEATURE_BRANCH#egg=mage-ai[all]";
+RUN  pip3 install --no-cache-dir "git+https://github.com/13129/mage-ai_xjc.git#egg=mage-integrations&subdirectory=mage_integrations";
+RUN  pip3 install --no-cache-dir "git+https://github.com/13129/mage_ai_xjc.git#egg=mage-ai[all]";
+# COPY . /tmp/mage_ai_xjc
+
+
+# RUN \
+#   pip3 install --no-cache-dir  /tmp/mage_ai_xjc/mage_integrations && \
+  # pip3 install --no-cache-dir  /tmp/mage_ai_xjc[all] && \
+  # rm -rf /tmp/mage_ai_xjc
+
 
 
 ## Startup Script
